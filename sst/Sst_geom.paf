@@ -1,0 +1,536 @@
+Camera: {
+    name: "SST"
+    serial: 1
+    nCol: 1
+    nRow: 1
+    Raft: {
+        name: "R:0,0"
+        serial: -1
+        index: 0 0
+        offset: 0.0 0.0
+    }
+    Distortion: {
+        # No idea yet
+    }
+}
+Amp: {
+    ptype: "default"
+    datasec: 0 0 512 4096
+    #biassec: 512 0 XXX 4096 # Data have no bias section
+    ewidth: 512
+    eheight: 4096
+}
+Ccd: {
+    ptype: "default"
+    pixelSize: 1.0 # All positions in pixels, rather than mm
+    nCol: 4
+    nRow: 1
+    Amp: {
+        serial: 1
+        ptype: "default"
+        flipLR: true
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 0 0
+    }
+    Amp: {
+        serial: 0
+        ptype: "default"
+        flipLR: false
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 1 0
+    }
+    Amp: {
+        serial: 3
+        ptype: "default"
+        flipLR: true
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 2 0
+    }
+    Amp: {
+        serial: 4
+        ptype: "default"
+        flipLR: false
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 3 0
+    }
+}
+Raft: {
+    nCol: 6
+    nRow: 2
+    name: "SST"
+    serial: -1
+
+    Ccd: {
+        serial: 1                       # CCD's serial number
+        name: "0,0"                     # CCD's name
+        ptype: "default"
+        index: 0 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 2                       # CCD's serial number
+        name: "1,0"                     # CCD's name
+        ptype: "default"
+        index: 1 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 3                       # CCD's serial number
+        name: "2,0"                     # CCD's name
+        ptype: "default"
+        index: 2 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 4                       # CCD's serial number
+        name: "3,0"                     # CCD's name
+        ptype: "default"
+        index: 3 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 5                       # CCD's serial number
+        name: "4,0"                     # CCD's name
+        ptype: "default"
+        index: 4 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 6                       # CCD's serial number
+        name: "5,0"                     # CCD's name
+        ptype: "default"
+        index: 5 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 7                       # CCD's serial number
+        name: "0,1"                     # CCD's name
+        ptype: "default"
+        index: 0 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 8                       # CCD's serial number
+        name: "1,1"                     # CCD's name
+        ptype: "default"
+        index: 1 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 9                       # CCD's serial number
+        name: "2,1"                     # CCD's name
+        ptype: "default"
+        index: 2 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 10                      # CCD's serial number
+        name: "3,1"                     # CCD's name
+        ptype: "default"
+        index: 3 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 11                      # CCD's serial number
+        name: "4,1"                     # CCD's name
+        ptype: "default"
+        index: 4 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 12                      # CCD's serial number
+        name: "5,1"                     # CCD's name
+        ptype: "default"
+        index: 5 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0 0                     # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+}
+
+Electronic: {
+    Raft: {
+        name: "SST"
+        serial: -1
+
+        Ccd: {
+            ptype: "default"
+            name: "0,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "1,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "2,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "3,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "4,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "5,0"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "0,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "1,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "2,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "3,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "4,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "default"
+            name: "5,1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 2 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 3 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+
+    }
+}
