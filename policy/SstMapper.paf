@@ -17,6 +17,7 @@ exposures: {
         columns:     "year"
         columns:     "doy"
         columns:     "frac"
+        columns:     "ccd"
     }
     postISRCCD: {
         template:    "postISRCCD/%(field)s/%(dateObs)s/postISRCCD-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
@@ -25,6 +26,10 @@ exposures: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "raw"
+        columns:     "year"
+        columns:     "doy"
+        columns:     "frac"
+        columns:     "ccd"
     }
     calexp: {
         template:    "calexp/%(field)s/%(date)s/calexp-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
@@ -33,6 +38,10 @@ exposures: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "raw"
+        columns:     "year"
+        columns:     "doy"
+        columns:     "frac"
+        columns:     "ccd"
     }
 
     coaddTempExp: {
@@ -41,6 +50,10 @@ exposures: {
         persistable: "ExposureF"
         storage:     "FitsStorage"
         tables:      "raw"
+        columns:     "year"
+        columns:     "doy"
+        columns:     "frac"
+        columns:     "ccd"
     }
 
 }
@@ -111,6 +124,10 @@ datasets: {
         persistable:   "Psf"
         storage:       "BoostStorage"
         tables:        "raw"
+        columns:       "year"
+        columns:       "doy"
+        columns:       "frac"
+        columns:       "ccd"
     }
     apCorr: {
         template:      "output/%(field)s/%(date)s/APC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.pickle"
@@ -118,6 +135,10 @@ datasets: {
         persistable:   "ApertureCorrection"
         storage:       "PickleStorage"
         tables:        "raw"
+        columns:       "year"
+        columns:       "doy"
+        columns:       "frac"
+        columns:       "ccd"
     }
     src: {
         template:      "output/%(field)s/%(date)s/SRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
@@ -125,6 +146,10 @@ datasets: {
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
+        columns:       "year"
+        columns:       "doy"
+        columns:       "frac"
+        columns:       "ccd"
     }
     icMatch: {
         template:      "output/%(field)s/%(date)s/ICMATCH-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
@@ -132,6 +157,10 @@ datasets: {
         persistable:   "BaseCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
+        columns:       "year"
+        columns:       "doy"
+        columns:       "frac"
+        columns:       "ccd"
     }
     icSrc: {
         template:      "output/%(field)s/%(date)s/ICSRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
@@ -139,6 +168,10 @@ datasets: {
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
+        columns:       "year"
+        columns:       "doy"
+        columns:       "frac"
+        columns:       "ccd"
     }
     log: {
         template:      "logs/%(field)s/%(date)s/run.log"
