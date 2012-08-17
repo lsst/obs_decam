@@ -111,8 +111,19 @@ class SstMapper(CameraMapper):
 
         exp = exposureFromImage(image)
         del image
+
+        md = exp.getMetadata()
+        md.add("EXPTIME", 1.0)
+        md.add("FILTER", "OPEN")
+
         return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=True, trimmed=False)
-        
+
+    def std_dark(self, item, dataId):
+        mapping = self.calibrations['dark']
+        item = self._standardizeExposure(mapping, item, dataId, filter=False, trimmed=False)
+        self._setTimes(mapping, item, dataId)
+        return item
+
     def getKeys(self, datasetType, *args, **kwargs):
         keyDict = super(SstMapper, self).getKeys(datasetType, *args, **kwargs)
         if datasetType == "raw":
