@@ -113,6 +113,8 @@ class SstMapper(CameraMapper):
         del image
         return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=True, trimmed=False)
         
-
-        
-        
+    def getKeys(self, datasetType, *args, **kwargs):
+        keyDict = super(SstMapper, self).getKeys(datasetType, *args, **kwargs)
+        if datasetType == "raw":
+            keyDict['ccd'] = int
+        return keyDict
