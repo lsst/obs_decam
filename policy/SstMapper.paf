@@ -53,7 +53,7 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "bias"
-        columns:     "taiObs"
+        columns:     "datetime"
         reference:   "raw"
         refCols:     "year"
         refCols:     "doy"
@@ -62,6 +62,7 @@ calibrations: {
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
+        obsTimeName: "datetime"
     }
     dark: {
         template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d-%(ccd)02d.fits"
@@ -70,7 +71,7 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "dark"
-        columns:     "taiObs"
+        columns:     "datetime"
         reference:   "raw"
         refCols:     "year"
         refCols:     "doy"
@@ -79,6 +80,7 @@ calibrations: {
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
+        obsTimeName: "datetime"
     }
     flat: {
         template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d-%(ccd)02d.fits"
@@ -87,14 +89,16 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "flat"
-        columns:     "taiObs"
-        reference:   "raw_visit"
-        refCols:     "visit"
-        refCols:     "filter"
-        filter:      false
+        columns:     "datetime"
+        reference:   "raw"
+        refCols:     "year"
+        refCols:     "doy"
+        refCols:     "frac"
+        filter:      true
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
+        obsTimeName: "datetime"
     }
 }
 

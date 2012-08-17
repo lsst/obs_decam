@@ -85,6 +85,9 @@ class SstMapper(CameraMapper):
         obsMidpoint = dafBase.DateTime(mjd, dafBase.DateTime.MJD, dafBase.DateTime.UTC)
         calib.setMidTime(obsMidpoint)
 
+    def _setFilter(self, mapping, item, dataId):
+        item.setFilter(afwImage.Filter("OPEN"))
+
     def bypass_raw(self, datasetType, pythonType, location, dataId):
         ccd = dataId['ccd']
         x, y = ccd % 6, ccd // 6
@@ -108,8 +111,7 @@ class SstMapper(CameraMapper):
 
         exp = exposureFromImage(image)
         del image
-        exp.setFilter(afwImage.Filter("OPEN"))
-        return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=False, trimmed=False)
+        return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=True, trimmed=False)
         
 
         

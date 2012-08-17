@@ -31,36 +31,34 @@ class GetRawTestCase(unittest.TestCase):
 
     def setUp(self):
         self.datadir = os.getenv("TESTDATA_SST_DIR")
-        self.size = (2048, 4096)
         assert self.datadir, "testdata_sst is not setup"
+        self.butler = getButler(self.datadir)
+        self.size = (2048, 4096)
+        self.dataId = {'year': 2012,
+                       'doy': 89,
+                       'frac': 132221,
+                       }
+    def tearDown(self):
+        del self.butler
+
+    def assertExposure(self, exp, ccd):
+        print "dataId: ", self.dataId
+        print "ccd: ", ccd
+        print "width: ", exp.getWidth()
+        print "height: ", exp.getHeight()
+        print "detector name: ", exp.getDetector().getId().getName()
+        
+        self.assertEqual(exp.getWidth(), self.size[0])
+        self.assertEqual(exp.getHeight(), self.size[1])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), "OPEN") 
+        self.assertEqual(exp.getDetector().getId().getName(), "%d,%d" % (ccd % 6, ccd // 6))
 
     def testRaw(self):
         """Test retrieval of raw image"""
-
-        year = 2012
-        doy = 89
-        frac = 132221
-
-        butler = getButler(self.datadir)
         for ccd in range(12):
-            dataId = {'year': year,
-                      'doy': doy,
-                      'frac': frac,
-                      'ccd': ccd,
-                      }
-            raw = butler.get("raw", dataId)
-            x,y = ccd % 6, ccd // 6
+            raw = self.butler.get("raw", self.dataId, ccd=ccd)
 
-            print "dataId: ", dataId
-            print "width: ", raw.getWidth()
-            print "height: ", raw.getHeight()
-            print "detector name: ", raw.getDetector().getId().getName()
-
-            self.assertEqual(raw.getWidth(), self.size[0]) # untrimmed
-            self.assertEqual(raw.getHeight(), self.size[1]) # untrimmed
-
-            self.assertEqual(raw.getFilter().getFilterProperty().getName(), "OPEN") 
-            self.assertEqual(raw.getDetector().getId().getName(), "%d,%d" % (x,y))
+            self.assertExposure(raw, ccd)
 
             if display:
                 ccd = cameraGeom.cast_Ccd(raw.getDetector())
@@ -71,6 +69,12 @@ class GetRawTestCase(unittest.TestCase):
                 cameraGeomUtils.showCcd(ccd, ccdImage=raw, frame=frame)
                 frame += 1
 
+    def testFlat(self):
+        """Test retrieval of flat image"""
+        for ccd in range(12):
+            flat = self.butler.get("flat", self.dataId, ccd=ccd)
+
+            self.assertExposure(flat, ccd)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
