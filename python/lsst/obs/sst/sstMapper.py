@@ -25,7 +25,7 @@ class SstMapper(CameraMapper):
         pathId = self._transformId(dataId)
         year = pathId['year']
         doy = pathId['doy']
-        sod = pathId['sod']
+        sod = pathId['frac']
         ccd = pathId['ccd']
         return 0 # XXX FIXME
 
@@ -59,18 +59,19 @@ class SstMapper(CameraMapper):
 
         year = pathId['year']
         doy = pathId['doy']
-        sod = pathId['sod']
+        frac = pathId['frac']
 
         exptime = 1.0 # XXX FIXME
 
         calib = item.getCalib()
         calib.setExptime(exptime)
 
-        mjd = 51544.0 + int((year - 2000) * 365.25) + doy + sod/86400 + exptime / 2.0
+        mjd = 51544.0 + int((year - 2000) * 365.25) + doy + frac/10**6 + exptime / 2.0
         obsMidpoint = dafBase.DateTime(mjd, dafBase.DateTime.MJD, dafBase.DateTime.UTC)
         calib.setMidTime(obsMidpoint)
 
     def std_raw(self, raw, dataId):
+        # XXX Not really an efficient means of reading a sub-image
         ccd = dataId['ccd']
         x, y = ccd % 6, ccd // 6
         xSize, ySize = 2048, 4096
