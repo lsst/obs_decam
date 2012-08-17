@@ -34,7 +34,7 @@ conn = sqlite.connect(registryName)
 if makeTables:
     cmd = "create table raw (id integer primary key autoincrement"
     cmd += ", field text, year int, doy int, frac int"
-    cmd += ", dateObs text, unique(year, doy, frac))"
+    cmd += ", date text, datetime text, unique(year, doy, frac))"
     conn.execute(cmd)
     conn.commit()
 
@@ -46,7 +46,7 @@ for fits in files:
 
     sys.stderr.write("Processing %s\n" % (fits))
 
-    field, dateObs, year, doy, frac = matches.groups()
+    field, date, year, doy, frac = matches.groups()
 
     year = int(year)
     doy = int(doy)
@@ -59,8 +59,8 @@ for fits in files:
                datetime.timedelta(days=doy-1, hours=hours, seconds=sec)).isoformat()
 
     try:
-        conn.execute("INSERT INTO raw VALUES (NULL, ?, ?, ?, ?, ?)",
-                     (field, year, doy, frac, dateObs))
+        conn.execute("INSERT INTO raw VALUES (NULL, ?, ?, ?, ?, ?, ?)",
+                     (field, year, doy, frac, date, dateObs))
 
     except Exception, e:
         print "skipping botched %s: %s" % (fits, e)

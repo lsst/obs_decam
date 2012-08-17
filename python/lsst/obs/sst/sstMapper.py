@@ -3,19 +3,34 @@
 import os
 import pwd
 
+import lsst.daf.base as dafBase
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 
-from lsst.daf.butlerUtils import CameraMapper
+from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
 class SstMapper(CameraMapper):
     def __init__(self, outputRoot=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile("obs_sst", "SstMapper.paf", "policy")
+        policy = pexPolicy.Policy(policyFile)
         super(SstMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         afwImageUtils.defineFilter('OPEN', lambdaEff=650)
+
+    def _extractDetectorName(self, dataId):
+        ccd = dataId['ccd']
+        x,y = ccd % 6, ccd // 6
+        return "%d,%d" % (x,y)
+
+    def _defectLookup(self, dataId, ccdSerial):
+        """Find the defects for a given CCD.
+        @param dataId (dict) Dataset identifier
+        @param ccdSerial (string) CCD serial number
+        @return (string) path to the defects file or None if not available
+        """
+        return None # XXX FIXME
 
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
@@ -57,9 +72,9 @@ class SstMapper(CameraMapper):
         @param dataId (dict) Dataset identifier
         """
 
-        year = pathId['year']
-        doy = pathId['doy']
-        frac = pathId['frac']
+        year = dataId['year']
+        doy = dataId['doy']
+        frac = dataId['frac']
 
         exptime = 1.0 # XXX FIXME
 
@@ -70,12 +85,32 @@ class SstMapper(CameraMapper):
         obsMidpoint = dafBase.DateTime(mjd, dafBase.DateTime.MJD, dafBase.DateTime.UTC)
         calib.setMidTime(obsMidpoint)
 
-    def std_raw(self, raw, dataId):
-        # XXX Not really an efficient means of reading a sub-image
+    def bypass_raw(self, datasetType, pythonType, location, dataId):
         ccd = dataId['ccd']
         x, y = ccd % 6, ccd // 6
         xSize, ySize = 2048, 4096
-        bbox = afwGeom.Box2I(afwGeom.Point2I(x * xSize, y * ySize), afwGeom.ExtentI(xSize, ySize))
-        ccdRaw = raw.Factory(raw, bbox, True)
-        return ccdRaw
+    
+        filename = location.getLocations()[0]
+        bbox = afwGeom.Box2I(afwGeom.Point2I(x * xSize, y * ySize), afwGeom.Extent2I(xSize, ySize))
+        if False:
+            # XXX seems to be some sort of bug here for ccd=11
+            # cfitsio returns: READ_ERROR 108 /* error reading from FITS file */
+            hdu = 0
+            image = afwImage.DecoratedImageF(filename, hdu, bbox)
+        else:
+            # XXX this can't be at all efficient, but it works
+            raw = afwImage.ImageF(filename)
+            sub = raw.Factory(raw, bbox, True)
+            del raw
+            sub.setXY0(afwGeom.Point2I(0,0))
+            image = afwImage.DecoratedImageF(sub)
+            del sub
+
+        exp = exposureFromImage(image)
+        del image
+        exp.setFilter(afwImage.Filter("OPEN"))
+        return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=False, trimmed=False)
+        
+
+        
         
