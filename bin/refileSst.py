@@ -42,7 +42,7 @@ def getFrameInfo(filename):
 def getFinalFile(root, field, filename):
     """ Return the final filename from the passed in info dictionary. """
     info = getFrameInfo(filename)
-    return os.path.join(root, field, info['date'], os.path.basename(filename) + ".fits")
+    return os.path.join(root, field, info['date'], os.path.basename(filename))
 
 def main():
     args = parser.parse_args()
