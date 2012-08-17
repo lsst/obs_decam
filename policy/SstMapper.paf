@@ -8,7 +8,7 @@ defaultLevel: "Ccd"
 
 exposures: {
     raw: {
-        template:    "%(field)s/%(dateObs)s/%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:    "%(field)s/%(dateObs)s/%(year)4d%(doy)03d_%(frac)06d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
         storage:     "FitsStorage"
@@ -16,7 +16,7 @@ exposures: {
         tables:      "raw"
     }
     postISRCCD: {
-        template:    "postISRCCD/%(field)s/%(dateObs)s/postISRCCD-%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:    "postISRCCD/%(field)s/%(dateObs)s/postISRCCD-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -24,7 +24,7 @@ exposures: {
         tables:      "raw"
     }
     calexp: {
-        template:    "calexp/%(field)s/%(dateObs)s/calexp-%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:    "calexp/%(field)s/%(dateObs)s/calexp-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -33,7 +33,7 @@ exposures: {
     }
 
     coaddTempExp: {
-        template:    "coaddTemp/%(tract)d/COADDTEMP-%(year)4d%(doy)03d_%(sod)06d-%(patch)s.fits"
+        template:    "coaddTemp/%(tract)d/COADDTEMP-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d-%(patch)s.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -44,7 +44,7 @@ exposures: {
 
 calibrations: {
     bias: {
-        template:    "BIAS/%(calibDate)s/BIAS-%(calibVersion)d.fits"
+        template:    "BIAS/%(calibDate)s/BIAS-%(calibVersion)d-%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -54,14 +54,14 @@ calibrations: {
         reference:   "raw"
         refCols:     "year"
         refCols:     "doy"
-        refCols:     "sod"
+        refCols:     "frac"
         filter:      false
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
     }
     dark: {
-        template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d.fits"
+        template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d-%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -71,14 +71,14 @@ calibrations: {
         reference:   "raw"
         refCols:     "year"
         refCols:     "doy"
-        refCols:     "sod"
+        refCols:     "frac"
         filter:      false
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
     }
     flat: {
-        template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d.fits"
+        template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d-%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -99,35 +99,35 @@ calibrations: {
 
 datasets: {
     psf: {
-        template:      "output/%(field)s/%(dateObs)s/PSF-%(year)4d%(doy)03d_%(sod)06d.boost"
+        template:      "output/%(field)s/%(dateObs)s/PSF-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.boost"
         python:        "lsst.afw.detection.Psf"
         persistable:   "Psf"
         storage:       "BoostStorage"
         tables:        "raw"
     }
     apCorr: {
-        template:      "output/%(field)s/%(dateObs)s/APC-%(year)4d%(doy)03d_%(sod)06d.pickle"
+        template:      "output/%(field)s/%(dateObs)s/APC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.pickle"
         python:        "lsst.meas.algorithms.ApertureCorrection"
         persistable:   "ApertureCorrection"
         storage:       "PickleStorage"
         tables:        "raw"
     }
     src: {
-        template:      "output/%(field)s/%(dateObs)s/SRC-%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:      "output/%(field)s/%(dateObs)s/SRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     icMatch: {
-        template:      "output/%(field)s/%(dateObs)s/ICMATCH-%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:      "output/%(field)s/%(dateObs)s/ICMATCH-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
         python:        "lsst.afw.table.BaseCatalog"
         persistable:   "BaseCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     icSrc: {
-        template:      "output/%(field)s/%(dateObs)s/ICSRC-%(year)4d%(doy)03d_%(sod)06d.fits"
+        template:      "output/%(field)s/%(dateObs)s/ICSRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
