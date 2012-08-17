@@ -5,6 +5,7 @@ import pwd
 
 import lsst.daf.base as dafBase
 import lsst.afw.geom as afwGeom
+import lsst.afw.coord as afwCoord
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 
@@ -115,6 +116,18 @@ class SstMapper(CameraMapper):
         md = exp.getMetadata()
         md.add("EXPTIME", 1.0)
         md.add("FILTER", "OPEN")
+
+        # Install a basic (wrong, apart from pixel scale) WCS so the pixel scale can be used
+        md.add("RA", "00:00:00.00")
+        md.add("DEC", "00:00:00.0")
+        coord = afwCoord.IcrsCoord(afwGeom.Point2D(0, 0), afwGeom.radians)
+        point = afwGeom.Point2D(0, 0)
+        pixScale = (0.9 * afwGeom.arcseconds).asDegrees()
+        wcs = afwImage.makeWcs(coord, point, pixScale, 0, 0, pixScale)
+        wcsMd = wcs.getFitsMetadata()
+        for key in wcsMd.names():
+            md.add(key, wcsMd.get(key))
+        exp.setWcs(wcs)
 
         return self._standardizeExposure(self.exposures['raw'], exp, dataId, filter=True, trimmed=False)
 
