@@ -2,57 +2,53 @@
 
 needCalibRegistry: true
 
-camera:     "../sst/Sst_geom.paf"
-defects:    "../sst/defects"
+camera:     "../decam/Decam_geom.paf"
+defects:    "../decam/defects"
 defaultLevel: "Ccd"
 
 exposures: {
     raw: {
-        template:    "%(field)s/%(date)s/%(year)4d%(doy)03d_%(frac)06d.fits"
+        template:    "%(proposal)/%(object)s/%(date)s/dec%(visit)06d.fits.fz[%(side)s%(ccd)d]"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "raw"
-        columns:     "year"
-        columns:     "doy"
-        columns:     "frac"
+        columns:     "visit"
+        columns:     "side"
         columns:     "ccd"
     }
     postISRCCD: {
-        template:    "postISRCCD/%(field)s/%(dateObs)s/postISRCCD-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
+        template:    "%(proposal)/reduced/%(object)s/%(date)s/postISRCCD-%(visit)06d_%(side)s%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "raw"
-        columns:     "year"
-        columns:     "doy"
-        columns:     "frac"
+        columns:     "visit"
+        columns:     "side"
         columns:     "ccd"
     }
     calexp: {
-        template:    "calexp/%(field)s/%(date)s/calexp-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
+        template:    "%(proposal)/reduced/%(object)s/%(date)s/calexp-%(visit)06d_%(side)s%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "raw"
-        columns:     "year"
-        columns:     "doy"
-        columns:     "frac"
+        columns:     "visit"
+        columns:     "side"
         columns:     "ccd"
     }
 
     coaddTempExp: {
-        template:    "coaddTemp/%(tract)d/COADDTEMP-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d-%(patch)s.fits"
+        template:    "%(proposal)/temp/%(tract)d/COADDTEMP--%(patch)s.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
         tables:      "raw"
-        columns:     "year"
-        columns:     "doy"
-        columns:     "frac"
+        columns:     "visit"
+        columns:     "side"
         columns:     "ccd"
     }
 
@@ -60,17 +56,17 @@ exposures: {
 
 calibrations: {
     bias: {
-        template:    "BIAS/%(calibDate)s/BIAS-%(calibVersion)d-%(ccd)02d.fits"
+        template:    "BIAS/%(calibDate)s/BIAS-%(calibVersion)d-%(side)s%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "bias"
-        columns:     "datetime"
+        columns:     "date"
         reference:   "raw"
-        refCols:     "year"
-        refCols:     "doy"
-        refCols:     "frac"
+        refCols:     "visit"
+        refCols:     "side"
+        refCols:     "ccd"
         filter:      false
         validRange:  true
         validStartName: "validStart"
@@ -78,7 +74,7 @@ calibrations: {
         obsTimeName: "datetime"
     }
     dark: {
-        template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d-%(ccd)02d.fits"
+        template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d-%(side)s%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -86,9 +82,9 @@ calibrations: {
         tables:      "dark"
         columns:     "datetime"
         reference:   "raw"
-        refCols:     "year"
-        refCols:     "doy"
-        refCols:     "frac"
+        refCols:     "visit"
+        refCols:     "side"
+        refCols:     "ccd"
         filter:      false
         validRange:  true
         validStartName: "validStart"
@@ -96,7 +92,7 @@ calibrations: {
         obsTimeName: "datetime"
     }
     flat: {
-        template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d-%(ccd)02d.fits"
+        template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d-%(side)s%(ccd)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -104,9 +100,9 @@ calibrations: {
         tables:      "flat"
         columns:     "datetime"
         reference:   "raw"
-        refCols:     "year"
-        refCols:     "doy"
-        refCols:     "frac"
+        refCols:     "visit"
+        refCols:     "side"
+        refCols:     "ccd"
         filter:      true
         validRange:  true
         validStartName: "validStart"
@@ -119,48 +115,48 @@ calibrations: {
 
 datasets: {
     psf: {
-        template:      "output/%(field)s/%(date)s/PSF-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.boost"
+        template:      "%(proposal)/output/%(object)s/%(date)s/PSF-%(visit)06d_%(side)s%(ccd)02d.boost"
         python:        "lsst.afw.detection.Psf"
         persistable:   "Psf"
         storage:       "BoostStorage"
         tables:        "raw"
     }
     apCorr: {
-        template:      "output/%(field)s/%(date)s/APC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.pickle"
+        template:      "%(proposal)/output/%(object)s/%(date)s/APC-%(visit)06d_%(side)s%(ccd)02d.pickle"
         python:        "lsst.meas.algorithms.ApertureCorrection"
         persistable:   "ApertureCorrection"
         storage:       "PickleStorage"
         tables:        "raw"
     }
     src: {
-        template:      "output/%(field)s/%(date)s/SRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
+        template:      "%(proposal)/output/%(object)s/%(date)s/SRC-%(visit)06d_%(side)s%(ccd)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     icMatch: {
-        template:      "output/%(field)s/%(date)s/ICMATCH-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
+        template:      "%(proposal)/output/%(object)s/%(date)s/ICMATCH-%(visit)06d_%(side)s%(ccd)02d.fits"
         python:        "lsst.afw.table.BaseCatalog"
         persistable:   "BaseCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     icSrc: {
-        template:      "output/%(field)s/%(date)s/ICSRC-%(year)4d%(doy)03d_%(frac)06d_%(ccd)02d.fits"
+        template:      "%(proposal)/output/%(object)s/%(date)s/ICSRC-%(visit)06d_%(side)s%(ccd)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     log: {
-        template:      "logs/%(field)s/%(date)s/run.log"
+        template:      "%(proposal)/logs/%(object)s/%(date)s/run.log"
         python:        "str"
         persistable:   "None"
         storage:       "TextStorage"
     }
     logDir: {
-        template:      "logs/%(field)s/%(date)s/"
+        template:      "%(proposal)/logs/%(object)s/%(date)s/"
         python:        "str"
         persistable:   "None"
         storage:       "None"
@@ -201,28 +197,28 @@ datasets: {
     }
 
     deepCoadd: {
-        template:      "deepCoadd/%(tract)d/%(patch)s.fits"
+        template:      "%(proposal)/deepCoadd/%(tract)d/%(patch)s.fits"
         python:        "lsst.afw.image.ExposureF"
         persistable:   "ExposureF"
         storage:       "FitsStorage"
         tables:        "raw"
     }
     deepCoadd_depth: {
-        template:      "deepCoadd/%(tract)d/%(patch)s.depth.fits"
+        template:      "%(proposal)/deepCoadd/%(tract)d/%(patch)s.depth.fits"
         python:        "lsst.afw.image.ImageF"
         persistable:   "ImageF"
         storage:       "FitsStorage"
         tables:        "raw"
     }
     deepCoadd_psf: {
-        template:      "deepCoadd/%(tract)d/%(patch)s.boost"
+        template:      "%(proposal)/deepCoadd/%(tract)d/%(patch)s.boost"
         python:        "lsst.afw.detection.Psf"
         persistable:   "Psf"
         storage:       "BoostStorage"
         tables:        "raw"
     }
     deepCoadd_skyMap: {
-        template:      "deepCoadd/skyMap.pickle"
+        template:      "%(proposal)/deepCoadd/skyMap.pickle"
         python:        "lsst.skymap.BaseSkyMap"
         persistable:   "ignored"
         storage:       "PickleStorage"

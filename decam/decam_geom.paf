@@ -1,0 +1,1703 @@
+Camera: {
+    name: "DECam"
+    serial: 1
+    nCol: 1
+    nRow: 1
+    Raft: {
+        name: "R:0,0"
+        serial: -1
+        index: 0 0
+        offset: 0.0 0.0
+    }
+    Distortion: {
+        # No idea yet
+    }
+}
+Amp: {
+    ptype: "default"
+    datasec: 56 50 1080 4145
+    biassec: 6 50 55 4145
+    ewidth: 1024
+    eheight: 4096
+}
+Ccd: {
+    ptype: "south"
+    pixelSize: 1.0 # All positions in pixels, rather than mm
+    nCol: 2
+    nRow: 1
+    Amp: {
+        serial: 1
+        ptype: "default"
+        flipLR: false
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 0 0
+    }
+    Amp: {
+        serial: 0
+        ptype: "default"
+        flipLR: true
+        nQuarter: 0
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 1 0
+    }
+}
+Ccd: {
+    ptype: "north"
+    pixelSize: 1.0 # All positions in pixels, rather than mm
+    nCol: 2
+    nRow: 1
+    Amp: {
+        serial: 1
+        ptype: "default"
+        flipLR: true
+        nQuarter: 2
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 0 0
+    }
+    Amp: {
+        serial: 0
+        ptype: "default"
+        flipLR: false
+        nQuarter: 2
+        hdu: 0
+        diskCoordSys: "camera"
+        index: 1 0
+    }
+}
+Raft: {
+    nCol: 12
+    nRow: 7
+    name: "DECam"
+    serial: -1
+
+    # The following have been organised (in the 'index' entry) with East down (S1 and N1 at bottom, center)
+    # and North to the right.  No attempt has yet been made to set the correct 'offset'.
+
+    Ccd: {
+        serial: 1                       # CCD's serial number
+        name: "S1"                      # CCD's name
+        ptype: "south"
+        index: 5 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 2                       # CCD's serial number
+        name: "S2"                      # CCD's name
+        ptype: "south"
+        index: 5 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 3                       # CCD's serial number
+        name: "S3"                      # CCD's name
+        ptype: "south"
+        index: 5 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 4                       # CCD's serial number
+        name: "S4"                      # CCD's name
+        ptype: "south"
+        index: 5 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 5                       # CCD's serial number
+        name: "S5"                      # CCD's name
+        ptype: "south"
+        index: 5 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 6                       # CCD's serial number
+        name: "S6"                      # CCD's name
+        ptype: "south"
+        index: 5 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 7                       # CCD's serial number
+        name: "S7"                      # CCD's name
+        ptype: "south"
+        index: 5 6                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 8                       # CCD's serial number
+        name: "S8"                      # CCD's name
+        ptype: "south"
+        index: 4 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 9                       # CCD's serial number
+        name: "S9"                      # CCD's name
+        ptype: "south"
+        index: 4 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 10                      # CCD's serial number
+        name: "S10"                     # CCD's name
+        ptype: "south"
+        index: 4 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 11                      # CCD's serial number
+        name: "S11"                     # CCD's name
+        ptype: "south"
+        index: 4 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 12                      # CCD's serial number
+        name: "S12"                     # CCD's name
+        ptype: "south"
+        index: 4 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 13                      # CCD's serial number
+        name: "S13"                     # CCD's name
+        ptype: "south"
+        index: 4 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 14                      # CCD's serial number
+        name: "S14"                     # CCD's name
+        ptype: "south"
+        index: 3 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 15                      # CCD's serial number
+        name: "S15"                     # CCD's name
+        ptype: "south"
+        index: 3 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 16                      # CCD's serial number
+        name: "S16"                     # CCD's name
+        ptype: "south"
+        index: 3 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 17                      # CCD's serial number
+        name: "S17"                     # CCD's name
+        ptype: "south"
+        index: 3 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 18                      # CCD's serial number
+        name: "S18"                     # CCD's name
+        ptype: "south"
+        index: 3 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 19                      # CCD's serial number
+        name: "S19"                     # CCD's name
+        ptype: "south"
+        index: 3 6                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 20                      # CCD's serial number
+        name: "S20"                     # CCD's name
+        ptype: "south"
+        index: 2 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 21                      # CCD's serial number
+        name: "S21"                     # CCD's name
+        ptype: "south"
+        index: 2 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 22                      # CCD's serial number
+        name: "S22"                     # CCD's name
+        ptype: "south"
+        index: 2 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 23                      # CCD's serial number
+        name: "S23"                     # CCD's name
+        ptype: "south"
+        index: 2 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 24                      # CCD's serial number
+        name: "S24"                     # CCD's name
+        ptype: "south"
+        index: 2 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 25                      # CCD's serial number
+        name: "S25"                     # CCD's name
+        ptype: "south"
+        index: 1 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 26                      # CCD's serial number
+        name: "S26"                     # CCD's name
+        ptype: "south"
+        index: 1 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 27                      # CCD's serial number
+        name: "S27"                     # CCD's name
+        ptype: "south"
+        index: 1 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 28                      # CCD's serial number
+        name: "S28"                     # CCD's name
+        ptype: "south"
+        index: 1 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 29                      # CCD's serial number
+        name: "S29"                     # CCD's name
+        ptype: "south"
+        index: 0 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 30                      # CCD's serial number
+        name: "S30"                     # CCD's name
+        ptype: "south"
+        index: 0 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 31                      # CCD's serial number
+        name: "S31"                     # CCD's name
+        ptype: "south"
+        index: 0 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+
+
+    Ccd: {
+        serial: 32                      # CCD's serial number
+        name: "N1"                      # CCD's name
+        ptype: "north"
+        index: 6 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 33                      # CCD's serial number
+        name: "N2"                      # CCD's name
+        ptype: "north"
+        index: 6 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 34                      # CCD's serial number
+        name: "N3"                      # CCD's name
+        ptype: "north"
+        index: 6 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 35                      # CCD's serial number
+        name: "N4"                      # CCD's name
+        ptype: "north"
+        index: 6 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 36                      # CCD's serial number
+        name: "N5"                      # CCD's name
+        ptype: "north"
+        index: 6 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 37                      # CCD's serial number
+        name: "N6"                      # CCD's name
+        ptype: "north"
+        index: 6 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 38                      # CCD's serial number
+        name: "N7"                      # CCD's name
+        ptype: "north"
+        index: 6 6                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 39                      # CCD's serial number
+        name: "N8"                      # CCD's name
+        ptype: "north"
+        index: 7 0                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 40                      # CCD's serial number
+        name: "N9"                      # CCD's name
+        ptype: "north"
+        index: 7 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 41                      # CCD's serial number
+        name: "N10"                     # CCD's name
+        ptype: "north"
+        index: 7 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 42                      # CCD's serial number
+        name: "N11"                     # CCD's name
+        ptype: "north"
+        index: 7 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 43                      # CCD's serial number
+        name: "N12"                     # CCD's name
+        ptype: "north"
+        index: 7 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 44                      # CCD's serial number
+        name: "N13"                     # CCD's name
+        ptype: "north"
+        index: 7 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 45                      # CCD's serial number
+        name: "N14"                     # CCD's name
+        ptype: "north"
+        index: 8 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 46                      # CCD's serial number
+        name: "N15"                     # CCD's name
+        ptype: "north"
+        index: 8 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 47                      # CCD's serial number
+        name: "N16"                     # CCD's name
+        ptype: "north"
+        index: 8 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 48                      # CCD's serial number
+        name: "N17"                     # CCD's name
+        ptype: "north"
+        index: 8 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 49                      # CCD's serial number
+        name: "N18"                     # CCD's name
+        ptype: "north"
+        index: 8 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 50                      # CCD's serial number
+        name: "N19"                     # CCD's name
+        ptype: "north"
+        index: 8 6                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 51                      # CCD's serial number
+        name: "N20"                     # CCD's name
+        ptype: "north"
+        index: 9 1                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 52                      # CCD's serial number
+        name: "N21"                     # CCD's name
+        ptype: "north"
+        index: 9 2                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 53                      # CCD's serial number
+        name: "N22"                     # CCD's name
+        ptype: "north"
+        index: 9 3                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 54                      # CCD's serial number
+        name: "N23"                     # CCD's name
+        ptype: "north"
+        index: 9 4                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 55                      # CCD's serial number
+        name: "N24"                     # CCD's name
+        ptype: "north"
+        index: 9 5                      # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 56                      # CCD's serial number
+        name: "N25"                     # CCD's name
+        ptype: "north"
+        index: 10 1                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 57                      # CCD's serial number
+        name: "N26"                     # CCD's name
+        ptype: "north"
+        index: 10 2                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 58                      # CCD's serial number
+        name: "N27"                     # CCD's name
+        ptype: "north"
+        index: 10 3                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 59                      # CCD's serial number
+        name: "N28"                     # CCD's name
+        ptype: "north"
+        index: 10 4                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 60                      # CCD's serial number
+        name: "N29"                     # CCD's name
+        ptype: "north"
+        index: 11 2                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 61                      # CCD's serial number
+        name: "N30"                     # CCD's name
+        ptype: "north"
+        index: 11 3                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+    Ccd: {
+        serial: 62                      # CCD's serial number
+        name: "N31"                     # CCD's name
+        ptype: "north"
+        index: 11 4                     # Location of CCD in Raft thought of as a grid of CCDs
+        offset: 0.0 0.0                 # offset of CCD center from raft center, (x, y)
+        nQuarter: 0                     # number of quarter turns applied to CCD when put into raft
+        orientation: 0.0 0.0 0.0        # pitch, roll, yaw; degrees
+    }
+}
+
+Electronic: {
+    Raft: {
+        name: "DECam"
+        serial: -1
+
+        Ccd: {
+            ptype: "south"
+            name: "S1"
+            serial: 1
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S2"
+            serial: 2
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S3"
+            serial: 3
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S4"
+            serial: 4
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S5"
+            serial: 5
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S6"
+            serial: 6
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S7"
+            serial: 7
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S8"
+            serial: 8
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S9"
+            serial: 9
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S10"
+            serial: 10
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S11"
+            serial: 11
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S12"
+            serial: 12
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S13"
+            serial: 13
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S14"
+            serial: 14
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S15"
+            serial: 15
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S16"
+            serial: 16
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S17"
+            serial: 17
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S18"
+            serial: 18
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S19"
+            serial: 19
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S20"
+            serial: 20
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S21"
+            serial: 21
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S22"
+            serial: 22
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S23"
+            serial: 23
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S24"
+            serial: 24
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S25"
+            serial: 25
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S26"
+            serial: 26
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S27"
+            serial: 27
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S28"
+            serial: 28
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S29"
+            serial: 29
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S30"
+            serial: 30
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "south"
+            name: "S31"
+            serial: 31
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N1"
+            serial: 32
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N2"
+            serial: 33
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N3"
+            serial: 34
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N4"
+            serial: 35
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N5"
+            serial: 36
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N6"
+            serial: 37
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N7"
+            serial: 38
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N8"
+            serial: 39
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N9"
+            serial: 40
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N10"
+            serial: 41
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N11"
+            serial: 42
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N12"
+            serial: 43
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N13"
+            serial: 44
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N14"
+            serial: 45
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N15"
+            serial: 46
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N16"
+            serial: 47
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N17"
+            serial: 48
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N18"
+            serial: 49
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N19"
+            serial: 50
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N20"
+            serial: 51
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N21"
+            serial: 52
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N22"
+            serial: 53
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N23"
+            serial: 54
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N24"
+            serial: 55
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N25"
+            serial: 56
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N26"
+            serial: 57
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N27"
+            serial: 58
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N28"
+            serial: 59
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N29"
+            serial: 60
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N30"
+            serial: 61
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+        Ccd: {
+            ptype: "north"
+            name: "N31"
+            serial: 62
+            Amp: {
+                index: 0 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+            Amp: {
+                index: 1 0
+                gain: 1.0
+                readNoise: 10.0
+                saturationLevel: 60000.0
+            }
+        }
+
+    }
+}
