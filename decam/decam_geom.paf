@@ -15,10 +15,10 @@ Camera: {
 }
 Amp: {
     ptype: "default"
-    datasec: 56 50 1080 4145
+    datasec: 56 50 1079 4145
     biassec: 6 50 55 4145
-    ewidth: 1024
-    eheight: 4096
+    ewidth: 1080
+    eheight: 4146
 }
 Ccd: {
     ptype: "south"
