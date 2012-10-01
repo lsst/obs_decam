@@ -7,7 +7,7 @@ import lsst.utils.tests as utilsTests
 
 from lsst.pex.policy import Policy
 import lsst.daf.persistence as dafPersist
-from lsst.obs.sst import SstMapper
+from lsst.obs.decam import DecamMapper
 
 import lsst.afw.display.ds9 as ds9
 import lsst.afw.display.utils as displayUtils
@@ -21,8 +21,8 @@ except NameError:
 
 
 def getButler(datadir):
-    bf = dafPersist.ButlerFactory(mapper=SstMapper(root=os.path.join(datadir, "DATA"),
-                                                   calibRoot=os.path.join(datadir, "CALIB")))
+    bf = dafPersist.ButlerFactory(mapper=DecamMapper(root=os.path.join(datadir, "DATA"),
+                                                     calibRoot=os.path.join(datadir, "CALIB")))
     return bf.create()
 
 
@@ -30,18 +30,17 @@ class GetRawTestCase(unittest.TestCase):
     """Testing butler raw image retrieval"""
 
     def setUp(self):
-        self.datadir = os.getenv("TESTDATA_SST_DIR")
-        assert self.datadir, "testdata_sst is not setup"
+        self.datadir = os.getenv("TESTDATA_DECAM_DIR")
+        assert self.datadir, "testdata_decam is not setup"
         self.butler = getButler(self.datadir)
-        self.size = (2048, 4096)
-        self.dataId = {'year': 2012,
-                       'doy': 89,
-                       'frac': 132221,
-                       }
+        self.size = (2160, 4146)
+        self.dataId = {'visit': 135635}
+        self.filter = "r"
+
     def tearDown(self):
         del self.butler
 
-    def assertExposure(self, exp, ccd):
+    def assertExposure(self, exp, side, ccd):
         print "dataId: ", self.dataId
         print "ccd: ", ccd
         print "width: ", exp.getWidth()
@@ -50,31 +49,32 @@ class GetRawTestCase(unittest.TestCase):
         
         self.assertEqual(exp.getWidth(), self.size[0])
         self.assertEqual(exp.getHeight(), self.size[1])
-        self.assertEqual(exp.getFilter().getFilterProperty().getName(), "OPEN") 
-        self.assertEqual(exp.getDetector().getId().getName(), "%d,%d" % (ccd % 6, ccd // 6))
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+        self.assertEqual(exp.getDetector().getId().getName(), "%s%d" % (side.upper(), ccd))
 
     def testRaw(self):
         """Test retrieval of raw image"""
-        for ccd in range(12):
-            raw = self.butler.get("raw", self.dataId, ccd=ccd)
+        for side in ("N", "S"):
+            for ccd in range(1, 32, 1):
+                raw = self.butler.get("raw", self.dataId, side=side, ccd=ccd)
 
-            self.assertExposure(raw, ccd)
+                self.assertExposure(raw, side, ccd)
 
-            if display:
-                ccd = cameraGeom.cast_Ccd(raw.getDetector())
-                for amp in ccd:
-                    amp = cameraGeom.cast_Amp(amp)
-                    print ccd.getId(), amp.getId(), amp.getDataSec().toString(), \
-                          amp.getBiasSec().toString(), amp.getElectronicParams().getGain()
-                cameraGeomUtils.showCcd(ccd, ccdImage=raw, frame=frame)
-                frame += 1
+                if display:
+                    ccd = cameraGeom.cast_Ccd(raw.getDetector())
+                    for amp in ccd:
+                        amp = cameraGeom.cast_Amp(amp)
+                        print ccd.getId(), amp.getId(), amp.getDataSec().toString(), \
+                              amp.getBiasSec().toString(), amp.getElectronicParams().getGain()
+                    cameraGeomUtils.showCcd(ccd, ccdImage=raw, frame=frame)
+                    frame += 1
 
-    def testFlat(self):
-        """Test retrieval of flat image"""
-        for ccd in range(12):
-            flat = self.butler.get("flat", self.dataId, ccd=ccd)
-
-            self.assertExposure(flat, ccd)
+#    def testFlat(self):
+#        """Test retrieval of flat image"""
+#        for ccd in range(12):
+#            flat = self.butler.get("flat", self.dataId, ccd=ccd)
+#
+#            self.assertExposure(flat, ccd)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

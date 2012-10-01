@@ -69,3 +69,19 @@ class DecamMapper(CameraMapper):
     def bypass_stackExposureId_bits(self, datasetType, pythonType, location, dataId):
         return 32 # not really, but this leaves plenty of space for sources
 
+    def std_raw(self, image, dataId):
+        """Pull out WCS header keywords wcslib doesn't understand"""
+        md = image.getMetadata()
+
+        def remove(md, key):
+            if md.exists(key):
+                md.remove(key)
+
+        remove(md, 'CTYPE1')
+        remove(md, 'CTYPE2')
+        remove(md, 'RADESYS')
+        remove(md, 'EQUINOX')
+        remove(md, 'CUNIT1')
+        remove(md, 'CUNIT2')
+
+        return super(DecamMapper, self).std_raw(image, dataId)
