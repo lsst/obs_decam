@@ -2,7 +2,7 @@
 
 needCalibRegistry: true
 
-camera:     "../decam/Decam_geom.paf"
+camera:     "../decam/decam_geom.paf"
 defects:    "../decam/defects"
 defaultLevel: "Ccd"
 
