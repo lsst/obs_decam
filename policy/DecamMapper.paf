@@ -71,7 +71,7 @@ calibrations: {
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
-        obsTimeName: "datetime"
+        obsTimeName: "taiObs"
     }
     dark: {
         template:    "DARK/%(calibDate)s/DARK-%(calibVersion)d-%(side)s%(ccd)02d.fits"
@@ -80,7 +80,7 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "dark"
-        columns:     "datetime"
+        columns:     "date"
         reference:   "raw"
         refCols:     "visit"
         refCols:     "side"
@@ -89,7 +89,7 @@ calibrations: {
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
-        obsTimeName: "datetime"
+        obsTimeName: "taiObs"
     }
     flat: {
         template:    "FLAT/%(calibDate)s/FLAT-%(calibVersion)d-%(side)s%(ccd)02d.fits"
@@ -98,7 +98,7 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      "flat"
-        columns:     "datetime"
+        columns:     "date"
         reference:   "raw"
         refCols:     "visit"
         refCols:     "side"
@@ -107,7 +107,7 @@ calibrations: {
         validRange:  true
         validStartName: "validStart"
         validEndName: "validEnd"
-        obsTimeName: "datetime"
+        obsTimeName: "taiObs"
     }
 }
 

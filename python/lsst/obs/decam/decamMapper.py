@@ -79,9 +79,11 @@ class DecamMapper(CameraMapper):
 
         remove(md, 'CTYPE1')
         remove(md, 'CTYPE2')
-        remove(md, 'RADESYS')
-        remove(md, 'EQUINOX')
-        remove(md, 'CUNIT1')
-        remove(md, 'CUNIT2')
+        md.add('CTYPE1', "RA---TAN")
+        md.add('CTYPE2', "DEC--TAN")
+        #remove(md, 'RADESYS')
+        #remove(md, 'EQUINOX')
+        #remove(md, 'CUNIT1')
+        #remove(md, 'CUNIT2')
 
         return super(DecamMapper, self).std_raw(image, dataId)
