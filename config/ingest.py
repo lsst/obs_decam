@@ -1,5 +1,6 @@
 from lsst.obs.decam.ingest import DecamParseTask
 root.parse.retarget(DecamParseTask)
+root.parse.hdu = 1 # PHU
 root.parse.translation = {'proposal': 'PROPID',
                           'visit': 'EXPNUM',
                           'taiObs': 'DATE-OBS', # Header says UTC, but shouldn't matter if we're consistent
