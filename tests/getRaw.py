@@ -54,6 +54,10 @@ class GetRawTestCase(unittest.TestCase):
 
     def testRaw(self):
         """Test retrieval of raw image"""
+        frame = 0
+        if display:
+            cameraGeomUtils.showCamera(self.butler.mapper.camera, frame=frame)
+
         for side in ("N", "S"):
             for ccd in range(1, 32, 1):
                 raw = self.butler.get("raw", self.dataId, side=side, ccd=ccd)
@@ -61,13 +65,13 @@ class GetRawTestCase(unittest.TestCase):
                 self.assertExposure(raw, side, ccd)
 
                 if display:
+                    frame += 1
                     ccd = cameraGeom.cast_Ccd(raw.getDetector())
                     for amp in ccd:
                         amp = cameraGeom.cast_Amp(amp)
                         print ccd.getId(), amp.getId(), amp.getDataSec().toString(), \
                               amp.getBiasSec().toString(), amp.getElectronicParams().getGain()
                     cameraGeomUtils.showCcd(ccd, ccdImage=raw, frame=frame)
-                    frame += 1
 
 #    def testFlat(self):
 #        """Test retrieval of flat image"""
