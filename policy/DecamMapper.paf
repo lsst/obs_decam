@@ -196,6 +196,23 @@ datasets: {
         tables:       "raw"
     }
 
+    processCcd_config: {
+        template:      "%(proposal)s/output/%(object)s/%(date)s/CONFIG-processCcd-%(visit)06d_%(side)s%(ccd)02d.py"
+        python:        "lsst.pipe.tasks.processCcdLsstSim.ProcessCcdLsstSimConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    processCcd_metadata: {
+        template:      "%(proposal)s/output/%(object)s/%(date)s/MD-processCcd-%(visit)06d_%(side)s%(ccd)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+
     deepCoadd: {
         template:      "%(proposal)s/deepCoadd/%(tract)d/%(patch)s.fits"
         python:        "lsst.afw.image.ExposureF"
