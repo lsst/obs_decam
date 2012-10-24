@@ -5,3 +5,4 @@ config.log
 tests/.tests
 ups/*.cfgc
 python/lsst/obs/sst/version.py
+python/lsst/obs/decam/version.py
