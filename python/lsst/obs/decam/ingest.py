@@ -20,7 +20,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from lsst.pipe.tasks.register import ParseTask
+from lsst.pipe.tasks.ingest import ParseTask
 
 def parseExtname(md):
     side, ccd = "X", 0
