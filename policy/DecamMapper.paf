@@ -40,6 +40,17 @@ exposures: {
         columns:     "side"
         columns:     "ccd"
     }
+    calexpBackground: {
+        template:    "%(proposal)s/reduced/%(object)s/%(date)s/calexp-%(visit)06d_%(side)s%(ccd)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "Ccd"
+        tables:      "raw"
+        columns:     "visit"
+        columns:     "side"
+        columns:     "ccd"
+    }
 
     coaddTempExp: {
         template:    "%(proposal)s/temp/%(tract)d/COADDTEMP--%(patch)s.fits"
