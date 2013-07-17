@@ -40,38 +40,23 @@ Use
 ===
 
 1. Create a data repository directory:
-
-```
-$ mkdir /path/to/repo
-$ echo lsst.obs.decam.DecamMapper > /path/to/repo/_mapper
-```
-
+        $ mkdir /path/to/repo
+        $ echo lsst.obs.decam.DecamMapper > /path/to/repo/_mapper
 2. Get and build obs_decam:
-
-```
-$ cd /path/to/work
-$ git clone git://github.com/LSST-nonproject/obs_decam.git
-$ cd obs_decam
-$ setup -t <CURRENT_TAG> -r .
-$ scons install declare
-```
-
+        $ cd /path/to/work
+        $ git clone git://github.com/LSST-nonproject/obs_decam.git
+        $ cd obs_decam
+        $ setup -t <CURRENT_TAG> -r .
+        $ scons install declare
 3. Import data into the data repository:
-
-```
-$ cd /path/to/data
-$ setup -t <CURRENT_TAG> pipe_tasks
-$ setup -k -t <CURRENT_TAG> obs_decam
-$ ingestImages.py /path/to/repo --mode=link *.fits
-```
-
+        $ cd /path/to/data
+        $ setup -t <CURRENT_TAG> pipe_tasks
+        $ setup -k -t <CURRENT_TAG> obs_decam
+        $ ingestImages.py /path/to/repo --mode=link *.fits
 4. Process data
-
-```
-$ setup -t <CURRENT_TAG> pipe_tasks
-$ setup -k -t <CURRENT_TAG> obs_decam
-$ processCcd.py /path/to/repo --id visit=12345 ccd=5 side=N
-```
+        $ setup -t <CURRENT_TAG> pipe_tasks
+        $ setup -k -t <CURRENT_TAG> obs_decam
+        $ processCcd.py /path/to/repo --id visit=12345 ccd=5 side=N
 
 Data identifiers
 ================
