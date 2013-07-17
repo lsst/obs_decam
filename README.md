@@ -50,7 +50,7 @@ Use
         $ git clone git://github.com/LSST-nonproject/obs_decam.git
         $ cd obs_decam
         $ setup -t <CURRENT_TAG> -r .
-        $ scons install declare
+        $ scons install declare --tag=current
 
 3. Import data into the data repository:
 
