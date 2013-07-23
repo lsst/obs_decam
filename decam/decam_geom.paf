@@ -50,6 +50,7 @@ Ccd: {
 Ccd: {
     ptype: "north"
     pixelSize: 1.0 # All positions in pixels, rather than mm
+    offsetUnit: "pixels"
     nCol: 2
     nRow: 1
     Amp: {
