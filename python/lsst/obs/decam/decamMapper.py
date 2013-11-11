@@ -34,9 +34,10 @@ from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
 class DecamMapper(CameraMapper):
-    def __init__(self, outputRoot=None, **kwargs):
+    def __init__(self, inputPolicy=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile("obs_decam", "DecamMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
+
         super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350)
@@ -48,8 +49,7 @@ class DecamMapper(CameraMapper):
 
     def _extractDetectorName(self, dataId):
         ccd = dataId['ccd']
-        side = dataId['side'].upper()
-        return "%s%d" % (side, ccd)
+        return "%d" % (ccd)
 
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
@@ -67,8 +67,7 @@ class DecamMapper(CameraMapper):
         pathId = self._transformId(dataId)
         visit = pathId['visit']
         ccd = pathId['ccd']
-        side = pathId['side']
-        return 0 # XXX FIXME
+        return "%d%d" % (visit, ccd)
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         return self._computeCcdExposureId(dataId)
@@ -91,20 +90,33 @@ class DecamMapper(CameraMapper):
         return 32 # not really, but this leaves plenty of space for sources
 
     def std_raw(self, image, dataId):
-        """Pull out WCS header keywords wcslib doesn't understand"""
+        """Fix missing header keywords"""
+
         md = image.getMetadata()
+        md.add('CRVAL2', 0.0)
+        if md.exists("BACKMEAN") and md.exists("ARAWGAIN"):
+           backmean = md.get("BACKMEAN")
+           gain = md.get("ARAWGAIN")
+        else:
+           backmean = 0.0
+           gain = 1.0
+        filterName = md.get("FILTER")[0]
+        if filterName == "Y":
+            filterName = "z"
 
-        def remove(md, key):
-            if md.exists(key):
-                md.remove(key)
+        # Not until the camera part gets worked out
+        #return super(DecamMapper, self).std_raw(image, dataId)
 
-        remove(md, 'CTYPE1')
-        remove(md, 'CTYPE2')
-        md.add('CTYPE1', "RA---TAN")
-        md.add('CTYPE2', "DEC--TAN")
-        #remove(md, 'RADESYS')
-        #remove(md, 'EQUINOX')
-        #remove(md, 'CUNIT1')
-        #remove(md, 'CUNIT2')
+        # we have to deal with the variance ourselves, at least for the test data I got # ACB
+        exp = exposureFromImage(image)
+        mi  = exp.getMaskedImage()
+        var = mi.getVariance().Factory(mi.getImage())
+        var += backmean
+        var /= gain
+        mi2 = mi.Factory(mi.getImage(), mi.getMask(), var)
+        exp2 = exp.Factory(mi2, exp.getWcs())
 
-        return super(DecamMapper, self).std_raw(image, dataId)
+        # hacking around filter issues
+        exp2.setFilter(afwImage.Filter(filterName))
+        
+        return exp2
