@@ -80,3 +80,16 @@ The following keywords are available when specifying a data identifier:
 * `object`: object name
 
 `visit`, `side`, `ccd` are required to specify a unique CCD image.
+
+Notes by ACB
+================
+
+This has been modified to run the equivalent of processCcd on Community-pipeline reduced Decam data.  A couple of features: 
+  * the input data currently need to reside in the --ouput directory.
+  * file naming convention is "%(visit)07d/dec%(visit)07d.fits.fz[%(ccd)d]"
+
+Example commands to run the code are below:
+  * setup pipe_tasks
+  * setup obs_decam
+  * setup astrometry_net_data
+  * python ~/python/obs_decam/bin/processCcdDecam.py . --id visit=1656128 ccd=1 --output .
