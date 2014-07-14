@@ -13,7 +13,7 @@ defaultSubLevels: {
     visit: "ccd"
 }
 
-camera: "../decam/decam_geom.paf"
+camera: "../decam/camGeom"
 
 exposures: {
     raw: {
