@@ -95,7 +95,7 @@ class DecamParseTask(ParseTask):
         # Note that phuInfo will have
         #   'side': 'X', 'ccd': 0
         phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
-        for num, info in enumerate(infoList):
+        for idx, info in enumerate(infoList):
             expnum = info["visit"]
             info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
             info[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]

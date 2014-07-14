@@ -4,6 +4,7 @@ root.parse.hdu = 1
 root.parse.translation = {'visit': 'EXPNUM',
                           'taiObs': 'DATE-OBS', 
                           'expTime': 'EXPTIME',
+                          'ccdnum': 'CCDNUM', # MEF header layer
                           }
 root.parse.translators = {'date': 'translate_date',
                           'filter': 'translate_filter',
@@ -23,6 +24,7 @@ root.register.columns = {'visit':    'int',
                          'date':     'text',
                          'taiObs':   'text',
                          'expTime':  'double',
+                         'ccdnum':   'int',
                          'instCal':  'text',
                          'dqmask':   'text',
                          'wtmap':    'text'
