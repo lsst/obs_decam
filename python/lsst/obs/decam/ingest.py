@@ -19,7 +19,9 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-
+import os
+import re
+import lsst.afw.image as afwImage
 from lsst.pipe.tasks.ingest import ParseTask
 
 def parseExtname(md):
@@ -33,6 +35,74 @@ def parseExtname(md):
     return side, ccd
 
 class DecamParseTask(ParseTask):
+    def __init__(self, *args, **kwargs):
+        super(ParseTask, self).__init__(*args, **kwargs)
+        
+        self.expnumMapper  = None
+
+        # Note that these should be syncronized with the fields in
+        # root.register.columns defined in config/ingest.py
+        self.instcalPrefix = "instCal"
+        self.dqmaskPrefix  = "dqmask"
+        self.wtmapPrefix   = "wtmap"
+
+    def _listdir(self, path, prefix):
+        for file in os.listdir(path):
+            fileName = os.path.join(path, file)
+            md = afwImage.readMetadata(fileName)
+            if not "EXPNUM" in md.names():
+                return
+            expnum = md.get("EXPNUM")
+            if not expnum in self.expnumMapper.keys():
+                self.expnumMapper[expnum] = {self.instcalPrefix: None,
+                                             self.wtmapPrefix: None,
+                                             self.dqmaskPrefix: None}
+            self.expnumMapper[expnum][prefix] = fileName
+            
+    def buildExpnumMapper(self, basepath):
+        self.expnumMapper = {}
+        
+        instcalPath = basepath
+        dqmaskPath  = re.sub(self.instcalPrefix, self.dqmaskPrefix, instcalPath)
+        wtmapPath   = re.sub(self.instcalPrefix, self.wtmapPrefix, instcalPath)
+        if not os.path.isdir(dqmaskPath):
+            raise OSError, "Directory %s does not exist" % (dqmaskPath)
+        if not os.path.isdir(wtmapPath):
+            raise OSError, "Directory %s does not exist" % (wtmapPath)
+
+        # Traverse each directory and extract the expnums
+        for path, prefix in zip((instcalPath, dqmaskPath, wtmapPath),
+                                (self.instcalPrefix, self.dqmaskPrefix, self.wtmapPrefix)):
+            self._listdir(path, prefix)
+        
+    def getInfo(self, filename):
+
+        """ The science pixels, mask, and weight (inverse variance)
+        are stored in separate files each with a unique name but with
+        a common unique identifier EXPNUM in the FITS header.  We have
+        to aggregate the 3 filenames for a given EXPNUM and return
+        this information along with that returned by the base class.
+
+        We expect a directory structure that looks like the following:
+
+          dqmask/ instCal/ wtmap/
+
+        The user creates the registry by running ingest.py on instCal/*.fits.
+        """
+        if self.expnumMapper is None:
+            self.buildExpnumMapper(os.path.dirname(os.path.abspath(filename)))
+
+        # Note that phuInfo will have
+        #   'side': 'X', 'ccd': 0
+        phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
+        for num, info in enumerate(infoList):
+            expnum = info["visit"]
+            info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
+            info[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
+            info[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
+
+        return phuInfo, infoList
+    
     def translate_side(self, md):
         side, ccd = parseExtname(md)
         return side
@@ -41,12 +111,3 @@ class DecamParseTask(ParseTask):
         side, ccd = parseExtname(md)
         return ccd
 
-    def translate_object(self, md):
-        obj = None
-        if md.exists("OBJECT"):
-            obj = md.get("OBJECT").strip()
-        if obj is None or len(obj) == 0 and md.exists("OBSTYPE"):
-            obj = md.get("OBSTYPE").strip()
-        if obj is None or len(obj) == 0:
-            return "UNKNOWN"
-        return obj

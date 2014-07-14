@@ -33,12 +33,13 @@ import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
-class DecamMapper(CameraMapper):
+class DecamInstcalMapper(CameraMapper):
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_decam", "DecamMapper.paf", "policy")
+        #policyFile = pexPolicy.DefaultPolicyFile("obs_decam", "DecamMapper.paf", "policy")
+        policyFile = pexPolicy.DefaultPolicyFile("obs_lsstSim", "LsstSimMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
-        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(DecamInstcalMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350)
         afwImageUtils.defineFilter('g', lambdaEff=450)
