@@ -45,6 +45,7 @@ exposures: {
         tables:      "raw"
         columns:     "visit"
         columns:     "ccd"
+        #Jim C.'s paf calls this an lsst.afw.math.BackgroundList.
     }
 
 }
@@ -87,12 +88,11 @@ datasets: {
         tables:        raw_skyTile
     }
     processCcd_config: {
-        template:      "%(visit)07d/config/config-%(visit)07d_%(ccd)02d.py"
+        template:      "config/processCcd.py"
         python:        "lsst.pipe.tasks.processCcd.ProcessCcdConfig"
         persistable:      "Config"
         storage:    "ConfigStorage"
         tables:        raw
-        tables:        raw_skyTile
     }
     processCcd_metadata: {
         template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccd)02d.boost"
@@ -100,7 +100,22 @@ datasets: {
         persistable:        "PropertySet"
         storage:    "BoostStorage"
         tables:        raw
-        tables:        raw_skyTile
     }
 
+    src_schema: {
+        template:      "schema/src.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:        "ignored"
+        storage:    "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    icSrc_schema: {
+        template:      "schema/icSrc.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:        "ignored"
+        storage:    "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
 }
