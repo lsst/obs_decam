@@ -45,11 +45,12 @@ class DecamInstcalMapper(CameraMapper):
         afwImageUtils.defineFilter('r', lambdaEff=600)
         afwImageUtils.defineFilter('i', lambdaEff=750)
         afwImageUtils.defineFilter('z', lambdaEff=900)
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y') # Urgh!
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y')
 
     def _extractDetectorName(self, dataId):
         ccd = dataId['ccd']
-        return "%d" % (ccd)
+        side = dataId['side']
+        return "%s%d" % (side, ccd)
 
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
@@ -57,38 +58,27 @@ class DecamInstcalMapper(CameraMapper):
         @param ccdSerial (string) CCD serial number
         @return (string) path to the defects file or None if not available
         """
-        return None # XXX FIXME
+        return None 
 
+    def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
+        return self._computeCcdExposureId(dataId)
+    def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
+        return 32 # not really, but this leaves plenty of space for sources
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
 
         @param dataId (dict) Data identifier with visit, ccd
         """
-        pathId = self._transformId(dataId)
-        visit = pathId['visit']
-        ccd = pathId['ccd']
-        return "%d%d" % (visit, ccd)
+        visit = dataId['visit']
+        ccd = dataId['ccd']
+        side = dataId['side']
+        return "%07d0%d%d" % (visit, 1 if side=="N" else 0, ccd)
 
-    def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
-        return self._computeCcdExposureId(dataId)
 
-    def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
-        return 32 # not really, but this leaves plenty of space for sources
 
-    def _computeStackExposureId(self, dataId):
-        """Compute the 64-bit (long) identifier for a Stack exposure.
-
-        @param dataId (dict) Data identifier with stack, patch, filter
-        """
-        nPatches = 1000000
-        return (long(dataId["stack"]) * nPatches + long(dataId["patch"]))
-
-    def bypass_stackExposureId(self, datasetType, pythonType, location, dataId):
-        return self._computeStackExposureId(dataId)
-
-    def bypass_stackExposureId_bits(self, datasetType, pythonType, location, dataId):
-        return 32 # not really, but this leaves plenty of space for sources
-
+    def bypass_raw(self, datasetType, pythonType, butlerLocation, dataId):
+        print "CAW"
+        
     def std_raw(self, image, dataId):
         """Fix missing header keywords"""
 

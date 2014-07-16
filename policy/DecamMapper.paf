@@ -3,118 +3,149 @@
 needCalibRegistry: false
 
 levels: {
-    skyTile: "visit" "ccd"
-    visit: "ccd"
-    ccd: "ccd"
+    skyTile: "visit" "ccdnum"
+    visit: "visit" "ccdnum"
+    ccd: "ccdnum"
 }
 defaultLevel: "ccd"
 defaultSubLevels: {
-    skyTile: "ccd"
-    visit: "ccd"
+    skyTile: "ccdnum"
+    visit: "ccdnum"
 }
 
 camera: "../decam/camGeom"
 
 exposures: {
     raw: {
-        template:    "%(visit)07d/dec%(visit)07d.fits[%(ccd)d]"
+        template:    "%(visit)07d/decam%(visit)07d.fits[%(ccdnum)d]"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
-        level:       "Ccd"
+        level:       "ccd"
         tables:      "raw"
         columns:     "visit"
-        columns:     "ccd"
+        columns:     "ccdnum"
     }
+
+    instcal: {
+        template:    "%(visit)07d/instcal%(visit)07d.fits[%(ccdnum)d]"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+        columns:     "visit"
+        columns:     "ccdnum"
+    }
+    wtmap: {
+        template:    "%(visit)07d/wtmap%(visit)07d.fits[%(ccdnum)d]"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+        columns:     "visit"
+        columns:     "ccdnum"
+    }
+    dqmask: {
+        template:    "%(visit)07d/dqmask%(visit)07d.fits[%(ccdnum)d]"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+        columns:     "visit"
+        columns:     "ccdnum"
+    }
+
     calexp: {
-        template:    "%(visit)07d/calexp/calexp-%(visit)07d_%(ccd)02d.fits"
+        template:    "%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
-        level:       "Ccd"
+        level:       "ccd"
         tables:      "raw"
         columns:     "visit"
-        columns:     "ccd"
+        columns:     "ccdnum"
     }
     calexpBackground: {
-        template:    "%(visit)07d/calexp/bkgd-calexp-%(visit)07d_%(ccd)02d.fits"
+        template:    "%(visit)07d/calexp/bkgd-calexp-%(visit)07d_%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
         storage:     "FitsStorage"
-        level:       "Ccd"
+        level:       "ccd"
         tables:      "raw"
         columns:     "visit"
-        columns:     "ccd"
-        #Jim C.'s paf calls this an lsst.afw.math.BackgroundList.
+        columns:     "ccdnum"
     }
 
 }
 
 datasets: {
     psf: {
-        template:      "%(visit)07d/psf/psf-%(visit)07d_%(ccd)02d.boost"
+        template:      "%(visit)07d/psf/psf-%(visit)07d_%(ccdnum)02d.boost"
         python:        "lsst.afw.detection.Psf"
         persistable:   "Psf"
         storage:       "BoostStorage"
         tables:        "raw"
     }
     apCorr: {
-        template:      "%(visit)07d/apCorr/apCorr-%(visit)07d_%(ccd)02d.pickle"
+        template:      "%(visit)07d/apCorr/apCorr-%(visit)07d_%(ccdnum)02d.pickle"
         python:        "lsst.meas.algorithms.ApertureCorrection"
         persistable:   "ApertureCorrection"
         storage:       "PickleStorage"
         tables:        "raw"
     }
     icSrc: {
-        template:      "%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccd)02d.fits"
+        template:      "%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     src: {
-        template:      "%(visit)07d/src/src-%(visit)07d_%(ccd)02d.fits"
+        template:      "%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
     icMatch: {
-        template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccd)02d.fits"
+        template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.table.BaseCatalog"
-        persistable:        "BaseCatalog"
-        storage:    "FitsCatalogStorage"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
     }
-    processCcd_config: {
-        template:      "config/processCcd.py"
-        python:        "lsst.pipe.tasks.processCcd.ProcessCcdConfig"
-        persistable:      "Config"
-        storage:    "ConfigStorage"
+    processCcdDecam_config: {
+        template:      "config/processCcdDecam.py"
+        python:        "lsst.obs.decam.processCcdDecam.ProcessCcdDecamConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
         tables:        raw
     }
     processCcd_metadata: {
-        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccd)02d.boost"
+        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
         python:        "lsst.daf.base.PropertySet"
-        persistable:        "PropertySet"
-        storage:    "BoostStorage"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
         tables:        raw
     }
 
     src_schema: {
         template:      "schema/src.fits"
         python:        "lsst.afw.table.SourceCatalog"
-        persistable:        "ignored"
-        storage:    "FitsCatalogStorage"
+        persistable:   "ignored"
+        storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
     }
     icSrc_schema: {
         template:      "schema/icSrc.fits"
         python:        "lsst.afw.table.SourceCatalog"
-        persistable:        "ignored"
-        storage:    "FitsCatalogStorage"
+        persistable:   "ignored"
+        storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
     }

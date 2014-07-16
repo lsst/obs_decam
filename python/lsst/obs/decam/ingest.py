@@ -22,7 +22,7 @@
 import os
 import re
 import lsst.afw.image as afwImage
-from lsst.pipe.tasks.ingest import ParseTask
+from lsst.pipe.tasks.ingest import ParseTask, IngestTask
 
 def parseExtname(md):
     side, ccd = "X", 0
@@ -34,6 +34,34 @@ def parseExtname(md):
     ccd = int(extname[1:])
     return side, ccd
 
+class DecamIngestTask(IngestTask):
+    def __init__(self, *args, **kwargs):
+        super(DecamIngestTask, self).__init__(*args, **kwargs)
+        
+    def run(self, args):
+        """Ingest all specified files and add them to the registry"""
+        registry = self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None
+        for infile in args.files:
+            fileInfo, hduInfoList = self.parse.getInfo(infile)
+            if len(hduInfoList) > 0:
+                outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
+                outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
+                outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
+
+                ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
+                ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
+                ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
+            
+                if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
+                    continue
+            
+            for info in hduInfoList:
+                self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
+                
+        self.register.addVisits(registry, dryrun=args.dryrun)
+        if not args.dryrun:
+            registry.commit()
+
 class DecamParseTask(ParseTask):
     def __init__(self, *args, **kwargs):
         super(ParseTask, self).__init__(*args, **kwargs)
@@ -42,7 +70,7 @@ class DecamParseTask(ParseTask):
 
         # Note that these should be syncronized with the fields in
         # root.register.columns defined in config/ingest.py
-        self.instcalPrefix = "instCal"
+        self.instcalPrefix = "instcal"
         self.dqmaskPrefix  = "dqmask"
         self.wtmapPrefix   = "wtmap"
 
@@ -65,6 +93,11 @@ class DecamParseTask(ParseTask):
         instcalPath = basepath
         dqmaskPath  = re.sub(self.instcalPrefix, self.dqmaskPrefix, instcalPath)
         wtmapPath   = re.sub(self.instcalPrefix, self.wtmapPrefix, instcalPath)
+        if instcalPath == dqmaskPath:
+            raise RuntimeError, "instcal and mask directories are the same"
+        if instcalPath == wtmapPath:
+            raise RuntimeError, "instcal and weight map directories are the same"
+            
         if not os.path.isdir(dqmaskPath):
             raise OSError, "Directory %s does not exist" % (dqmaskPath)
         if not os.path.isdir(wtmapPath):
@@ -76,18 +109,20 @@ class DecamParseTask(ParseTask):
             self._listdir(path, prefix)
         
     def getInfo(self, filename):
-
-        """ The science pixels, mask, and weight (inverse variance)
-        are stored in separate files each with a unique name but with
-        a common unique identifier EXPNUM in the FITS header.  We have
+        """
+        The science pixels, mask, and weight (inverse variance) are
+        stored in separate files each with a unique name but with a
+        common unique identifier EXPNUM in the FITS header.  We have
         to aggregate the 3 filenames for a given EXPNUM and return
         this information along with that returned by the base class.
 
         We expect a directory structure that looks like the following:
 
-          dqmask/ instCal/ wtmap/
+          dqmask/ instcal/ wtmap/
 
-        The user creates the registry by running ingest.py on instCal/*.fits.
+        The user creates the registry by running
+
+          ingestImagesDecam.py outputRepository --mode=link instcal/*fits
         """
         if self.expnumMapper is None:
             self.buildExpnumMapper(os.path.dirname(os.path.abspath(filename)))
@@ -95,6 +130,10 @@ class DecamParseTask(ParseTask):
         # Note that phuInfo will have
         #   'side': 'X', 'ccd': 0
         phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
+        expnum = phuInfo["visit"]
+        phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
+        phuInfo[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
+        phuInfo[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
         for idx, info in enumerate(infoList):
             expnum = info["visit"]
             info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
@@ -114,4 +153,20 @@ class DecamParseTask(ParseTask):
     @staticmethod
     def getExtensionName(md):
         return md.get('EXTNAME')
+
+    def getDestination(self, butler, info, filename, filetype):
+        """Get destination for the file
+
+        @param butler      Data butler
+        @param info        File properties, used as dataId for the butler
+        @param filename    Input filename
+        @return Destination filename
+        """
+        raw = butler.get("%s_filename"%(filetype), info)[0]
+        # Ensure filename is devoid of cfitsio directions about HDUs
+        c = raw.find("[")
+        if c > 0:
+            raw = raw[:c]
+        return raw
+
 

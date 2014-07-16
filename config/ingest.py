@@ -26,9 +26,9 @@ root.register.columns = {'visit':    'int',
                          'taiObs':   'text',
                          'expTime':  'double',
                          'ccdnum':   'int',
-                         'instCal':  'text',
+                         'instcal':  'text',
                          'dqmask':   'text',
                          'wtmap':    'text'
                          }
 root.register.visit = ['visit', 'date', 'filter']
-root.register.unique = ['visit', 'side', 'ccd']
+root.register.unique = ['visit', 'ccdnum']
