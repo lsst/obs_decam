@@ -111,3 +111,7 @@ class DecamParseTask(ParseTask):
         side, ccd = parseExtname(md)
         return ccd
 
+    @staticmethod
+    def getExtensionName(md):
+        return md.get('EXTNAME')
+

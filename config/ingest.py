@@ -29,4 +29,5 @@ root.register.columns = {'visit':    'int',
                          'dqmask':   'text',
                          'wtmap':    'text'
                          }
+root.register.visit = ['visit', 'date', 'filter']
 root.register.unique = ['visit', 'side', 'ccd']
