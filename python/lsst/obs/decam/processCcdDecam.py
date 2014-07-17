@@ -49,7 +49,7 @@ class ProcessCcdDecamTask(ProcessImageTask):
         Subclasses may wish to override, e.g. to change the dataset type or data ref level
         """
         parser = pipeBase.ArgumentParser(name=cls._DefaultName)
-        parser.add_id_argument("--id", "raw", "data ID, e.g. visit=155293 ccd=1 side='N'")
+        parser.add_id_argument("--id", "instcal", "data ID, e.g. visit=155293 ccdnum=10")
         return parser
 
     def makeIdFactory(self, sensorRef):
@@ -71,7 +71,7 @@ class ProcessCcdDecamTask(ProcessImageTask):
         - sources: detected source if config.doPhotometry, else None
         """
         self.log.info("Processing %s" % (sensorRef.dataId))
-        exp = sensorRef.get("raw")
+        exp = sensorRef.get("instcal")
 
         # delegate most of the work to ProcessImageTask
         result = self.process(sensorRef, exp)

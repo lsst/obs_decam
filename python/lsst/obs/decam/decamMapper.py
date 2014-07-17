@@ -22,14 +22,9 @@
 
 
 import os
-import pwd
-
-import lsst.daf.base as dafBase
-import lsst.afw.geom as afwGeom
-import lsst.afw.coord as afwCoord
+import numpy as np
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
-
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
@@ -48,9 +43,8 @@ class DecamInstcalMapper(CameraMapper):
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y')
 
     def _extractDetectorName(self, dataId):
-        ccd = dataId['ccd']
-        side = dataId['side']
-        return "%s%d" % (side, ccd)
+        ccdnum = dataId['ccdnum']
+        return "%d" % (ccdnum)
 
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
@@ -70,43 +64,50 @@ class DecamInstcalMapper(CameraMapper):
         @param dataId (dict) Data identifier with visit, ccd
         """
         visit = dataId['visit']
-        ccd = dataId['ccd']
-        side = dataId['side']
-        return "%07d0%d%d" % (visit, 1 if side=="N" else 0, ccd)
+        ccdnum = dataId['ccdnum']
+        return "%07d%02d" % (visit, ccdnum)
 
+    def translate_dqmask(self, dqmask):
+        # TODO: make a class member variable that knows the mappings
+        # below instead of hard-coding them
+        dqmArr    = dqmask.getArray()
+        mask      = afwImage.MaskU(dqmask.getDimensions())
+        mArr      = mask.getArray()
+        idxBad    = np.where(dqmArr & 1)
+        idxSat    = np.where(dqmArr & 2)
+        idxIntrp  = np.where(dqmArr & 4) 
+        idxCr     = np.where(dqmArr & 16)
+        idxBleed  = np.where(dqmArr & 64)
+        mArr[idxBad]   |= mask.getPlaneBitMask("BAD")
+        mArr[idxSat]   |= mask.getPlaneBitMask("SAT")
+        mArr[idxIntrp] |= mask.getPlaneBitMask("INTRP")
+        mArr[idxCr]    |= mask.getPlaneBitMask("CR")
+        mArr[idxBleed] |= mask.getPlaneBitMask("SAT")
+        return mask
 
-
-    def bypass_raw(self, datasetType, pythonType, butlerLocation, dataId):
-        print "CAW"
+    def translate_wtmap(self, wtmap):
+        var   = 1.0 / wtmap.getArray()
+        varim = afwImage.ImageF(var)
+        return varim
         
-    def std_raw(self, image, dataId):
-        """Fix missing header keywords"""
+    def bypass_instcal(self, datasetType, pythonType, butlerLocation, dataId):
+        # Workaround until I can access the butler
+        instcalMap  = self.map_instcal(dataId)
+        dqmaskMap   = self.map_dqmask(dataId)
+        wtmapMap    = self.map_wtmap(dataId)
+        instcalType = getattr(afwImage, instcalMap.getPythonType().split(".")[-1])
+        dqmaskType  = getattr(afwImage, dqmaskMap.getPythonType().split(".")[-1])
+        wtmapType   = getattr(afwImage, wtmapMap.getPythonType().split(".")[-1])
+        instcal     = instcalType(instcalMap.getLocations()[0])
+        dqmask      = dqmaskType(dqmaskMap.getLocations()[0])
+        wtmap       = wtmapType(wtmapMap.getLocations()[0])
 
-        md = image.getMetadata()
-        md.add('CRVAL2', 0.0)
-        if md.exists("BACKMEAN") and md.exists("ARAWGAIN"):
-           backmean = md.get("BACKMEAN")
-           gain = md.get("ARAWGAIN")
-        else:
-           backmean = 0.0
-           gain = 1.0
-        filterName = md.get("FILTER")[0]
-        if filterName == "Y":
-            filterName = "z"
+        mask        = self.translate_dqmask(dqmask)
+        variance    = self.translate_wtmap(wtmap)
 
-        # Not until the camera part gets worked out
-        #return super(DecamMapper, self).std_raw(image, dataId)
-
-        # we have to deal with the variance ourselves, at least for the test data I got # ACB
-        exp = exposureFromImage(image)
-        mi  = exp.getMaskedImage()
-        var = mi.getVariance().Factory(mi.getImage())
-        var += backmean
-        var /= gain
-        mi2 = mi.Factory(mi.getImage(), mi.getMask(), var)
-        exp2 = exp.Factory(mi2, exp.getWcs())
-
-        # hacking around filter issues
-        exp2.setFilter(afwImage.Filter(filterName))
-        
-        return exp2
+	mi          = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
+	md          = instcal.getMetadata()
+	wcs         = afwImage.makeWcs(md)
+	exp         = afwImage.ExposureF(mi, wcs)
+        exp.setMetadata(md) # Do we need to remove WCS info?
+        return exp
