@@ -43,8 +43,13 @@ class DecamInstcalMapper(CameraMapper):
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y')
 
     def _extractDetectorName(self, dataId):
-        ccdnum = dataId['ccdnum']
-        return "%d" % (ccdnum)
+        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
+                                   (dataId['ccdnum'], dataId['visit']))
+        if len(nameTuple) > 1:
+            raise RuntimeError("More than one name returned")
+        if len(nameTuple) == 0:
+            raise RuntimeError("No name found for dataId: %s"%(dataId))
+        return "%s%i" % (nameTuple[0][0], nameTuple[0][1])
 
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
