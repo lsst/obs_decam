@@ -12,8 +12,10 @@ for file in infiles:
 
     data     = np.loadtxt(file, unpack=True, comments="#")
     flags    = data[6].astype(np.int) 
+    isStar   = flags & 1                  # star galaxy separation : 0/1  galaxy/star
     isNotSat = np.logical_not(flags & 2)  # saturated star in one of the filters
-    idx      = np.where(isNotSat)
+    isBright = data[9] < 23               # r-band mag
+    idx      = np.where(isNotSat & isStar & isBright)
 
     ra       = data[3][idx]
     decl     = data[4][idx]
@@ -22,12 +24,12 @@ for file in infiles:
     r        = data[9][idx]
     i        = data[10][idx]
     z        = data[11][idx]
-    du       = data[12][idx]
-    dg       = data[13][idx]
-    dr       = data[14][idx]
-    di       = data[15][idx]
-    dz       = data[16][idx]
-    isStar   = flags[idx] & 1                  # star galaxy separation : 0/1  galaxy/star
+    du       = np.sqrt(0.001**2 + data[12][idx]**2)
+    dg       = np.sqrt(0.001**2 + data[13][idx]**2)
+    dr       = np.sqrt(0.001**2 + data[14][idx]**2)
+    di       = np.sqrt(0.001**2 + data[15][idx]**2)
+    dz       = np.sqrt(0.001**2 + data[16][idx]**2)
+    isStar   = isStar[idx]
     isVar    = np.zeros_like(isStar)
     ids      = np.cumsum(np.ones_like(isStar)) + nobj
     nobj     = max(ids)
@@ -66,7 +68,7 @@ have trouble, reference http://astrometry.net/doc/build-index.html
  build-astrometry-index -1 index-${P}00.fits -o index-${P}02.fits -I ${P}02 -P 2 -S r -L 20 -E -M -j 0.4
  build-astrometry-index -1 index-${P}00.fits -o index-${P}03.fits -I ${P}03 -P 3 -S r -L 20 -E -M -j 0.4
  build-astrometry-index -1 index-${P}00.fits -o index-${P}04.fits -I ${P}04 -P 4 -S r -L 20 -E -M -j 0.4
- ls index-1234567* | awk '{printf("modhead %s+7 REFCAT '1234567'\n",$1)}' | sh
+ ls index-1234567* | awk '{printf("modhead %s+7 REFCAT '1234567'\\n",$1)}' | sh
 
 We only needed astrometry.net-0.50 to build the index files, so re-setup the default one
 
