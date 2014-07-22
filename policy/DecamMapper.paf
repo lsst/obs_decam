@@ -69,16 +69,13 @@ exposures: {
         columns:     "ccdnum"
     }
     calexpBackground: {
-        template:    "%(visit)07d/calexp/bkgd-calexp-%(visit)07d_%(ccdnum)02d.fits"
-        python:      "lsst.afw.image.ImageF"
-        persistable: "ImageF"
-        storage:     "FitsStorage"
-        level:       "ccd"
-        tables:      "raw"
-        columns:     "visit"
-        columns:     "ccdnum"
+        template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.math.BackgroundList"
+        persistable:   "PurePythonClass"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
     }
-
 }
 
 datasets: {
@@ -136,7 +133,7 @@ datasets: {
     src_schema: {
         template:      "schema/src.fits"
         python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "ignored"
+        persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
@@ -144,7 +141,7 @@ datasets: {
     icSrc_schema: {
         template:      "schema/icSrc.fits"
         python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "ignored"
+        persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
