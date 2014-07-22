@@ -19,14 +19,13 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-
-
-import os
+import os, re
 import numpy as np
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
+import lsst.daf.base as dafBase
 
 np.seterr(divide="ignore")
 
@@ -116,5 +115,14 @@ class DecamInstcalMapper(CameraMapper):
 	md          = instcal.getMetadata()
 	wcs         = afwImage.makeWcs(md)
 	exp         = afwImage.ExposureF(mi, wcs)
-        exp.setMetadata(md) # Do we need to remove WCS info?
+
+        # Set the calib by hand; need to grab the zeroth extension
+        header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocations()[0])
+        md0 = afwImage.readMetadata(header)
+        calib = afwImage.Calib()
+        calib.setExptime(md0.get("EXPTIME"))
+        calib.setFluxMag0(10**(-0.4 * md0.get("MAGZERO")))
+        exp.setCalib(calib)
+        
+        exp.setMetadata(md) # Do we need to remove WCS/calib info?
         return exp
