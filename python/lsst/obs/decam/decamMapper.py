@@ -121,7 +121,7 @@ class DecamInstcalMapper(CameraMapper):
         md0 = afwImage.readMetadata(header)
         calib = afwImage.Calib()
         calib.setExptime(md0.get("EXPTIME"))
-        calib.setFluxMag0(10**(-0.4 * md0.get("MAGZERO")))
+        calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
         
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
