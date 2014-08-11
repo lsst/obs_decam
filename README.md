@@ -39,6 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Use
 ===
 
+Documentation for this can be found at:
+        $ https://confluence.lsstcorp.org/display/LSWUG/Process+DECam+Images
+Currently, there is only support for "instcal" (plus dqmask and wtmap) processing.
+
 1. Create a data repository directory:
 
         $ mkdir /path/to/repo
@@ -57,39 +61,10 @@ Use
         $ cd /path/to/data
         $ setup -t <CURRENT_TAG> pipe_tasks
         $ setup -k -t <CURRENT_TAG> obs_decam
-        $ ingestImages.py /path/to/repo --mode=link *.fits
+        $ ingestImagesDecam.py /path/to/repo --mode=link instcal/*.fits
 
 4. Process data
 
         $ setup -t <CURRENT_TAG> pipe_tasks
         $ setup -k -t <CURRENT_TAG> obs_decam
-        $ processCcd.py /path/to/repo --id visit=12345 ccd=5 side=N
-
-Data identifiers
-================
-
-The following keywords are available when specifying a data identifier:
-* `proposal`: proposal identifier
-* `visit`: exposure number
-* `taiObs`: actually UTC, but not very useful for specifying data, as must match exactly
-* `expTime`
-* `date`
-* `filter`
-* `side`: `N` or `S`
-* `ccd`: CCD number; together with side, specifies a unique CCD
-* `object`: object name
-
-`visit`, `side`, `ccd` are required to specify a unique CCD image.
-
-Notes by ACB
-================
-
-This has been modified to run the equivalent of processCcd on Community-pipeline reduced Decam data.  A couple of features: 
-  * the input data currently need to reside in the --ouput directory.
-  * file naming convention is "%(visit)07d/dec%(visit)07d.fits.fz[%(ccd)d]"
-
-Example commands to run the code are below:
-  * setup pipe_tasks
-  * setup obs_decam
-  * setup astrometry_net_data
-  * python ~/python/obs_decam/bin/processCcdDecam.py . --id visit=1656128 ccd=1 --output .
+        $ processCcdDecam.py /path/to/repo --id visit=283453 ccdnum=10 --config calibrate.doPhotoCal=False calibrate.doAstrometry=False calibrate.measurePsf.starSelector.name="secondMoment" doWriteCalibrateMatches=False --clobber-config

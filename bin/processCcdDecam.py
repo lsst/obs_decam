@@ -21,5 +21,4 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 from lsst.obs.decam.processCcdDecam import ProcessCcdDecamTask
-
 ProcessCcdDecamTask.parseAndRun()

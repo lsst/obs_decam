@@ -19,37 +19,38 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-
-
-import os
-import pwd
-
-import lsst.daf.base as dafBase
-import lsst.afw.geom as afwGeom
-import lsst.afw.coord as afwCoord
+import os, re
+import numpy as np
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
-
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
+import lsst.daf.base as dafBase
 
-class DecamMapper(CameraMapper):
+np.seterr(divide="ignore")
+
+class DecamInstcalMapper(CameraMapper):
     def __init__(self, inputPolicy=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile("obs_decam", "DecamMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
-        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(DecamInstcalMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350)
         afwImageUtils.defineFilter('g', lambdaEff=450)
         afwImageUtils.defineFilter('r', lambdaEff=600)
         afwImageUtils.defineFilter('i', lambdaEff=750)
         afwImageUtils.defineFilter('z', lambdaEff=900)
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y') # Urgh!
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y')
 
     def _extractDetectorName(self, dataId):
-        ccd = dataId['ccd']
-        return "%d" % (ccd)
+        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
+                                   (dataId['ccdnum'], dataId['visit']))
+        if len(nameTuple) > 1:
+            raise RuntimeError("More than one name returned")
+        if len(nameTuple) == 0:
+            raise RuntimeError("No name found for dataId: %s"%(dataId))
+        return "%s%i" % (nameTuple[0][0], nameTuple[0][1])
 
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
@@ -57,66 +58,71 @@ class DecamMapper(CameraMapper):
         @param ccdSerial (string) CCD serial number
         @return (string) path to the defects file or None if not available
         """
-        return None # XXX FIXME
+        return None 
 
+    def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
+        return self._computeCcdExposureId(dataId)
+    def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
+        return 32 # not really, but this leaves plenty of space for sources
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
 
         @param dataId (dict) Data identifier with visit, ccd
         """
-        pathId = self._transformId(dataId)
-        visit = pathId['visit']
-        ccd = pathId['ccd']
-        return "%d%d" % (visit, ccd)
+        visit = dataId['visit']
+        ccdnum = dataId['ccdnum']
+        return "%07d%02d" % (visit, ccdnum)
 
-    def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
-        return self._computeCcdExposureId(dataId)
+    def translate_dqmask(self, dqmask):
+        # TODO: make a class member variable that knows the mappings
+        # below instead of hard-coding them
+        dqmArr    = dqmask.getArray()
+        mask      = afwImage.MaskU(dqmask.getDimensions())
+        mArr      = mask.getArray()
+        idxBad    = np.where(dqmArr & 1)
+        idxSat    = np.where(dqmArr & 2)
+        idxIntrp  = np.where(dqmArr & 4) 
+        idxCr     = np.where(dqmArr & 16)
+        idxBleed  = np.where(dqmArr & 64)
+        mArr[idxBad]   |= mask.getPlaneBitMask("BAD")
+        mArr[idxSat]   |= mask.getPlaneBitMask("SAT")
+        mArr[idxIntrp] |= mask.getPlaneBitMask("INTRP")
+        mArr[idxCr]    |= mask.getPlaneBitMask("CR")
+        mArr[idxBleed] |= mask.getPlaneBitMask("SAT")
+        return mask
 
-    def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
-        return 32 # not really, but this leaves plenty of space for sources
-
-    def _computeStackExposureId(self, dataId):
-        """Compute the 64-bit (long) identifier for a Stack exposure.
-
-        @param dataId (dict) Data identifier with stack, patch, filter
-        """
-        nPatches = 1000000
-        return (long(dataId["stack"]) * nPatches + long(dataId["patch"]))
-
-    def bypass_stackExposureId(self, datasetType, pythonType, location, dataId):
-        return self._computeStackExposureId(dataId)
-
-    def bypass_stackExposureId_bits(self, datasetType, pythonType, location, dataId):
-        return 32 # not really, but this leaves plenty of space for sources
-
-    def std_raw(self, image, dataId):
-        """Fix missing header keywords"""
-
-        md = image.getMetadata()
-        md.add('CRVAL2', 0.0)
-        if md.exists("BACKMEAN") and md.exists("ARAWGAIN"):
-           backmean = md.get("BACKMEAN")
-           gain = md.get("ARAWGAIN")
-        else:
-           backmean = 0.0
-           gain = 1.0
-        filterName = md.get("FILTER")[0]
-        if filterName == "Y":
-            filterName = "z"
-
-        # Not until the camera part gets worked out
-        #return super(DecamMapper, self).std_raw(image, dataId)
-
-        # we have to deal with the variance ourselves, at least for the test data I got # ACB
-        exp = exposureFromImage(image)
-        mi  = exp.getMaskedImage()
-        var = mi.getVariance().Factory(mi.getImage())
-        var += backmean
-        var /= gain
-        mi2 = mi.Factory(mi.getImage(), mi.getMask(), var)
-        exp2 = exp.Factory(mi2, exp.getWcs())
-
-        # hacking around filter issues
-        exp2.setFilter(afwImage.Filter(filterName))
+    def translate_wtmap(self, wtmap):
+        var   = 1.0 / wtmap.getArray()
+        varim = afwImage.ImageF(var)
+        return varim
         
-        return exp2
+    def bypass_instcal(self, datasetType, pythonType, butlerLocation, dataId):
+        # Workaround until I can access the butler
+        instcalMap  = self.map_instcal(dataId)
+        dqmaskMap   = self.map_dqmask(dataId)
+        wtmapMap    = self.map_wtmap(dataId)
+        instcalType = getattr(afwImage, instcalMap.getPythonType().split(".")[-1])
+        dqmaskType  = getattr(afwImage, dqmaskMap.getPythonType().split(".")[-1])
+        wtmapType   = getattr(afwImage, wtmapMap.getPythonType().split(".")[-1])
+        instcal     = instcalType(instcalMap.getLocations()[0])
+        dqmask      = dqmaskType(dqmaskMap.getLocations()[0])
+        wtmap       = wtmapType(wtmapMap.getLocations()[0])
+
+        mask        = self.translate_dqmask(dqmask)
+        variance    = self.translate_wtmap(wtmap)
+
+	mi          = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
+	md          = instcal.getMetadata()
+	wcs         = afwImage.makeWcs(md)
+	exp         = afwImage.ExposureF(mi, wcs)
+
+        # Set the calib by hand; need to grab the zeroth extension
+        header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocations()[0])
+        md0 = afwImage.readMetadata(header)
+        calib = afwImage.Calib()
+        calib.setExptime(md0.get("EXPTIME"))
+        calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
+        exp.setCalib(calib)
+        
+        exp.setMetadata(md) # Do we need to remove WCS/calib info?
+        return exp

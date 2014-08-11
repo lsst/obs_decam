@@ -36,7 +36,7 @@ class ProcessCcdDecamTask(ProcessImageTask):
     """Process a CCD for SDSS
     """
     ConfigClass = ProcessCcdDecamConfig
-    _DefaultName = "processCcd"
+    _DefaultName = "processCcdDecam"
     dataPrefix = ""
 
     def __init__(self, **kwargs):
@@ -44,7 +44,13 @@ class ProcessCcdDecamTask(ProcessImageTask):
 
     @classmethod
     def _makeArgumentParser(cls):
-        return pipeBase.ArgumentParser(name=cls._DefaultName, datasetType="raw")        
+        """Create an argument parser
+
+        Subclasses may wish to override, e.g. to change the dataset type or data ref level
+        """
+        parser = pipeBase.ArgumentParser(name=cls._DefaultName)
+        parser.add_id_argument("--id", "instcal", "data ID, e.g. visit=155293 ccdnum=10")
+        return parser
 
     def makeIdFactory(self, sensorRef):
         expBits = 24
@@ -65,9 +71,10 @@ class ProcessCcdDecamTask(ProcessImageTask):
         - sources: detected source if config.doPhotometry, else None
         """
         self.log.info("Processing %s" % (sensorRef.dataId))
-        exp = sensorRef.get("raw")
+        exp = sensorRef.get("instcal")
 
         # delegate most of the work to ProcessImageTask
         result = self.process(sensorRef, exp)
         return result
+
 
