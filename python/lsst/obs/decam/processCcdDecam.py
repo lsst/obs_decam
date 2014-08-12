@@ -77,4 +77,6 @@ class ProcessCcdDecamTask(ProcessImageTask):
         result = self.process(sensorRef, exp)
         return result
 
-
+    #This needs to be fixed in pipe_tasks.  Issue number coming up.
+    def propagateCalibFlags(self, icSources, sources, matchRadius=1):
+        pass
