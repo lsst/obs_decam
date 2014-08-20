@@ -87,7 +87,7 @@ class DecamInstcalMapper(CameraMapper):
         mArr[idxBad]   |= mask.getPlaneBitMask("BAD")
         mArr[idxSat]   |= mask.getPlaneBitMask("SAT")
         mArr[idxIntrp] |= mask.getPlaneBitMask("INTRP")
-        mArr[idxCr]    |= mask.getPlaneBitMask("CR")
+        mArr[idxCr]    |= mask.getPlaneBitMask("CR") 
         mArr[idxBleed] |= mask.getPlaneBitMask("SAT")
         return mask
 
@@ -122,6 +122,9 @@ class DecamInstcalMapper(CameraMapper):
         calib = afwImage.Calib()
         calib.setExptime(md0.get("EXPTIME"))
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
+        assert(md0.get("TIMESYS") == "UTC")
+        tc = dafBase.DateTime(md0.get("MJD-OBS")+0.5*md0.get("EXPTIME"), dafBase.DateTime.MJD, dafBase.DateTime.UTC)
+        calib.setMidTime(tc)
         exp.setCalib(calib)
         
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
