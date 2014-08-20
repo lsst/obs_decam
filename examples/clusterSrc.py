@@ -10,11 +10,7 @@ import matplotlib.pyplot as plt
 
 doPlot = False
 
-def getSrc(visit, ccdnum, butler):
-    dataId = {"visit": visit, "ccdnum": ccdnum}
-
 if __name__ == "__main__":
-    import pdb; pdb.set_trace()
     root   = sys.argv[1]
     mapper = Mapper(root = root, calibRoot = None, outputRoot = None)
     butler = dafPersist.ButlerFactory(mapper = mapper).create()
@@ -41,27 +37,27 @@ if __name__ == "__main__":
                 fmagzero = calexp.getCalib().getFluxMag0()[0]
                 tc = calexp.getCalib().getMidTime().get(dafBase.DateTime.MJD, dafBase.DateTime.TAI)
                 if cat is None:
-                    # Extract original source schema, which we will add to
+                    # Extract original source schema, which we will add to using a schema mapper
                     schema = src.getSchema()
+                    smapper = afwTable.SchemaMapper(schema)
+                    smapper.addMinimalSchema(schema, True)
 
                     # Define what we will add to the schema for
                     # calibrated aperture and psf fluxes.  NOTE: when
                     # using lightcurves we always want to e.g. average
                     # in fluxes and convert to mags afterwards
-                    apCalKey = schema.addField("flux.ap.cal", type=np.float)
-                    psfCalKey = schema.addField("flux.psf.cal", type=np.float)
-                    visitKey = schema.addField("visit", type=np.int)
-                    taiKey = schema.addField("mjd.tai", type=np.double)
-                    print apCalKey, psfCalKey, visitKey, taiKey
+                    apCalKey = smapper.editOutputSchema().addField("flux.ap.cal", type=np.float)
+                    psfCalKey = smapper.editOutputSchema().addField("flux.psf.cal", type=np.float)
+                    visitKey = smapper.editOutputSchema().addField("visit", type=np.int)
+                    taiKey = smapper.editOutputSchema().addField("mjd.tai", type=np.double)
                     
-                    # Extract deblender keys
-                    nChildKey = schema.find("deblend.nchild").key
-                    tooManyKey = schema.find("deblend.too-many-peaks").key
-                    failedKey = schema.find("deblend.failed").key
-                    print nChildKey, tooManyKey, failedKey
-
                     # Create a source table with the modified source schema
-                    st = afwTable.SourceTable.make(schema)
+                    st = afwTable.SourceTable.make(smapper.getOutputSchema())
+
+                    # Extract deblender keys
+                    nChildKey = st.schema.find("deblend.nchild").key
+                    tooManyKey = st.schema.find("deblend.too-many-peaks").key
+                    failedKey = st.schema.find("deblend.failed").key
 
                     # Define what we intend to use for the aperture and psf fluxes
                     st.defineApFlux("flux.sinc")
@@ -72,24 +68,24 @@ if __name__ == "__main__":
                     # Create a source catalog with this modified schema
                     cat = afwTable.SourceCatalog(st)
 
-                for s in src:
-                    # Skip deblending errors
-                    print "DEBLEND"
-                    if s.get(tooManyKey) or s.get(failedKey) or (s.get(nChildKey)>0):
-                        continue
-                    print "DEBLEND DONE"
+                # Skip deblending errors
+                deblendSlice = (~(src.get(tooManyKey) | src.get(failedKey) | src.get(nChildKey)>0))
+                subSrc = src[deblendSlice]
 
-                    if doPlot:
-                        plt.plot(s.getCoord()[0], s.getCoord()[1], "%so"%(colors[cidx]))
+                if doPlot:
+                    plt.plot([x.getCoord()[0] for x in subSrc], [y.getCoord()[0] for y in subSrc], "%so"%(colors[cidx]))
 
-                    # Provide calibrated fluxes
-                    s.set(apCalKey, s.get(apKey)/fmagzero)
-                    s.set(psfCalKey, s.get(psfKey)/fmagzero)
-                    s.set(visitKey, visit)
-                    s.set(taiKey, tc)
-                    print "APPENDING"
-                    cat.append(s)
-                print "DONE"
+                # Create a temporary catalog with the new schema, and update the fields
+                tmp = afwTable.SourceCatalog(cat.getTable())
+                tmp.extend(subSrc, mapper=smapper)
+                tmp[taiKey][:] = tc
+                tmp[visitKey][:] = visit
+                tmp[apCalKey][:] = tmp.get(apKey)/fmagzero
+                tmp[psfCalKey][:] = tmp.get(psfKey)/fmagzero
+
+                # Extend the master catalog with this updated data; shallow copy
+                cat.extend(tmp, False)
+
             else:
                 print "UNABLE TO FIND", dataId
 
@@ -108,14 +104,20 @@ if __name__ == "__main__":
         afluxes= []
         pfluxes= []
         for s, src in enumerate(cluster):
-            print "Cluster %d, source %d, flux = %.3f %.3f" % (c, s, src.get(apKey), src.get(psfKey))
+            print "Cluster %d, source %d, flux = %.3f %.3f, visit=%d mjd.tai=%f" % (c, s, src.get(apKey), src.get(psfKey), src.get(visitKey), src.get(taiKey))
             afluxes.append(src.get(apCalKey))
             pfluxes.append(src.get(psfCalKey))
+        afluxes = np.array(afluxes)
+        pfluxes = np.array(pfluxes)
 
-        aMed = np.median(afluxes)
-        aStd = 0.741 * (np.percentile(afluxes, 75) - np.percentile(afluxes, 25))
-        pMed = np.median(pfluxes)
-        pStd = 0.741 * (np.percentile(pfluxes, 75) - np.percentile(pfluxes, 25))
-        print aMed, aStd, pMed, pStd
+        aIdx = np.isfinite(afluxes)
+        aMed = np.median(afluxes[aIdx])
+        aStd = 0.741 * (np.percentile(afluxes[aIdx], 75) - np.percentile(afluxes[aIdx], 25))
+
+        pIdx = np.isfinite(pfluxes)
+        pMed = np.median(pfluxes[pIdx])
+        pStd = 0.741 * (np.percentile(pfluxes[pIdx], 75) - np.percentile(pfluxes[pIdx], 25))
+
         print "Cluster %d, mean ap mag = %.3f, std = %.3f, mean psf mag = %.3f +/- %.3f" % (c, -2.5*np.log10(aMed), 2.5/np.log(10.0)*aStd/aMed,
                                                                                                -2.5*np.log10(pMed), 2.5/np.log(10.0)*pStd/pMed)
+        print
