@@ -46,7 +46,7 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
 1. Create a data repository directory:
 
         $ mkdir /path/to/repo
-        $ echo lsst.obs.decam.DecamMapper > /path/to/repo/_mapper
+        $ echo lsst.obs.decam.DecamInstcalMapper > /path/to/repo/_mapper
 
 2. Get and build obs_decam:
 
