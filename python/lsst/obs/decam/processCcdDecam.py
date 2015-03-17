@@ -77,6 +77,9 @@ class ProcessCcdDecamTask(ProcessImageTask):
         result = self.process(sensorRef, exp)
         return result
 
+    def getExposureId(self, sensorRef):
+        return long(sensorRef.get("ccdExposureId"))
+
     #This needs to be fixed in pipe_tasks.  Issue number coming up.
     def propagateCalibFlags(self, icSources, sources, matchRadius=1):
         pass

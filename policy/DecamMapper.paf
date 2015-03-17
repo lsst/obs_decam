@@ -79,6 +79,20 @@ exposures: {
 }
 
 datasets: {
+    ccdExposureId: {
+        template:     "ignored"
+        python:       "lsst.daf.base.PropertySet"
+        persistable:  "ignored"
+        storage:      "ignored"
+        tables:       "raw"
+    }
+    ccdExposureId_bits: {
+        template:     "ignored"
+        python:       "lsst.daf.base.PropertySet"
+        persistable:  "ignored"
+        storage:      "ignored"
+        tables:       "raw"
+    }
     psf: {
         template:      "%(visit)07d/psf/psf-%(visit)07d_%(ccdnum)02d.boost"
         python:        "lsst.afw.detection.Psf"
