@@ -73,6 +73,15 @@ class ProcessCcdDecamTask(ProcessImageTask):
         self.log.info("Processing %s" % (sensorRef.dataId))
         exp = sensorRef.get("instcal")
 
+        #hack to mask and replace pixels with negative variance
+        import numpy as np
+        mi = exp.getMaskedImage()
+        arr = mi.getVariance().getArray()
+        idxNegVar = np.where(arr < 0)
+        maskArr = mi.getMask().getArray()
+        maskArr[idxNegVar] = 5
+        arr[idxNegVar] = np.median(arr)
+
         # delegate most of the work to ProcessImageTask
         result = self.process(sensorRef, exp)
         return result
