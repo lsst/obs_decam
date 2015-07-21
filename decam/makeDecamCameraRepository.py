@@ -26,7 +26,7 @@ import os
 import re
 import shutil
 
-import eups
+import lsst.utils
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
 from lsst.afw.cameraGeom import (DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS)
@@ -178,7 +178,7 @@ if __name__ == "__main__":
     """
     Create the configs for building a camera.  
     """
-    baseDir = eups.productDir("obs_decam")
+    baseDir = lsst.utils.getPackageDir("obs_decam")
     defaultOutDir = os.path.join(os.path.normpath(baseDir), "description", "camera")
 
     parser = argparse.ArgumentParser()

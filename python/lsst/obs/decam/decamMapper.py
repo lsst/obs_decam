@@ -30,8 +30,10 @@ import lsst.daf.base as dafBase
 np.seterr(divide="ignore")
 
 class DecamInstcalMapper(CameraMapper):
+    packageName = 'obs_decam'
+
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_decam", "DecamMapper.paf", "policy")
+        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "DecamMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
         super(DecamInstcalMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
