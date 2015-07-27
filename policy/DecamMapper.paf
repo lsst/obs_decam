@@ -68,17 +68,10 @@ exposures: {
         columns:     "visit"
         columns:     "ccdnum"
     }
-    calexpBackground: {
-        template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
-        python:        "lsst.afw.math.BackgroundList"
-        persistable:   "PurePythonClass"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
-    }
 }
 
 datasets: {
+
     ccdExposureId: {
         template:     "ignored"
         python:       "lsst.daf.base.PropertySet"
@@ -125,6 +118,14 @@ datasets: {
         template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.table.BaseCatalog"
         persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    calexpBackground: {
+        template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.math.BackgroundList"
+        persistable:   "PurePythonClass"
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
