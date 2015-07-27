@@ -68,6 +68,31 @@ exposures: {
         columns:     "visit"
         columns:     "ccdnum"
     }
+    deepCoadd_tempExp: {
+        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+        tables:      raw
+    }
+    deepCoadd: {
+        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+        tables:      raw
+    }
+    deepCoadd_calexp: {
+        template:    "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/calexp-%(filter)s-%(tract)d-%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+        tables:      raw
+        tables:      raw_skyTile
+    }
 }
 
 datasets: {
@@ -155,6 +180,83 @@ datasets: {
     }
     icSrc_schema: {
         template:      "schema/icSrc.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:   "SourceCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepCoadd_skyMap: {
+        template:      "deepCoadd/skyMap.pickle"
+        python:        "lsst.skymap.BaseSkyMap"
+        persistable:   "ignored"
+        storage:       "PickleStorage"
+        tables:        raw
+    }
+    deep_makeSkyMap_config: {
+        template:      "config/deep_makeSkyMap.py"
+        python:        "lsst.pipe.tasks.makeSkyMap.MakeSkyMapTask.ConfigClass"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+    }
+    deep_makeSkyMap_metadata: {
+        template:      "metadata/deep_makeSkyMap.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    deepDiff_config: {
+        template:      "config/deepDiff.py"
+        python:        "lsst.pex.config.Config"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_metadata: {
+        template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_differenceExp: {
+        template:      "deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits"
+        python:        "lsst.afw.image.ExposureF"
+        persistable:   "ExposureF"
+        storage:       "FitsStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_matchedExp: {
+        template:      "deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits"
+        python:        "lsst.afw.image.ExposureF"
+        persistable:   "ExposureF"
+        storage:       "FitsStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_diaSrc: {
+        template:      "deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:   "SourceCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_diaSrc_schema: {
+        template:      "schema/deepDiff_diaSrc.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:   "SourceCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    deepDiff_kernelSrc: {
+        template:      "deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits"
         python:        "lsst.afw.table.SourceCatalog"
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
