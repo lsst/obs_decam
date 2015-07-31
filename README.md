@@ -51,7 +51,7 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
 2. Get and build obs_decam:
 
         $ cd /path/to/work
-        $ git clone git://github.com/LSST-nonproject/obs_decam.git
+        $ git clone git://github.com/yalsayyad/obs_decam.git
         $ cd obs_decam
         $ setup -t <CURRENT_TAG> -r .
         $ scons install declare --tag=current
@@ -61,7 +61,7 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
         $ cd /path/to/data
         $ setup -t <CURRENT_TAG> pipe_tasks
         $ setup -k -t <CURRENT_TAG> obs_decam
-        $ ingestImagesDecam.py /path/to/repo --mode=link instcal/*.fits
+        $ ingestImagesDecam.py /path/to/repo --mode=link instcal/*.fits.fz
 
 4. Process data
 
