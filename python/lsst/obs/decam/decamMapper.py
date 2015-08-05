@@ -94,7 +94,11 @@ class DecamInstcalMapper(CameraMapper):
         return mask
 
     def translate_wtmap(self, wtmap):
-        var   = 1.0 / wtmap.getArray()
+        wtmArr = wtmap.getArray()
+        idxUndefWeight = np.where(wtmArr <= 0)
+        #Reassign weights to be finite but small:
+        wtmArr[idxUndefWeight] = min(1e-14, np.min(wtmArr[np.where(wtmArr>0)]))
+        var   = 1.0 / wtmArr
         varim = afwImage.ImageF(var)
         return varim
         
