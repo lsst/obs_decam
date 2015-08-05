@@ -83,14 +83,16 @@ class DecamInstcalMapper(CameraMapper):
         mArr      = mask.getArray()
         idxBad    = np.where(dqmArr & 1)
         idxSat    = np.where(dqmArr & 2)
-        idxIntrp  = np.where(dqmArr & 4) 
+        idxIntrp  = np.where(dqmArr & 4)
         idxCr     = np.where(dqmArr & 16)
         idxBleed  = np.where(dqmArr & 64)
+        idxEdge   = np.where(dqmArr & 512)
         mArr[idxBad]   |= mask.getPlaneBitMask("BAD")
         mArr[idxSat]   |= mask.getPlaneBitMask("SAT")
         mArr[idxIntrp] |= mask.getPlaneBitMask("INTRP")
         mArr[idxCr]    |= mask.getPlaneBitMask("CR")
         mArr[idxBleed] |= mask.getPlaneBitMask("SAT")
+        mArr[idxEdge] |= mask.getPlaneBitMask("EDGE")
         return mask
 
     def translate_wtmap(self, wtmap):
