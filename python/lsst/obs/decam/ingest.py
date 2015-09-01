@@ -40,27 +40,27 @@ class DecamIngestTask(IngestTask):
         
     def run(self, args):
         """Ingest all specified files and add them to the registry"""
-        registry = self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None
-        for infile in args.files:
-            fileInfo, hduInfoList = self.parse.getInfo(infile)
-            if len(hduInfoList) > 0:
-                outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
-                outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
-                outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
+        with self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None as registry:
+            for infile in args.files:
+                fileInfo, hduInfoList = self.parse.getInfo(infile)
+                if len(hduInfoList) > 0:
+                    outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
+                    outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
+                    outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
 
-                ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
-                ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
-                ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
-            
-                if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
-                    continue
-            
-            for info in hduInfoList:
-                self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
-                
-        self.register.addVisits(registry, dryrun=args.dryrun)
-        if not args.dryrun:
-            registry.commit()
+                    ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
+                    ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
+                    ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
+
+                    if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
+                        continue
+
+                for info in hduInfoList:
+                    self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
+
+            self.register.addVisits(registry, dryrun=args.dryrun)
+            if not args.dryrun:
+                registry.commit()
 
 class DecamParseTask(ParseTask):
     def __init__(self, *args, **kwargs):
