@@ -2,7 +2,7 @@
 
 #
 # LSST Data Management System
-# Copyright 2012 LSST Corporation.
+# Copyright 2012, 2015 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -27,12 +27,8 @@ import os
 import unittest
 import lsst.utils.tests as utilsTests
 
-from lsst.pex.policy import Policy
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamMapper
-
-import lsst.afw.display.ds9 as ds9
-import lsst.afw.display.utils as displayUtils
+from lsst.obs.decam import DecamInstcalMapper
 
 import lsst.afw.cameraGeom as cameraGeom
 import lsst.afw.cameraGeom.utils as cameraGeomUtils
@@ -43,7 +39,7 @@ except NameError:
 
 
 def getButler(datadir):
-    bf = dafPersist.ButlerFactory(mapper=DecamMapper(root=os.path.join(datadir, "DATA"),
+    bf = dafPersist.ButlerFactory(mapper=DecamInstCalMapper(root=os.path.join(datadir, "DATA"),
                                                      calibRoot=os.path.join(datadir, "CALIB")))
     return bf.create()
 
@@ -74,6 +70,7 @@ class GetRawTestCase(unittest.TestCase):
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
         self.assertEqual(exp.getDetector().getId().getName(), "%s%d" % (side.upper(), ccd))
 
+    @unittest.skip("testdata_decam does not exist")
     def testRaw(self):
         """Test retrieval of raw image"""
         frame = 0
