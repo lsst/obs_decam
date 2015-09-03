@@ -38,12 +38,12 @@ class DecamInstcalMapper(CameraMapper):
 
         super(DecamInstcalMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
-        afwImageUtils.defineFilter('u', lambdaEff=350)
-        afwImageUtils.defineFilter('g', lambdaEff=450)
-        afwImageUtils.defineFilter('r', lambdaEff=600)
-        afwImageUtils.defineFilter('i', lambdaEff=750)
-        afwImageUtils.defineFilter('z', lambdaEff=900)
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias='Y')
+        afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
+        afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
+        afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
+        afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
+        afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y','Y DECam c0005 10095.0 1130.0'])
 
     def _extractDetectorName(self, dataId):
         nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
