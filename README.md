@@ -70,4 +70,5 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
         $ processCcdDecam.py /path/to/repo --id visit=283453 ccdnum=10 --config calibrate.doPhotoCal=False calibrate.doAstrometry=False calibrate.measurePsf.starSelector.name="secondMoment" doWriteCalibrateMatches=False --clobber-config
 
 5. Import raw data into the data repository: 
+
         $  ingestImagesDecam.py /path/to/repo --mode=link --filetype="raw" raw/*.fits.fz 
