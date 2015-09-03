@@ -63,6 +63,7 @@ class DecamIngestTask(IngestTask):
                             continue
 
                     for info in hduInfoList:
+                        info['hdu'] = None
                         self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
 
                 self.register.addVisits(registry, dryrun=args.dryrun)
