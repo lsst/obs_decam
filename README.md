@@ -68,3 +68,6 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
         $ setup -t <CURRENT_TAG> pipe_tasks
         $ setup -k -t <CURRENT_TAG> obs_decam
         $ processCcdDecam.py /path/to/repo --id visit=283453 ccdnum=10 --config calibrate.doPhotoCal=False calibrate.doAstrometry=False calibrate.measurePsf.starSelector.name="secondMoment" doWriteCalibrateMatches=False --clobber-config
+
+5. Import raw data into the data repository: 
+        $  ingestImagesDecam.py /path/to/repo --mode=link --filetype="raw" raw/*.fits.fz 

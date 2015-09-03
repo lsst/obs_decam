@@ -1,6 +1,6 @@
 #
 # LSST Data Management System
-# Copyright 2012 LSST Corporation.
+# Copyright 2012,2015 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -22,7 +22,7 @@
 import os
 import re
 import lsst.afw.image as afwImage
-from lsst.pipe.tasks.ingest import ParseTask, IngestTask
+from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
 def parseExtname(md):
     side, ccd = "X", 0
@@ -34,33 +34,48 @@ def parseExtname(md):
     ccd = int(extname[1:])
     return side, ccd
 
+class DecamIngestArgumentParser(IngestArgumentParser):
+    def __init__(self, *args, **kwargs):
+        super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
+        self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"], help="Data processing level of the files to be ingested")
+
 class DecamIngestTask(IngestTask):
+    ArgumentParser = DecamIngestArgumentParser
     def __init__(self, *args, **kwargs):
         super(DecamIngestTask, self).__init__(*args, **kwargs)
         
     def run(self, args):
         """Ingest all specified files and add them to the registry"""
-        with self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None as registry:
-            for infile in args.files:
-                fileInfo, hduInfoList = self.parse.getInfo(infile)
-                if len(hduInfoList) > 0:
-                    outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
-                    outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
-                    outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
+        if args.filetype == "instcal":
+            with self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None as registry:
+                for infile in args.files:
+                    fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
+                    if len(hduInfoList) > 0:
+                        outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
+                        outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
+                        outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
 
-                    ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
-                    ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
-                    ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
+                        ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
+                        ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
+                        ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
 
-                    if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
-                        continue
+                        if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
+                            continue
 
-                for info in hduInfoList:
-                    self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
+                    for info in hduInfoList:
+                        self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
 
-            self.register.addVisits(registry, dryrun=args.dryrun)
-            if not args.dryrun:
-                registry.commit()
+                self.register.addVisits(registry, dryrun=args.dryrun)
+        elif args.filetype == "raw":
+            with self.register.openRegistry(args.butler, create=args.create, dryrun=args.dryrun) as registry:
+                for infile in args.files:
+                    fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
+                    fileInfo['hdu'] = 0
+                    outfileRaw = super(DecamParseTask, self.parse).getDestination(args.butler, fileInfo, infile)
+                    self.ingest(infile, outfileRaw, mode=args.mode, dryrun=args.dryrun)
+                    for info in hduInfoList:
+                        self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
+                self.register.addVisits(registry, dryrun=args.dryrun)
 
 class DecamParseTask(ParseTask):
     def __init__(self, *args, **kwargs):
@@ -108,7 +123,7 @@ class DecamParseTask(ParseTask):
                                 (self.instcalPrefix, self.dqmaskPrefix, self.wtmapPrefix)):
             self._listdir(path, prefix)
         
-    def getInfo(self, filename):
+    def getInfo(self, filename, filetype):
         """
         The science pixels, mask, and weight (inverse variance) are
         stored in separate files each with a unique name but with a
@@ -123,23 +138,49 @@ class DecamParseTask(ParseTask):
         The user creates the registry by running
 
           ingestImagesDecam.py outputRepository --mode=link instcal/*fits
+
+        For raw data, the registry can be created by running
+
+          ingestImagesDecam.py outputRepository --mode=link --filetype="raw" raw/*.fits.fz
         """
-        if self.expnumMapper is None:
-            self.buildExpnumMapper(os.path.dirname(os.path.abspath(filename)))
+        if filetype == "instcal":
+            if self.expnumMapper is None:
+                self.buildExpnumMapper(os.path.dirname(os.path.abspath(filename)))
 
-        # Note that phuInfo will have
-        #   'side': 'X', 'ccd': 0
-        phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
-        expnum = phuInfo["visit"]
-        phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
-        phuInfo[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
-        phuInfo[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
-        for idx, info in enumerate(infoList):
-            expnum = info["visit"]
-            info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
-            info[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
-            info[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
-
+            # Note that phuInfo will have
+            #   'side': 'X', 'ccd': 0
+            phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
+            expnum = phuInfo["visit"]
+            phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
+            phuInfo[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
+            phuInfo[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
+            for idx, info in enumerate(infoList):
+                expnum = info["visit"]
+                info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
+                info[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
+                info[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
+        elif filetype == "raw":
+            md = afwImage.readMetadata(filename, self.config.hdu)
+            phuInfo = self.getInfoFromMetadata(md)
+            extnames = set(self.config.extnames)
+            extnum = 1
+            infoList = []
+            while len(extnames) > 0:
+                extnum += 1
+                try:
+                    md = afwImage.readMetadata(filename, extnum)
+                except:
+                    self.log.warn("Error reading %s extensions %s" % (filename, extnames))
+                    break
+                ext = self.getExtensionName(md)
+                if ext in extnames:
+                    info = self.getInfoFromMetadata(md, info=phuInfo.copy())
+                    info['hdu'] = extnum - 1
+                    info[self.instcalPrefix] = ""
+                    info[self.dqmaskPrefix] = ""
+                    info[self.wtmapPrefix] = ""
+                    infoList.append(info)
+                    extnames.discard(ext)
         return phuInfo, infoList
     
     def translate_side(self, md):

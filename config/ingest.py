@@ -26,6 +26,7 @@ config.register.columns = {'visit':    'int',
                          'taiObs':   'text',
                          'expTime':  'double',
                          'ccdnum':   'int',
+                         'hdu':      'int',
                          'instcal':  'text',
                          'dqmask':   'text',
                          'wtmap':    'text'
