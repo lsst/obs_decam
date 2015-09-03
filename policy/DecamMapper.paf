@@ -17,7 +17,7 @@ camera: "../decam/camGeom"
 
 exposures: {
     raw: {
-        template:    "%(visit)07d/decam%(visit)07d.fits[%(ccdnum)d]"
+        template:    "%(visit)07d/decam%(visit)07d.fits.fz[%(ccdnum)d]"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
