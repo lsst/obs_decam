@@ -32,72 +32,45 @@ from lsst.obs.decam import DecamInstcalMapper
 
 import lsst.afw.cameraGeom as cameraGeom
 import lsst.afw.cameraGeom.utils as cameraGeomUtils
-try:
-    type(display)
-except NameError:
-    display = False
-
-
-def getButler(datadir):
-    bf = dafPersist.ButlerFactory(mapper=DecamInstCalMapper(root=os.path.join(datadir, "DATA"),
-                                                     calibRoot=os.path.join(datadir, "CALIB")))
-    return bf.create()
-
 
 class GetRawTestCase(unittest.TestCase):
     """Testing butler raw image retrieval"""
 
     def setUp(self):
-        self.datadir = os.getenv("TESTDATA_DECAM_DIR")
-        assert self.datadir, "testdata_decam is not setup"
-        self.butler = getButler(self.datadir)
+        datadir = os.getenv("TESTDATA_DECAM_DIR")
+        assert datadir, "testdata_decam is not setup"
+        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
         self.size = (2160, 4146)
-        self.dataId = {'visit': 135635}
-        self.filter = "r"
+        self.dataId = {'visit': 237628, 'ccdnum': 10}
+        self.filter = "i"
 
     def tearDown(self):
         del self.butler
 
-    def assertExposure(self, exp, side, ccd):
-        print "dataId: ", self.dataId
-        print "ccd: ", ccd
-        print "width: ", exp.getWidth()
-        print "height: ", exp.getHeight()
-        print "detector name: ", exp.getDetector().getId().getName()
-        
-        self.assertEqual(exp.getWidth(), self.size[0])
-        self.assertEqual(exp.getHeight(), self.size[1])
-        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
-        self.assertEqual(exp.getDetector().getId().getName(), "%s%d" % (side.upper(), ccd))
+    def testPackageName(self):
+        self.assertEqual(self.butler.mapper.packageName, "obs_decam")
 
-    @unittest.skip("testdata_decam does not exist")
     def testRaw(self):
         """Test retrieval of raw image"""
-        frame = 0
-        if display:
-            cameraGeomUtils.showCamera(self.butler.mapper.camera, frame=frame)
+        exp = self.butler.get("raw", self.dataId)
 
-        for side in ("N", "S"):
-            for ccd in range(1, 32, 1):
-                raw = self.butler.get("raw", self.dataId, side=side, ccd=ccd)
+        print "dataId: ", self.dataId
+        print "width: ", exp.getWidth()
+        print "height: ", exp.getHeight()
+        print "detector id: ", exp.getDetector().getId()
 
-                self.assertExposure(raw, side, ccd)
+        self.assertEqual(exp.getWidth(), self.size[0])
+        self.assertEqual(exp.getHeight(), self.size[1])
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
 
-                if display:
-                    frame += 1
-                    ccd = cameraGeom.cast_Ccd(raw.getDetector())
-                    for amp in ccd:
-                        amp = cameraGeom.cast_Amp(amp)
-                        print ccd.getId(), amp.getId(), amp.getDataSec().toString(), \
-                              amp.getBiasSec().toString(), amp.getElectronicParams().getGain()
-                    cameraGeomUtils.showCcd(ccd, ccdImage=raw, frame=frame)
-
-#    def testFlat(self):
-#        """Test retrieval of flat image"""
-#        for ccd in range(12):
-#            flat = self.butler.get("flat", self.dataId, ccd=ccd)
-#
-#            self.assertExposure(flat, ccd)
+    def testRawMetadata(self):
+        """Test retrieval of metadata"""
+        md = self.butler.get("raw_md", self.dataId)
+        print "EXPNUM(visit): ",md.get('EXPNUM')
+        print "ccdnum:", md.get('CCDNUM')
+        self.assertEqual(md.get('EXPNUM'), self.dataId["visit"])
+        self.assertEqual(md.get('CCDNUM'), self.dataId["ccdnum"])
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
