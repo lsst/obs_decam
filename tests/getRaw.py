@@ -28,7 +28,7 @@ import unittest
 import lsst.utils.tests as utilsTests
 
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamInstcalMapper
+from lsst.obs.decam import DecamMapper
 
 import lsst.afw.cameraGeom as cameraGeom
 import lsst.afw.cameraGeom.utils as cameraGeomUtils

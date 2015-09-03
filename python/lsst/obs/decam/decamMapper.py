@@ -29,14 +29,14 @@ import lsst.daf.base as dafBase
 
 np.seterr(divide="ignore")
 
-class DecamInstcalMapper(CameraMapper):
+class DecamMapper(CameraMapper):
     packageName = 'obs_decam'
 
     def __init__(self, inputPolicy=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "DecamMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
-        super(DecamInstcalMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
         afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
