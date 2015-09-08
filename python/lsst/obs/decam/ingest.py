@@ -139,10 +139,6 @@ class DecamParseTask(ParseTask):
         The user creates the registry by running
 
           ingestImagesDecam.py outputRepository --mode=link instcal/*fits
-
-        For raw data, the registry can be created by running
-
-          ingestImagesDecam.py outputRepository --mode=link --filetype="raw" raw/*.fits.fz
         """
         if filetype == "instcal":
             if self.expnumMapper is None:
