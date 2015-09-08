@@ -43,7 +43,7 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
         afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
         afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y','Y DECam c0005 10095.0 1130.0'])
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
 
     def _extractDetectorName(self, dataId):
         nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
