@@ -24,9 +24,12 @@
 
 import os
 
+import warnings
 import unittest
 import lsst.utils.tests as utilsTests
+from lsst.utils import getPackageDir
 
+import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.obs.decam import DecamMapper
 
@@ -37,8 +40,12 @@ class GetRawTestCase(unittest.TestCase):
     """Testing butler raw image retrieval"""
 
     def setUp(self):
-        datadir = os.getenv("TESTDATA_DECAM_DIR")
-        assert datadir, "testdata_decam is not setup"
+        try:
+            datadir = getPackageDir("testdata_decam")
+        except pexExcept.NotFoundError:
+            message = "testdata_decam not setup. Skipping."
+            warnings.warn(message)
+            raise unittest.SkipTest(message)
         self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
         self.size = (2160, 4146)
         self.dataId = {'visit': 237628, 'ccdnum': 10}
