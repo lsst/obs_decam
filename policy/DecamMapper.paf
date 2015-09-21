@@ -3,14 +3,15 @@
 needCalibRegistry: false
 
 levels: {
+    # Keys that are NOT relevant for a particular level
     skyTile: "visit" "ccdnum"
-    visit: "visit" "ccdnum"
-    ccd: "ccdnum"
+    visit: "ccdnum"
+    ccd: "none"
 }
 defaultLevel: "ccd"
 defaultSubLevels: {
-    skyTile: "ccdnum"
-    visit: "ccdnum"
+    skyTile: "ccd"
+    visit: "ccd"
 }
 
 camera: "../decam/camGeom"
