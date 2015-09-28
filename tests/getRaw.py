@@ -46,10 +46,11 @@ class GetRawTestCase(unittest.TestCase):
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
-        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
+        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"),
+                                        calibRoot=os.path.join(datadir, "calib"))
         self.size = (2160, 4146)
-        self.dataId = {'visit': 237628, 'ccdnum': 10}
-        self.filter = "i"
+        self.dataId = {'visit': 229388, 'ccdnum': 13}
+        self.filter = "z"
 
     def tearDown(self):
         del self.butler
@@ -78,6 +79,31 @@ class GetRawTestCase(unittest.TestCase):
         print "ccdnum:", md.get('CCDNUM')
         self.assertEqual(md.get('EXPNUM'), self.dataId["visit"])
         self.assertEqual(md.get('CCDNUM'), self.dataId["ccdnum"])
+
+    def testBias(self):
+        """Test retrieval of bias image"""
+        exp = self.butler.get("bias", self.dataId)
+        print "dataId: ", self.dataId
+        print "detector id: ", exp.getDetector().getId()
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+
+    def testFlat(self):
+        """Test retrieval of flat image"""
+        exp = self.butler.get("flat", self.dataId)
+        print "dataId: ", self.dataId
+        print "detector id: ", exp.getDetector().getId()
+        print "filter: ", self.filter
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+
+    def testFringe(self):
+        """Test retrieval of fringe image"""
+        exp = self.butler.get("fringe", self.dataId)
+        print "dataId: ", self.dataId
+        print "detector id: ", exp.getDetector().getId()
+        print "filter: ", self.filter
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
