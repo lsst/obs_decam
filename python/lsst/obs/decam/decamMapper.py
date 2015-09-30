@@ -19,13 +19,12 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import os, re
+import re
 import numpy as np
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper
 import lsst.pex.policy as pexPolicy
-import lsst.daf.base as dafBase
 
 np.seterr(divide="ignore")
 

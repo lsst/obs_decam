@@ -31,10 +31,7 @@ from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamMapper
 
-import lsst.afw.cameraGeom as cameraGeom
-import lsst.afw.cameraGeom.utils as cameraGeomUtils
 
 class GetRawTestCase(unittest.TestCase):
     """Testing butler raw image retrieval"""
