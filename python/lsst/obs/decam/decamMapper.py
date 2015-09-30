@@ -45,8 +45,8 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
 
     def _extractDetectorName(self, dataId):
-        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
-                                   (dataId['ccdnum'], dataId['visit']))
+        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')],
+                                               None, (dataId['ccdnum'], dataId['visit']))
         if len(nameTuple) > 1:
             raise RuntimeError("More than one name returned")
         if len(nameTuple) == 0:

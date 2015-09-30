@@ -37,8 +37,15 @@ def parseExtname(md):
 class DecamIngestArgumentParser(IngestArgumentParser):
     def __init__(self, *args, **kwargs):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
-        self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"], help="Data processing level of the files to be ingested")
-        self.description = "To ingest instcal data, the following directory structure is expected:\n    dqmask/ instcal/ wtmap/ \nThe science pixels, mask, and weight (inverse variance) are stored in separate files each with a unique name but with a common unique identifier EXPNUM in the FITS header. The 3 files of the same EXPNUM will be aggregated. For example, the user creates the registry by running \n    ingestImagesDecam.py outputRepository --mode=link instcal/*fits"
+        self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"],
+                          help="Data processing level of the files to be ingested")
+        self.description = "To ingest instcal data, the following directory structure is expected:"\
+            "\n    dqmask/ instcal/ wtmap/"\
+            "\nThe science pixels, mask, and weight (inverse variance) are stored in"\
+            "\nseparate files each with a unique name but with a common unique identifier"\
+            "\nEXPNUM in the FITS header. The 3 files of the same EXPNUM will be aggregated."\
+            "\nFor example, the user creates the registry by running"\
+            "\n    ingestImagesDecam.py outputRepository --mode=link instcal/*fits"
 
 
 class DecamIngestTask(IngestTask):
@@ -53,13 +60,19 @@ class DecamIngestTask(IngestTask):
                 for infile in args.files:
                     fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
                     if len(hduInfoList) > 0:
-                        outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "instcal"))
-                        outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "dqmask"))
-                        outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler, hduInfoList[0], infile, "wtmap"))
+                        outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                                                      hduInfoList[0], infile, "instcal"))
+                        outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                                                     hduInfoList[0], infile, "dqmask"))
+                        outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                                                    hduInfoList[0], infile, "wtmap"))
 
-                        ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal, mode=args.mode, dryrun=args.dryrun)
-                        ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask, mode=args.mode, dryrun=args.dryrun)
-                        ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap, mode=args.mode, dryrun=args.dryrun)
+                        ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal,
+                                                      mode=args.mode, dryrun=args.dryrun)
+                        ingestedDqmask = self.ingest(fileInfo["dqmask"], outfileDqmask,
+                                                     mode=args.mode, dryrun=args.dryrun)
+                        ingestedWtmap = self.ingest(fileInfo["wtmap"], outfileWtmap,
+                                                    mode=args.mode, dryrun=args.dryrun)
 
                         if not (ingestedInstcal or ingestedDqmask or ingestedWtmap):
                             continue
@@ -74,7 +87,8 @@ class DecamIngestTask(IngestTask):
                 for infile in args.files:
                     fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
                     fileInfo['hdu'] = 0
-                    outfileRaw = super(DecamParseTask, self.parse).getDestination(args.butler, fileInfo, infile)
+                    outfileRaw = super(DecamParseTask, self.parse).getDestination(args.butler,
+                                                                                  fileInfo, infile)
                     self.ingest(infile, outfileRaw, mode=args.mode, dryrun=args.dryrun)
                     for info in hduInfoList:
                         self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
