@@ -56,7 +56,7 @@ class DecamIngestTask(IngestTask):
     def run(self, args):
         """Ingest all specified files and add them to the registry"""
         if args.filetype == "instcal":
-            with self.register.openRegistry(args.butler, create=args.create) if not args.dryrun else None as registry:
+            with self.register.openRegistry(args.butler, create=args.create, dryrun=args.dryrun) as registry:
                 for infile in args.files:
                     fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
                     if len(hduInfoList) > 0:
