@@ -19,13 +19,12 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-import os, re
+import re
 import numpy as np
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
-from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
+from lsst.daf.butlerUtils import CameraMapper
 import lsst.pex.policy as pexPolicy
-import lsst.daf.base as dafBase
 
 np.seterr(divide="ignore")
 
@@ -46,8 +45,8 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
 
     def _extractDetectorName(self, dataId):
-        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')], None,
-                                   (dataId['ccdnum'], dataId['visit']))
+        nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')],
+                                               None, (dataId['ccdnum'], dataId['visit']))
         if len(nameTuple) > 1:
             raise RuntimeError("More than one name returned")
         if len(nameTuple) == 0:
@@ -134,3 +133,40 @@ class DecamMapper(CameraMapper):
         
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
         return exp
+
+    def _standardizeMasterCal(self, datasetType, item, dataId, setFilter=False):
+        """Standardize a MasterCal image obtained from NOAO archive into Exposure
+
+        These MasterCal images are MEF files with one HDU for each detector.
+        Some WCS header, eg CTYPE1, exists only in the zeroth extensionr,
+        so info in the zeroth header need to be copied over to metadata.
+
+        @param datasetType: Dataset type ("bias" or "flat")
+        @param item: The image read by the butler
+        @param dataId: Data identifier
+        @param setFilter: Whether to set the filter in the Exposure
+        @return (lsst.afw.image.Exposure) the standardized Exposure
+        """
+        mi = afwImage.makeMaskedImage(item.getImage())
+        md = item.getMetadata()
+        masterCalMap = getattr(self, "map_" + datasetType)
+        masterCalPath = masterCalMap(dataId).getLocations()[0]
+        headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
+        md0 = afwImage.readMetadata(headerPath)
+        for kw in md0.paramNames():
+            if kw not in md.paramNames():
+                md.add(kw, md0.get(kw))
+        wcs = afwImage.makeWcs(md, True)
+        exp = afwImage.makeExposure(mi, wcs)
+        exp.setMetadata(md)
+        return self._standardizeExposure(self.calibrations[datasetType], exp, dataId, filter=setFilter)
+
+    def std_bias(self, item, dataId):
+        return self._standardizeMasterCal("bias", item, dataId, setFilter=False)
+
+    def std_flat(self, item, dataId):
+        return self._standardizeMasterCal("flat", item, dataId, setFilter=True)
+
+    def std_fringe(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["fringe"], exp, dataId)

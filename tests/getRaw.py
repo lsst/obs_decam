@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2012, 2015 LSST Corporation.
@@ -31,10 +31,7 @@ from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamMapper
 
-import lsst.afw.cameraGeom as cameraGeom
-import lsst.afw.cameraGeom.utils as cameraGeomUtils
 
 class GetRawTestCase(unittest.TestCase):
     """Testing butler raw image retrieval"""
@@ -46,10 +43,11 @@ class GetRawTestCase(unittest.TestCase):
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
-        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
+        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"),
+                                        calibRoot=os.path.join(datadir, "calib"))
         self.size = (2160, 4146)
-        self.dataId = {'visit': 237628, 'ccdnum': 10}
-        self.filter = "i"
+        self.dataId = {'visit': 229388, 'ccdnum': 13}
+        self.filter = "z"
 
     def tearDown(self):
         del self.butler
@@ -61,10 +59,10 @@ class GetRawTestCase(unittest.TestCase):
         """Test retrieval of raw image"""
         exp = self.butler.get("raw", self.dataId)
 
-        print "dataId: ", self.dataId
-        print "width: ", exp.getWidth()
-        print "height: ", exp.getHeight()
-        print "detector id: ", exp.getDetector().getId()
+        print("dataId: %s" % self.dataId)
+        print("width: %s" % exp.getWidth())
+        print("height: %s" % exp.getHeight())
+        print("detector id: %s" % exp.getDetector().getId())
 
         self.assertEqual(exp.getWidth(), self.size[0])
         self.assertEqual(exp.getHeight(), self.size[1])
@@ -74,10 +72,35 @@ class GetRawTestCase(unittest.TestCase):
     def testRawMetadata(self):
         """Test retrieval of metadata"""
         md = self.butler.get("raw_md", self.dataId)
-        print "EXPNUM(visit): ",md.get('EXPNUM')
-        print "ccdnum:", md.get('CCDNUM')
+        print("EXPNUM(visit): %s" % md.get('EXPNUM'))
+        print("ccdnum: %s" % md.get('CCDNUM'))
         self.assertEqual(md.get('EXPNUM'), self.dataId["visit"])
         self.assertEqual(md.get('CCDNUM'), self.dataId["ccdnum"])
+
+    def testBias(self):
+        """Test retrieval of bias image"""
+        exp = self.butler.get("bias", self.dataId)
+        print("dataId: %s" % self.dataId)
+        print("detector id: %s" % exp.getDetector().getId())
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+
+    def testFlat(self):
+        """Test retrieval of flat image"""
+        exp = self.butler.get("flat", self.dataId)
+        print("dataId: %s" % self.dataId)
+        print("detector id: %s" % exp.getDetector().getId())
+        print("filter: %s" % self.filter)
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+
+    def testFringe(self):
+        """Test retrieval of fringe image"""
+        exp = self.butler.get("fringe", self.dataId)
+        print("dataId: %s" % self.dataId)
+        print("detector id: %s" % exp.getDetector().getId())
+        print("filter: %s" % self.filter)
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
