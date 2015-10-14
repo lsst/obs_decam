@@ -53,6 +53,18 @@ class DecamMapper(CameraMapper):
             raise RuntimeError("No name found for dataId: %s"%(dataId))
         return "%s%i" % (nameTuple[0][0], nameTuple[0][1])
 
+    # Overriding this so that we can extract the detector name from the Exposure.
+    def _setCcdDetector(self, item, dataId, trimmed=True):
+        """Set the detector object in an Exposure for a CCD.
+        @param[in,out] item (lsst.afw.image.Exposure)
+        @param dataId (dict) Dataset identifier
+        @param trimmed (bool) Should detector be marked as trimmed? (ignored)"""
+
+        long_detectorName = item.getMetadata().get('DETECTOR')
+        detectorName = long_detectorName.split('-')[0]
+        detector = self.camera[detectorName]
+        return detector
+
     def _defectLookup(self, dataId, ccdSerial):
         """Find the defects for a given CCD.
         @param dataId (dict) Dataset identifier
