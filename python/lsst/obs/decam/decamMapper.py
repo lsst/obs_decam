@@ -131,7 +131,23 @@ class DecamMapper(CameraMapper):
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
         
+        # Convert LTV1 and LTV2 in the metadata to integers
+        for key in ('LTV1', 'LTV2'):
+            md.set(key, _convertNumType(md.get(key), int))
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
+        return exp
+
+    def std_raw(self, item, dataId):
+        """Standardize a raw dataset by converting it to an Exposure
+
+        @param item: The image read by the butler
+        @param dataId: Data identifier
+        """
+        exp = CameraMapper.std_raw(self, item, dataId)
+        md = exp.getMetadata()
+        for key in ('LTV1', 'LTV2'):
+            md.set(key, _convertNumType(md.get(key), int))
+        exp.setMetadata(md)
         return exp
 
     def _standardizeMasterCal(self, datasetType, item, dataId, setFilter=False):
@@ -170,3 +186,11 @@ class DecamMapper(CameraMapper):
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["fringe"], exp, dataId)
+
+def _convertNumType(number, newType):
+    """Convert a numeric variable to a new type"""
+    newValue = newType(number)
+    if np.isclose(number, newValue):
+        return newValue
+    else:
+        raise RuntimeError("The converted value is not close enough to the original value")
