@@ -84,36 +84,48 @@ def makeAmpTables(segmentsFile):
             voverscan = 50
             rawBBox = afwGeom.Box2I(afwGeom.Point2I(xoff, yoff),
                                     afwGeom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan))
+            # Note: I'm not particularry happy with how the data origin is derived (it neglects [xy]off),
+            # but I don't see a better way.
             if readCorner is afwTable.LL:
-                originData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
+                originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
+                originData = afwGeom.Point2I(0, 0)
                 originHOverscan = afwGeom.Point2I(xoff + prescan, yoff)
                 originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + ndatay)
                 originPrescan = afwGeom.Point2I(xoff, yoff)
             elif readCorner is afwTable.LR:
-                originData = afwGeom.Point2I(xoff, yoff)
+                originRawData = afwGeom.Point2I(xoff, yoff)
+                originData = afwGeom.Point2I(ndatax, 0)
                 originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff)
                 originVOverscan = afwGeom.Point2I(xoff, yoff + ndatay)
                 originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan, yoff)
             elif readCorner is afwTable.UL:
-                originData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
+                originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
+                originData = afwGeom.Point2I(0, 0)
                 originHOverscan = afwGeom.Point2I(xoff + prescan, yoff + voverscan)
                 originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
                 originPrescan = afwGeom.Point2I(xoff, yoff + voverscan)
             elif readCorner is afwTable.UR:
-                originData = afwGeom.Point2I(xoff, yoff + voverscan)
+                originRawData = afwGeom.Point2I(xoff, yoff + voverscan)
+                originData = afwGeom.Point2I(ndatax, 0)
                 originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff + voverscan)
                 originVOverscan = afwGeom.Point2I(xoff, yoff)
                 originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan, yoff + voverscan)
             else:
                 raise RuntimeError("Expected readout corner to be LL, LR, UL, or UR")
 
-            rawDataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay))
+            rawDataBBox = afwGeom.Box2I(originRawData, afwGeom.Extent2I(ndatax, ndatay))
+            dataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay))
             rawHorizontalOverscanBBox = afwGeom.Box2I(originHOverscan, afwGeom.Extent2I(hoverscan, ndatay))
             rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
             rawPrescanBBox = afwGeom.Box2I(originPrescan, afwGeom.Extent2I(prescan, ndatay))
 
+            print name
+            print rawHorizontalOverscanBBox
+            print rawVerticalOverscanBBox
+            print dataBBox
+            print rawBBox
             #Set the elements of the record for this amp
-            record.setBBox(rawDataBBox)
+            record.setBBox(dataBBox) # This is the box for the amp in the assembled frame
             record.setName(name)
             record.setReadoutCorner(readCorner)
             record.setGain(gain)
@@ -125,6 +137,9 @@ def makeAmpTables(segmentsFile):
             record.setRawFlipX(flipx)
             record.setRawFlipY(flipy)
             record.setRawBBox(rawBBox)
+            # I believe that xy offset is not needed if the raw data are pre-assembled
+            record.setRawXYOffset(afwGeom.Extent2I(0,0))
+            """
             if readCorner is afwTable.LL:
                 record.setRawXYOffset(afwGeom.Extent2I(xoff + prescan + hoverscan, yoff))
             elif readCorner is afwTable.LR:
@@ -133,10 +148,13 @@ def makeAmpTables(segmentsFile):
                 record.setRawXYOffset(afwGeom.Extent2I(xoff + prescan + hoverscan, yoff + voverscan))
             elif readCorner is afwTable.UR:
                 record.setRawXYOffset(afwGeom.Extent2I(xoff, yoff + voverscan))
+            """
             record.setRawDataBBox(rawDataBBox)
             record.setRawHorizontalOverscanBBox(rawHorizontalOverscanBBox)
             record.setRawVerticalOverscanBBox(rawVerticalOverscanBBox)
-            record.setRawPrescanBBox(rawPrescanBBox)
+            # I think of prescan as being along the bottom of the raw data.  I actually
+            # don't know how you would do a prescan in the serial direction.
+            record.setRawPrescanBBox(afwGeom.Box2I())
     return returnDict
 
 def makeDetectorConfigs(detectorLayoutFile):
@@ -146,8 +164,8 @@ def makeDetectorConfigs(detectorLayoutFile):
 
     """
     detectorConfigs = []
-    xsize = 2160
-    ysize = 4146
+    xsize = 2048
+    ysize = 4096
     #Only do Science detectors right now.
     #There is an overall 0.05 deg rotation to the entire focal plane that I'm ignoring here.
     with open(detectorLayoutFile) as fh:
