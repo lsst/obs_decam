@@ -14,6 +14,16 @@ class DecamCalibsParseTask(CalibsParseTask):
         # Use info of primary header unit
         if not infoList:
             infoList.append(phuInfo)
+        # Try to fetch a date from filename
+        # and use as the calibration dates if not already set
+        found = re.search('(\d\d\d\d-\d\d-\d\d)', filename)
+        if not found:
+            return phuInfo, infoList
+        date = found.group(1)
+        for info in infoList:
+            for col in ['calibDate', 'validStart', 'validEnd']:
+                if col not in info or (col in info and info[col] == "unknown"):
+                    info[col] = date
         return phuInfo, infoList
 
     def translate_ccdnum(self, md):
@@ -53,6 +63,19 @@ class DecamCalibsParseTask(CalibsParseTask):
             self.log.warn("Unable to find value for DATE-OBS")
             date = "unknown"
         return date
+
+    def translate_filter(self, md):
+        """Extract the filter name
+
+        Translate a full filter description into a mere filter name.
+        Return "unknown" if the keyword FILTER does not exist in the header,
+        which can happen for some valid Community Pipeline products.
+
+        @param md (PropertySet) FITS header metadata
+        """
+        if not md.exists("FILTER"):
+            return "unknown"
+        return CalibsParseTask.translate_filter(self, md)
 
     @staticmethod
     def getExtensionName(md):

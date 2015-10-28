@@ -1,6 +1,6 @@
 #
 # LSST Data Management System
-# Copyright 2012 LSST Corporation.
+# Copyright 2012-2015 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -21,9 +21,11 @@
 #
 import re
 import numpy as np
+import lsst.afw.detection as afwDetection
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper
+from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
 
 np.seterr(divide="ignore")
@@ -52,14 +54,6 @@ class DecamMapper(CameraMapper):
         if len(nameTuple) == 0:
             raise RuntimeError("No name found for dataId: %s"%(dataId))
         return "%s%i" % (nameTuple[0][0], nameTuple[0][1])
-
-    def _defectLookup(self, dataId, ccdSerial):
-        """Find the defects for a given CCD.
-        @param dataId (dict) Dataset identifier
-        @param ccdSerial (string) CCD serial number
-        @return (string) path to the defects file or None if not available
-        """
-        return None 
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         return self._computeCcdExposureId(dataId)
@@ -170,3 +164,42 @@ class DecamMapper(CameraMapper):
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["fringe"], exp, dataId)
+
+    def map_defects(self, dataId, write=False):
+        """Map defects dataset with the calibration registry.
+
+        Overriding the method so to use CalibrationMapping policy,
+        instead of looking up the path in defectRegistry as currently
+        implemented in CameraMapper.
+
+        @param dataId (dict) Dataset identifier
+        @return daf.persistence.ButlerLocation
+        """
+        return self.mappings["defects"].map(self, dataId=dataId, write=write)
+
+    def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
+        """Return a defect list based on butlerLocation returned by map_defects.
+
+        Read in the Community Pipeline bad pixel masks and use those with
+        bit 1 as defect pixels.
+
+        @param[in] butlerLocation: Butler Location with path to defects FITS
+        @param[in] dataId: data identifier
+        @return a list of afw.image.DefectBase
+        """
+        bpmFitsPath = butlerLocation.locationList[0]
+        bpmImg = afwImage.ImageU(bpmFitsPath)
+        bpmArr = bpmImg.getArray()
+        idxBad = np.where(bpmArr & 1)
+        workImg = afwImage.ImageU(bpmImg.getDimensions())
+        workImg.getArray()[idxBad] = 1
+        ds = afwDetection.FootprintSet(workImg, afwDetection.Threshold(0.5))
+        fpList = ds.getFootprints()
+        return isr.defectListFromFootprintList(fpList, growFootprints=0)
+
+    def std_defects(self, item, dataId):
+        """Return the defect list as it is.
+
+        Do not standardize it to Exposure.
+        """
+        return item

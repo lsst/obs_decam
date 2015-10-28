@@ -26,6 +26,7 @@ import os
 
 import warnings
 import unittest
+import lsst.afw.image as afwImage
 import lsst.utils.tests as utilsTests
 from lsst.utils import getPackageDir
 
@@ -101,6 +102,12 @@ class GetRawTestCase(unittest.TestCase):
         print("filter: %s" % self.filter)
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+
+    def testDefect(self):
+        """Test retrieval of defect list"""
+        defectList = self.butler.get("defects", self.dataId)
+        for d in defectList:
+            self.assertIsInstance(d, afwImage.imageLib.DefectBase)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
