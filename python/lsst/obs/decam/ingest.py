@@ -83,16 +83,8 @@ class DecamIngestTask(IngestTask):
 
                 self.register.addVisits(registry, dryrun=args.dryrun)
         elif args.filetype == "raw":
-            with self.register.openRegistry(args.butler, create=args.create, dryrun=args.dryrun) as registry:
-                for infile in args.files:
-                    fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
-                    fileInfo['hdu'] = 0
-                    outfileRaw = super(DecamParseTask, self.parse).getDestination(args.butler,
-                                                                                  fileInfo, infile)
-                    self.ingest(infile, outfileRaw, mode=args.mode, dryrun=args.dryrun)
-                    for info in hduInfoList:
-                        self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
-                self.register.addVisits(registry, dryrun=args.dryrun)
+            IngestTask.run(self, args)
+
 
 class DecamParseTask(ParseTask):
     def __init__(self, *args, **kwargs):
@@ -140,7 +132,7 @@ class DecamParseTask(ParseTask):
                                 (self.instcalPrefix, self.dqmaskPrefix, self.wtmapPrefix)):
             self._listdir(path, prefix)
         
-    def getInfo(self, filename, filetype):
+    def getInfo(self, filename, filetype="raw"):
         """
         The science pixels, mask, and weight (inverse variance) are
         stored in separate files each with a unique name but with a
@@ -175,6 +167,12 @@ class DecamParseTask(ParseTask):
         elif filetype == "raw":
             md = afwImage.readMetadata(filename, self.config.hdu)
             phuInfo = self.getInfoFromMetadata(md)
+            # Some data IDs can not be extracted from the zeroth extension
+            # of the MEF. Add them so Butler does not try to find them
+            # in the registry which may still yet to be created.
+            for key in ("ccdnum", "hdu"):
+                if key not in phuInfo:
+                    phuInfo[key] = 0
             extnames = set(self.config.extnames)
             extnum = 1
             infoList = []
@@ -208,7 +206,7 @@ class DecamParseTask(ParseTask):
     def getExtensionName(md):
         return md.get('EXTNAME')
 
-    def getDestination(self, butler, info, filename, filetype):
+    def getDestination(self, butler, info, filename, filetype="raw"):
         """Get destination for the file
 
         @param butler      Data butler
