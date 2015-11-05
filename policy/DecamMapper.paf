@@ -27,7 +27,14 @@ exposures: {
         columns:     "visit"
         columns:     "ccdnum"
     }
-
+    postISRCCD: {
+        template:    "%(date)s/%(filter)s/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+    }
     instcal: {
         template:    "%(visit)07d/instcal%(visit)07d.fits.fz[%(ccdnum)d]"
         python:      "lsst.afw.image.DecoratedImageF"
@@ -164,6 +171,20 @@ calibrations: {
         filter:      true
         validRange:  false
     }
+    defects: {
+        template:    "%(path)s"
+        python:      "lsst.afw.image.ImageU"
+        persistable: "ImageU"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "defect"
+        columns:     "date" "ccdnum"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      false
+        validRange:  true
+        obsTimeName: date
+    }
 }
 
 datasets: {
@@ -225,6 +246,19 @@ datasets: {
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
+    }
+    processCcd_config: {
+        template:      "config/processCcd.py"
+        python:        "lsst.pipe.tasks.processCcd.ProcessCcdConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+    }
+    processCcd_metadata: {
+        template:      "%(date)s/%(filter)s/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
     }
     processCcdDecam_config: {
         template:      "config/processCcdDecam.py"

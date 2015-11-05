@@ -22,5 +22,5 @@ config.register.columns = {'filter': 'text',
                          'validEnd': 'text',
                          }
 config.register.unique = ['filter', 'ccdnum', 'calibDate']
-config.register.tables = ['bias', 'flat', 'fringe']
+config.register.tables = ['bias', 'flat', 'fringe', 'defect']
 config.register.visit = ['calibDate']

@@ -71,4 +71,4 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
 
 5. Import raw data into the data repository: 
 
-        $  ingestImagesDecam.py /path/to/repo --mode=link --filetype="raw" raw/*.fits.fz 
+        $  ingestImagesDecam.py /path/to/repo --mode=link --filetype="raw" path/to/raw/*.fits.fz
