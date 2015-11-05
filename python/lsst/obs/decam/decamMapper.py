@@ -24,7 +24,7 @@ import numpy as np
 import lsst.afw.detection as afwDetection
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
-from lsst.daf.butlerUtils import CameraMapper
+from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
 
@@ -45,6 +45,11 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
         afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
+
+        # The data ID key ccdnum is not directly used in the current policy
+        # template of the raw dataset, so is not in its keyDict automatically.
+        # Add it so raw dataset know about the data ID key ccdnum.
+        self.mappings["raw"].keyDict.update({'ccdnum': int})
 
     def _extractDetectorName(self, dataId):
         nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')],
@@ -127,6 +132,29 @@ class DecamMapper(CameraMapper):
         
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
         return exp
+
+    def std_raw(self, item, dataId):
+        """Standardize a raw dataset by converting it to an Exposure.
+
+        Raw images are MEF files with one HDU for each detector.
+        Some useful header keywords, such as EXPTIME and MJD-OBS,
+        exist only in the zeroth extensionr.  Here information in
+        the zeroth header are copied to metadata.
+
+        @param item: The image read by the butler
+        @param dataId: Data identifier
+        @return (lsst.afw.image.Exposure) the standardized Exposure
+        """
+        exp = exposureFromImage(item)
+        md = exp.getMetadata()
+        rawPath = self.map_raw(dataId).getLocations()[0]
+        headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
+        md0 = afwImage.readMetadata(headerPath)
+        for kw in md0.paramNames():
+            if kw not in md.paramNames():
+                md.add(kw, md0.get(kw))
+        return self._standardizeExposure(self.exposures['raw'], exp, dataId,
+                                         trimmed=False)
 
     def _standardizeMasterCal(self, datasetType, item, dataId, setFilter=False):
         """Standardize a MasterCal image obtained from NOAO archive into Exposure
