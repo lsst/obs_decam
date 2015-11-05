@@ -66,7 +66,7 @@ class DecamMapper(CameraMapper):
         """
         visit = dataId['visit']
         ccdnum = dataId['ccdnum']
-        return "%07d%02d" % (visit, ccdnum)
+        return int("%07d%02d" % (visit, ccdnum))
 
     def translate_dqmask(self, dqmask):
         # TODO: make a class member variable that knows the mappings
