@@ -44,7 +44,7 @@ class GetIdTestCase(unittest.TestCase):
         bits = self.butler.get("ccdExposureId_bits")
         self.assertEqual(bits, 32)
         id = self.butler.get("ccdExposureId", visit=229388, ccdnum=13, filter="z")
-        self.assertEqual(id, "022938813")
+        self.assertEqual(id, 22938813)
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
