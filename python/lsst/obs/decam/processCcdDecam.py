@@ -22,6 +22,8 @@
 #
 import lsst.pipe.base as pipeBase
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
+import lsst.afw.image as afwImage
+import lsst.meas.astrom as measAstrom
 
 class ProcessCcdDecamConfig(ProcessCcdTask.ConfigClass):
     """Config for ProcessCcdDecam"""
@@ -54,4 +56,12 @@ class ProcessCcdDecamTask(ProcessCcdTask):
         \return     postIsrExposure  exposure to be passed to processCcdExposure
         """
         exp = sensorRef.get("instcal")
+
+        # Check if we have a distortion but are not using TanWcs. If that is
+        # true, then we don't know how to persist the distortion, so we should
+        # refit it as SIP before passing it to processCcd.
+        if exp.getWcs().hasDistortion() and not isinstance(exp.getWcs(), afwImage.imageLib.TanWcs):
+            newWcs = measAstrom.approximateWcs(exp.getWcs(), exp.getBBox())
+        exp.setWcs(newWcs)
+
         return exp
