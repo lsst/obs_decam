@@ -20,7 +20,10 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from lsst.ip.isr import IsrTask, biasCorrection, flatCorrection
+import lsst.afw.geom as afwGeom
+import lsst.afw.table as afwTable
+import lsst.pex.config as pexConfig
+from lsst.ip.isr import IsrTask, biasCorrection, flatCorrection, overscanCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 
 
@@ -43,7 +46,25 @@ def _computeEdgeSize(rawExposure, calibExposure):
     return nx/2
 
 
+class DecamIsrConfig(IsrTask.ConfigClass):
+    overscanBiasJumpBKP = pexConfig.ListField(
+        dtype = str,
+        doc = "Names of the backplanes for CCDs showing bias jump due to " +
+              "the simultaneous readout of the smaller ancillary CCDs.",
+        default = ['DECAM_BKP3', 'DECAM_BKP5'],
+    )
+    overscanBiasJumpLocation = pexConfig.Field(
+        dtype = int,
+        doc = "The y distance of the bias jump location measured in units " +
+              "of pixels from the readout corner; this should be the y " +
+              "dimension of the smaller ancillary CCDs.",
+        default = 2098,
+    )
+
+
 class DecamIsrTask(IsrTask):
+    ConfigClass = DecamIsrConfig
+
     def convertIntToFloat(self, exp):
         """No conversion necessary."""
         return exp
@@ -101,4 +122,62 @@ class DecamIsrTask(IsrTask):
             exposure.getMaskedImage(),
             rawMaskedImage.getBBox(),
             exposure.getMaskedImage().getMask().getPlaneBitMask("EDGE")
+        )
+
+    def overscanCorrection(self, exposure, amp):
+        """Apply overscan correction in place
+
+        If the input exposure is on the readout backplanes listed in
+        config.overscanBiasJumpBKP, cut the amplifier in two vertically
+        and correct each piece separately.
+
+        @param[in,out] exposure: exposure to process; must include both
+                                 DataSec and BiasSec pixels
+        @param[in] amp: amplifier device data
+        """
+        if not (exposure.getMetadata().exists('FPA') and
+                exposure.getMetadata().get('FPA') in self.config.overscanBiasJumpBKP):
+            IsrTask.overscanCorrection(self, exposure, amp)
+            return
+
+        dataBox = amp.getRawDataBBox()
+        overscanBox = amp.getRawHorizontalOverscanBBox()
+
+        if amp.getReadoutCorner() in (afwTable.LL, afwTable.LR):
+            yLower = self.config.overscanBiasJumpLocation
+            yUpper = dataBox.getHeight() - yLower
+        else:
+            yUpper = self.config.overscanBiasJumpLocation
+            yLower = dataBox.getHeight() - yUpper
+
+        lowerDataBBox = afwGeom.Box2I(dataBox.getBegin(),
+                                      afwGeom.Extent2I(dataBox.getWidth(), yLower))
+        upperDataBBox = afwGeom.Box2I(dataBox.getBegin() + afwGeom.Extent2I(0, yLower),
+                                      afwGeom.Extent2I(dataBox.getWidth(), yUpper))
+        lowerOverscanBBox = afwGeom.Box2I(overscanBox.getBegin(),
+                                          afwGeom.Extent2I(overscanBox.getWidth(), yLower))
+        upperOverscanBBox = afwGeom.Box2I(overscanBox.getBegin() + afwGeom.Extent2I(0, yLower),
+                                          afwGeom.Extent2I(overscanBox.getWidth(), yUpper))
+
+        maskedImage = exposure.getMaskedImage()
+        lowerDataView = maskedImage.Factory(maskedImage, lowerDataBBox)
+        upperDataView = maskedImage.Factory(maskedImage, upperDataBBox)
+
+        expImage = exposure.getMaskedImage().getImage()
+        lowerOverscanImage = expImage.Factory(expImage, lowerOverscanBBox)
+        upperOverscanImage = expImage.Factory(expImage, upperOverscanBBox)
+
+        overscanCorrection(
+            ampMaskedImage = lowerDataView,
+            overscanImage = lowerOverscanImage,
+            fitType = self.config.overscanFitType,
+            order = self.config.overscanOrder,
+            collapseRej = self.config.overscanRej,
+        )
+        overscanCorrection(
+            ampMaskedImage = upperDataView,
+            overscanImage = upperOverscanImage,
+            fitType = self.config.overscanFitType,
+            order = self.config.overscanOrder,
+            collapseRej = self.config.overscanRej,
         )
