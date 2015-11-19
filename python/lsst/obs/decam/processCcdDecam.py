@@ -55,7 +55,3 @@ class ProcessCcdDecamTask(ProcessCcdTask):
         """
         exp = sensorRef.get("instcal")
         return exp
-
-    #This needs to be fixed in pipe_tasks.  Issue number coming up.
-    def propagateCalibFlags(self, icSources, sources, matchRadius=1):
-        pass
