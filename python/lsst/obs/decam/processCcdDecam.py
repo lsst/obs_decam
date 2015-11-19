@@ -35,10 +35,6 @@ class ProcessCcdDecamTask(ProcessCcdTask):
     """
     ConfigClass = ProcessCcdDecamConfig
     _DefaultName = "processCcdDecam"
-    dataPrefix = ""
-
-    def __init__(self, **kwargs):
-        ProcessCcdTask.__init__(self, **kwargs)
 
     @classmethod
     def _makeArgumentParser(cls):
@@ -59,23 +55,6 @@ class ProcessCcdDecamTask(ProcessCcdTask):
         """
         exp = sensorRef.get("instcal")
         return exp
-
-    @pipeBase.timeMethod
-    def run(self, sensorRef):
-        """Process a CCD: including source detection, photometry and WCS determination
-
-        @param sensorRef: sensor-level butler data reference to Decam instcal file
-        @return pipe_base Struct containing these fields:
-        - exposure: calibrated exposure (calexp): as computed if config.doCalibrate,
-            else as upersisted and updated if config.doDetection, else None
-        - calib: object returned by calibration process if config.doCalibrate, else None
-        - apCorr: aperture correction: as computed config.doCalibrate, else as unpersisted
-            if config.doMeasure, else None
-        - sources: detected source if config.doPhotometry, else None
-        """
-        # delegate most of the work to ProcessCcdTask (which, in turn, delegates to ProcessImageTask)
-        result = ProcessCcdTask.run(self, sensorRef)
-        return result
 
     #This needs to be fixed in pipe_tasks.  Issue number coming up.
     def propagateCalibFlags(self, icSources, sources, matchRadius=1):
