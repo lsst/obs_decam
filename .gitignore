@@ -6,3 +6,5 @@ tests/.tests
 ups/*.cfgc
 python/lsst/obs/sst/version.py
 python/lsst/obs/decam/version.py
+bin/ingestImagesDecam.py
+bin/processCcdDecam.py
