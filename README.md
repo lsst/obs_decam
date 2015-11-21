@@ -71,4 +71,12 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
 
 5. Import raw data into the data repository: 
 
-        $  ingestImagesDecam.py /path/to/repo --mode=link --filetype="raw" path/to/raw/*.fits.fz
+        $  ingestImagesDecam.py /path/to/repo --filetype="raw" path/to/raw/*.fits.fz
+
+6. Import calibration data into the data repository. The calibration type can be flat/bias/fringe/defect.
+
+        $ ingestCalibs.py /path/to/repo/  --calibType defect path/to/calib/*fits
+
+7. Process raw data:
+
+        $ processCcd.py /path/to/repo
