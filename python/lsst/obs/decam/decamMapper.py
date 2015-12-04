@@ -208,8 +208,7 @@ class DecamMapper(CameraMapper):
     def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
         """Return a defect list based on butlerLocation returned by map_defects.
 
-        Read in the Community Pipeline bad pixel masks and use those with
-        bit 1 as defect pixels.
+        Use all nonzero pixels in the Community Pipeline Bad Pixel Masks.
 
         @param[in] butlerLocation: Butler Location with path to defects FITS
         @param[in] dataId: data identifier
@@ -218,7 +217,7 @@ class DecamMapper(CameraMapper):
         bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
         bpmArr = bpmImg.getArray()
-        idxBad = np.where(bpmArr & 1)
+        idxBad = np.nonzero(bpmArr)
         workImg = afwImage.ImageU(bpmImg.getDimensions())
         workImg.getArray()[idxBad] = 1
         ds = afwDetection.FootprintSet(workImg, afwDetection.Threshold(0.5))
