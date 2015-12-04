@@ -213,7 +213,7 @@ class DecamMapper(CameraMapper):
 
         @param[in] butlerLocation: Butler Location with path to defects FITS
         @param[in] dataId: data identifier
-        @return a list of afw.image.DefectBase
+        @return meas.algorithms.DefectListT
         """
         bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
