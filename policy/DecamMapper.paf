@@ -165,7 +165,7 @@ calibrations: {
         storage:     "FitsStorage"
         level:       "ccd"
         tables:      "fringe"
-        columns:     "filter"
+        columns:     "filter" "ccdnum"
         reference:   "raw_visit"
         refCols:     "visit"
         filter:      true
