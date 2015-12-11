@@ -314,7 +314,7 @@ datasets: {
     }
     deepDiff_config: {
         template:      "config/deepDiff.py"
-        python:        "lsst.pex.config.Config"
+        python:        "lsst.pipe.tasks.imageDifference.ImageDifferenceConfig"
         persistable:   "Config"
         storage:       "ConfigStorage"
         tables:        raw
@@ -391,7 +391,7 @@ datasets: {
     }
     goodSeeingDiff_config: {
         template:      "config/goodSeeingDiff.py"
-        python:        "lsst.pex.config.Config"
+        python:        "lsst.pipe.tasks.imageDifference.ImageDifferenceConfig"
         persistable:   "Config"
         storage:       "ConfigStorage"
         tables:        raw
