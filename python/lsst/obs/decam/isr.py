@@ -60,6 +60,11 @@ class DecamIsrConfig(IsrTask.ConfigClass):
               "dimension of the smaller ancillary CCDs.",
         default = 2098,
     )
+    numEdgeSuspect = pexConfig.Field(
+        dtype = int,
+        doc = "Number of edge pixels to be flagged as untrustworthy.",
+        default = 25,
+    )
 
 
 class DecamIsrTask(IsrTask):
@@ -122,6 +127,25 @@ class DecamIsrTask(IsrTask):
             exposure.getMaskedImage(),
             rawMaskedImage.getBBox(),
             exposure.getMaskedImage().getMask().getPlaneBitMask("EDGE")
+        )
+
+    def maskAndInterpDefect(self, ccdExposure, defectBaseList):
+        """Mask defects and edges, interpolate over defects in place
+
+        Mask defect pixels using mask plane BAD and interpolate over them.
+        Mask the potentially problematic glowing edges as SUSPECT.
+
+        @param[in,out] ccdExposure: exposure to process
+        @param[in] defectBaseList: a list of defects to mask and interpolate
+        """
+        IsrTask.maskAndInterpDefect(self, ccdExposure, defectBaseList)
+        maskedImage = ccdExposure.getMaskedImage()
+        goodBBox = maskedImage.getBBox()
+        goodBBox.grow(-self.config.numEdgeSuspect)
+        SourceDetectionTask.setEdgeBits(
+            maskedImage,
+            goodBBox,
+            maskedImage.getMask().getPlaneBitMask("SUSPECT")
         )
 
     def overscanCorrection(self, exposure, amp):
