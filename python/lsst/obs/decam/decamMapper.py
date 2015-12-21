@@ -51,6 +51,15 @@ class DecamMapper(CameraMapper):
         # Add it so raw dataset know about the data ID key ccdnum.
         self.mappings["raw"].keyDict.update({'ccdnum': int})
 
+        # The number of bits allocated for fields in object IDs
+        # TODO: This needs to be updated; also see Trac #2797
+        DecamMapper._nbit_tract = 10
+        DecamMapper._nbit_patch = 10
+        DecamMapper._nbit_filter = 4
+        DecamMapper._nbit_id = 64 - (DecamMapper._nbit_tract +
+                                     2*DecamMapper._nbit_patch +
+                                     DecamMapper._nbit_filter)
+
     def _extractDetectorName(self, dataId):
         nameTuple = self.registry.executeQuery(['side','ccd'], ['raw',], [('ccdnum','?'), ('visit','?')],
                                                None, (dataId['ccdnum'], dataId['visit']))
@@ -72,6 +81,38 @@ class DecamMapper(CameraMapper):
         visit = dataId['visit']
         ccdnum = dataId['ccdnum']
         return int("%07d%02d" % (visit, ccdnum))
+
+    def _computeCoaddExposureId(self, dataId, singleFilter):
+        """Compute the 64-bit (long) identifier for a coadd.
+
+        @param dataId (dict)       Data identifier with tract and patch.
+        @param singleFilter (bool) True means the desired ID is for a single-
+                                   filter coadd, in which case dataId
+                                   must contain filter.
+        """
+        tract = long(dataId['tract'])
+        if tract < 0 or tract >= 2**DecamMapper._nbit_tract:
+            raise RuntimeError('tract not in range [0,%d)' % (2**DecamMapper._nbit_tract))
+        patchX, patchY = map(int, dataId['patch'].split(','))
+        for p in (patchX, patchY):
+            if p < 0 or p >= 2**DecamMapper._nbit_patch:
+                raise RuntimeError('patch component not in range [0, %d)' % 2**DecamMapper._nbit_patch)
+        oid = (((tract << DecamMapper._nbit_patch) + patchX) << DecamMapper._nbit_patch) + patchY
+        if singleFilter:
+            return (oid << DecamMapper._nbit_filter) + afwImage.Filter(dataId['filter']).getId()
+        return oid
+
+    def bypass_deepCoaddId(self, datasetType, pythonType, location, dataId):
+        return self._computeCoaddExposureId(dataId, True)
+
+    def bypass_deepCoaddId_bits(self, *args, **kwargs):
+        return 64 - DecamMapper._nbit_id
+
+    def bypass_deepMergedCoaddId(self, datasetType, pythonType, location, dataId):
+        return self._computeCoaddExposureId(dataId, False)
+
+    def bypass_deepMergedCoaddId_bits(self, *args, **kwargs):
+        return 64 - DecamMapper._nbit_id
 
     def translate_dqmask(self, dqmask):
         # TODO: make a class member variable that knows the mappings
@@ -208,17 +249,16 @@ class DecamMapper(CameraMapper):
     def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
         """Return a defect list based on butlerLocation returned by map_defects.
 
-        Read in the Community Pipeline bad pixel masks and use those with
-        bit 1 as defect pixels.
+        Use all nonzero pixels in the Community Pipeline Bad Pixel Masks.
 
         @param[in] butlerLocation: Butler Location with path to defects FITS
         @param[in] dataId: data identifier
-        @return a list of afw.image.DefectBase
+        @return meas.algorithms.DefectListT
         """
         bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
         bpmArr = bpmImg.getArray()
-        idxBad = np.where(bpmArr & 1)
+        idxBad = np.nonzero(bpmArr)
         workImg = afwImage.ImageU(bpmImg.getDimensions())
         workImg.getArray()[idxBad] = 1
         ds = afwDetection.FootprintSet(workImg, afwDetection.Threshold(0.5))
