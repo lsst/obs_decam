@@ -257,13 +257,10 @@ class DecamMapper(CameraMapper):
         """
         bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
-        bpmArr = bpmImg.getArray()
-        idxBad = np.nonzero(bpmArr)
-        workImg = afwImage.ImageU(bpmImg.getDimensions())
-        workImg.getArray()[idxBad] = 1
-        ds = afwDetection.FootprintSet(workImg, afwDetection.Threshold(0.5))
-        fpList = ds.getFootprints()
-        return isr.defectListFromFootprintList(fpList, growFootprints=0)
+        idxBad = np.nonzero(bpmImg.getArray())
+        mim = afwImage.MaskedImageU(bpmImg.getDimensions())
+        mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
+        return isr.getDefectListFromMask(mim, "BAD", growFootprints=0)
 
     def std_defects(self, item, dataId):
         """Return the defect list as it is.

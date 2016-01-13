@@ -117,6 +117,7 @@ class GetRawTestCase(unittest.TestCase):
     def testDefect(self):
         """Test retrieval of defect list"""
         defectList = self.butler.get("defects", self.dataId)
+        self.assertEqual(len(defectList), 9)
         for d in defectList:
             self.assertIsInstance(d, afwImage.DefectBase)
 
