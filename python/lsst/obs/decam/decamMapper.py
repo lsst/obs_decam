@@ -1,6 +1,6 @@
 #
 # LSST Data Management System
-# Copyright 2012-2015 LSST Corporation.
+# Copyright 2012-2016 LSST Corporation.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -185,14 +185,30 @@ class DecamMapper(CameraMapper):
         @param dataId: Data identifier
         @return (lsst.afw.image.Exposure) the standardized Exposure
         """
+        # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
         exp = exposureFromImage(item)
         md = exp.getMetadata()
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
+        # Keywords EXPTIME and MJD-OBS are used to set the calib object.
         for kw in ('EXPTIME', 'MJD-OBS'):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
+        # As TPV is not supported yet, the wcs keywords are not pruned
+        # from the metadata. Once TPV is supported, the following keyword
+        # removal may not be necessary here and would probably be done at
+        # makeWcs() when the raw image is converted to an Exposure.
+        for kw in exp.getWcs().getFitsMetadata().paramNames():
+            md.remove(kw)
+        for kw in ('LTV1', 'LTV2'):
+            md.remove(kw)
+        # Currently the existence of some PV cards in the metadata combined
+        # with a CTYPE of TAN is interpreted as TPV (DM-2883).
+        for kw in md.paramNames():
+            if re.match(r'PV\d_\d', kw):
+                md.remove(kw)
+        # Standardize an Exposure, including setting the calib object
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
 
