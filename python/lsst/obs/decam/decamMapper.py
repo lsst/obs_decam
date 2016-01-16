@@ -178,9 +178,8 @@ class DecamMapper(CameraMapper):
         """Standardize a raw dataset by converting it to an Exposure.
 
         Raw images are MEF files with one HDU for each detector.
-        Some useful header keywords, such as EXPTIME and MJD-OBS,
-        exist only in the zeroth extensionr.  Here information in
-        the zeroth header are copied to metadata.
+        Header keywords EXPTIME and MJD-OBS exist only in the zeroth
+        extension and are copied to metadata.
 
         @param item: The image read by the butler
         @param dataId: Data identifier
@@ -191,8 +190,8 @@ class DecamMapper(CameraMapper):
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
-        for kw in md0.paramNames():
-            if kw not in md.paramNames():
+        for kw in ('EXPTIME', 'MJD-OBS'):
+            if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
@@ -216,8 +215,9 @@ class DecamMapper(CameraMapper):
         masterCalPath = masterCalMap(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
         md0 = afwImage.readMetadata(headerPath)
-        for kw in md0.paramNames():
-            if kw not in md.paramNames():
+        for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
+                   'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
+            if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
         wcs = afwImage.makeWcs(md, True)
         exp = afwImage.makeExposure(mi, wcs)
@@ -257,13 +257,10 @@ class DecamMapper(CameraMapper):
         """
         bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
-        bpmArr = bpmImg.getArray()
-        idxBad = np.nonzero(bpmArr)
-        workImg = afwImage.ImageU(bpmImg.getDimensions())
-        workImg.getArray()[idxBad] = 1
-        ds = afwDetection.FootprintSet(workImg, afwDetection.Threshold(0.5))
-        fpList = ds.getFootprints()
-        return isr.defectListFromFootprintList(fpList, growFootprints=0)
+        idxBad = np.nonzero(bpmImg.getArray())
+        mim = afwImage.MaskedImageU(bpmImg.getDimensions())
+        mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
+        return isr.getDefectListFromMask(mim, "BAD", growFootprints=0)
 
     def std_defects(self, item, dataId):
         """Return the defect list as it is.

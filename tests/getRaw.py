@@ -49,6 +49,7 @@ class GetRawTestCase(unittest.TestCase):
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
+        self.exptime = 200.0
 
     def tearDown(self):
         del self.butler
@@ -69,6 +70,14 @@ class GetRawTestCase(unittest.TestCase):
         self.assertEqual(exp.getHeight(), self.size[1])
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+        self.assertTrue(exp.hasWcs())
+
+        # Metadata which should have been copied from zeroth extension.
+        self.assertIn("MJD-OBS", exp.getMetadata().paramNames())
+        self.assertEqual(exp.getCalib().getExptime(), self.exptime)
+
+        # Example of metadata which should *not* have been copied from zeroth extension.
+        self.assertNotIn("PROPOSER", exp.getMetadata().paramNames())
 
     def testRawMetadata(self):
         """Test retrieval of metadata"""
@@ -84,6 +93,7 @@ class GetRawTestCase(unittest.TestCase):
         print("dataId: %s" % self.dataId)
         print("detector id: %s" % exp.getDetector().getId())
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertTrue(exp.hasWcs())
 
     def testFlat(self):
         """Test retrieval of flat image"""
@@ -93,6 +103,7 @@ class GetRawTestCase(unittest.TestCase):
         print("filter: %s" % self.filter)
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+        self.assertTrue(exp.hasWcs())
 
     def testFringe(self):
         """Test retrieval of fringe image"""
@@ -106,6 +117,7 @@ class GetRawTestCase(unittest.TestCase):
     def testDefect(self):
         """Test retrieval of defect list"""
         defectList = self.butler.get("defects", self.dataId)
+        self.assertEqual(len(defectList), 9)
         for d in defectList:
             self.assertIsInstance(d, afwImage.DefectBase)
 
