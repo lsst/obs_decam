@@ -44,8 +44,7 @@ class GetRawTestCase(unittest.TestCase):
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
-        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"),
-                                        calibRoot=os.path.join(datadir, "calib"))
+        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
