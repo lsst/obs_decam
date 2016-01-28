@@ -72,8 +72,9 @@ class DecamMapper(CameraMapper):
                                      DecamMapper._nbit_filter)
 
     def _extractDetectorName(self, dataId):
+        transformedId = self._transformId(dataId)
         try:
-            return self.detectorNames[dataId['ccdnum']]
+            return self.detectorNames[transformedId['ccdnum']]
         except KeyError:
             raise RuntimeError("No name found for dataId: %s"%(dataId))
 
@@ -86,8 +87,9 @@ class DecamMapper(CameraMapper):
 
         @param dataId (dict) Data identifier with visit, ccd
         """
-        visit = dataId['visit']
-        ccdnum = dataId['ccdnum']
+        transformedId = self._transformId(dataId)
+        visit = transformedId['visit']
+        ccdnum = transformedId['ccdnum']
         return int("%07d%02d" % (visit, ccdnum))
 
     def _computeCoaddExposureId(self, dataId, singleFilter):
@@ -292,3 +294,24 @@ class DecamMapper(CameraMapper):
         Do not standardize it to Exposure.
         """
         return item
+
+    def _transformId(self, dataId):
+        """
+        Transform an ID dict into standard form for DECam?
+        Transform from colloquial usage (e.g., "ccdname") to canonical usage (e.g., "ccd")?
+
+        The canonical key is ccd.
+
+        @param dataId[in] (dict) Data identifier; this must not be modified
+        @return (dict) Transformed data identifier
+        """
+        copyId = dataId.copy()
+        #if "ccdnum" in copyId:
+        #    copyId.setdefault("ccd", copyId["ccdnum"])
+        if "ccd" in copyId:
+            copyId.setdefault("ccdnum", copyId["ccd"])
+        return copyId
+
+    def map_raw(self, dataId, write=False):
+        transformedId = self._transformId(dataId)
+        return self.mappings["raw"].map(self, dataId=transformedId, write=write)

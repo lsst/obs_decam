@@ -87,6 +87,20 @@ class GetRawTestCase(unittest.TestCase):
         self.assertEqual(md.get('EXPNUM'), self.dataId["visit"])
         self.assertEqual(md.get('CCDNUM'), self.dataId["ccdnum"])
 
+    def testRawAlias(self):
+        """Test retrieval of raw image using aliased ccd key"""
+        exp = self.butler.get("raw", visit=self.dataId["visit"], ccd=self.dataId["ccdnum"])
+
+        print("dataId: %s" % self.dataId)
+        print("width: %s" % exp.getWidth())
+        print("height: %s" % exp.getHeight())
+        print("detector id: %s" % exp.getDetector().getId())
+
+        self.assertEqual(exp.getWidth(), self.size[0])
+        self.assertEqual(exp.getHeight(), self.size[1])
+        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
+        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
+
     def testBias(self):
         """Test retrieval of bias image"""
         exp = self.butler.get("bias", self.dataId)
