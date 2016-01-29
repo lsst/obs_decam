@@ -65,7 +65,14 @@ exposures: {
         columns:     "visit"
         columns:     "ccdnum"
     }
-
+    icExp: {
+        template:    "%(date)s/%(filter)s/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+    }
     calexp: {
         template:    "%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ExposureF"
@@ -275,6 +282,21 @@ datasets: {
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
+    }
+    srcMatch: {
+        template:      "%(date)s/%(filter)s/srcMatch/srcMatch-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
+    icExpBackground: {
+        template:      "%(date)s/%(filter)s/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.math.BackgroundList"
+        persistable:   "PurePythonClass"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
     }
     calexpBackground: {
         template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
