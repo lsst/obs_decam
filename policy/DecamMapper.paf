@@ -297,6 +297,26 @@ datasets: {
         storage:       "BoostStorage"
         tables:        raw
     }
+    deepDiff_metadata: {
+        template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    deep_processDiffim_metadata: {
+        template:      "deep_processDiffim_metadata/v%(visit)d/metadata-%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    deep_processDiffim_config: {
+        template:      "config/deep_processDiffim.py"
+        python:        "lsst.pipe.tasks.processDiffim.ProcessDiffimConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"    
+    }
     processCcdDecam_config: {
         template:      "config/processCcdDecam.py"
         python:        "lsst.obs.decam.processCcdDecam.ProcessCcdDecamConfig"
@@ -311,7 +331,6 @@ datasets: {
         storage:       "BoostStorage"
         tables:        raw
     }
-
     src_schema: {
         template:      "schema/src.fits"
         python:        "lsst.afw.table.SourceCatalog"
