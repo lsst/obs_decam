@@ -33,7 +33,7 @@ import lsst.pex.exceptions as pexExcept
 
 
 class WcsCardsTestCase(unittest.TestCase):
-    """Testing butler exposure id retrieval"""
+    """Test wcs keywords in the metadata"""
     def setUp(self):
         try:
             datadir = getPackageDir("testdata_decam")
