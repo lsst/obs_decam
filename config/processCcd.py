@@ -9,3 +9,5 @@ config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
                                        'BIASSECA', 'BIASSECB',
                                        'PRESECA', 'PRESECB',
                                        'POSTSECA', 'POSTSECB']
+
+config.charImage.repair.cosmicray.nCrPixelMax = 100000
