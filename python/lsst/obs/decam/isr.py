@@ -51,7 +51,7 @@ class DecamIsrConfig(IsrTask.ConfigClass):
         dtype = str,
         doc = "Names of the backplanes for CCDs showing bias jump due to " +
               "the simultaneous readout of the smaller ancillary CCDs.",
-        default = ['DECAM_BKP3', 'DECAM_BKP5'],
+        default = ['DECAM_BKP3', 'DECAM_BKP5', 'DECAM_BKP1', 'DECAM_BKP4'],
     )
     overscanBiasJumpLocation = pexConfig.Field(
         dtype = int,
