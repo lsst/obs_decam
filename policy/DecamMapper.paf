@@ -268,6 +268,22 @@ datasets: {
         storage:       "FitsCatalogStorage"
         tables:        "raw"
     }
+    transformed_src: {
+        template:      "%(visit)07d/transformed_src/transformed_src-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.SourceCatalog"
+        persistable:   "SourceCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
+    transformed_src_schema: {
+        template:      "schema/transformed_src.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "SourceCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
     icMatch: {
         template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.table.BaseCatalog"
@@ -275,6 +291,30 @@ datasets: {
         storage:       "FitsCatalogStorage"
         tables:        raw
         tables:        raw_skyTile
+    }
+    icMatchFull: {
+        template:      "%(visit)07d/icMatchFull/ML-%(visit)07d-%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
+    srcMatch: {
+        template:      "%(visit)07d/srcMatch/SRCMATCH-%(visit)07d-%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
+    srcMatchFull: {
+        template:      "%(visit)07d/srcMatchFull/SRCML-%(visit)07d-%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
     }
     calexpBackground: {
         template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
@@ -665,4 +705,17 @@ datasets: {
         tables:        raw_skyTile
     }
 
+    # Plots for analysis QA
+    plotVisit: {
+        template:      "plots/%(filter)s/visit-%(visit)d/plot-v%(visit)d-%(description)s-%(style)s.png"
+        python:        __builtin__.str
+        persistable:   None
+        storage:       TextStorage
+    }
+    plotCompareVisit: {
+        template:      "plots/%(filter)s/visit-%(visit)d/compareVisit-v%(visit)d-%(description)s-%(style)s.png"
+        python:        __builtin__.str
+        persistable:   None
+        storage:       TextStorage
+    }
 }
