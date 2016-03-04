@@ -57,7 +57,7 @@ class DecamNullIsrTask(pipeBase.Task):
     @section pipe_tasks_decamNullIsr_Purpose  Description
 
     Load "instcal" exposures from the community pipeline as a post-ISR exposure,
-    and optionally persists it as a `postISRCCD`.
+    and optionally persist it as a `postISRCCD`.
 
     This is used to retarget the `isr` subtask in `ProcessCcdTask` when you prefer to use
     the community pipeline instead of the LSST software stack to perform ISR on DECam images.
