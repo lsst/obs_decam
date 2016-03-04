@@ -29,6 +29,11 @@ class DecamNullIsrConfig(pexConfig.Config):
         doc = "Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
         default = False,
     )
+    datasetType = pexConfig.Field(
+        dtype = str,
+        doc = "Dataset type for input data; read by ProcessCcdTask; users will typically leave this alone",
+        default = "instcal",
+    )
 
 ## \addtogroup LSST_task_documentation
 ## \{
