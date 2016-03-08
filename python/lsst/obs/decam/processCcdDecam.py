@@ -22,16 +22,52 @@
 #
 import lsst.pipe.base as pipeBase
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
+from .decamNullIsr import DecamNullIsrTask
 
 class ProcessCcdDecamConfig(ProcessCcdTask.ConfigClass):
     """Config for ProcessCcdDecam"""
 
     def setDefaults(self):
         ProcessCcdTask.ConfigClass.setDefaults(self)
-        self.doIsr = False
+        self.isr.retarget(DecamNullIsrTask)
+
+
+## \addtogroup LSST_task_documentation
+## \{
+## \page ProcessCcdDecamTask
+## \ref ProcessCcdDecamTask_ "ProcessCcdDecamTask"
+## \copybrief ProcessCcdDecamTask
+## \}
 
 class ProcessCcdDecamTask(ProcessCcdTask):
-    """Process a CCD for Decam
+    """!Process DECam "instcal" images
+
+    @anchor ProcessCcdDecamTask_
+    
+    @section pipe_tasks_processCcdDecam_Contents  Contents
+
+     - @ref pipe_tasks_processCcdDecam_Purpose
+     - @ref pipe_tasks_processCcdDecam_Initialize
+     - @ref pipe_tasks_processCcdDecam_IO
+     - @ref pipe_tasks_processCcdDecam_Config
+
+    @section pipe_tasks_processCcdDecam_Purpose  Description
+
+    Process "instcal" data from the community pipeline, as loaded by DecamNullIsrTask.
+    This trivial subclass of lsst.pipe.tasks.ProcessCcdTask exists solely to provide the correct dataset type
+    to the `--id` command-line argument. Once ticket DM-4952 is implemented this task will not be needed.
+
+    @section pipe_tasks_processCcdDecam_Initialize  Task initialisation
+
+    @copydoc \_\_init\_\_
+
+    @section pipe_tasks_processCcdDecam_IO  Invoking the Task
+
+    The main method is `run`.
+
+    @section pipe_tasks_processCcdDecam_Config  Configuration parameters
+
+    See @ref ProcessCcdDecamConfig
     """
     ConfigClass = ProcessCcdDecamConfig
     _DefaultName = "processCcdDecam"
@@ -45,13 +81,3 @@ class ProcessCcdDecamTask(ProcessCcdTask):
         parser = pipeBase.ArgumentParser(name=cls._DefaultName)
         parser.add_id_argument("--id", "instcal", "data ID, e.g. visit=155293 ccdnum=10")
         return parser
-
-    def setPostIsrExposure(self, sensorRef):
-        """Load the post instrument signature removal image
-
-        \param[in]  sensorRef        sensor-level butler data reference
-
-        \return     postIsrExposure  exposure to be passed to processCcdExposure
-        """
-        exp = sensorRef.get("instcal")
-        return exp

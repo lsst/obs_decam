@@ -28,7 +28,7 @@ exposures: {
         columns:     "ccdnum"
     }
     postISRCCD: {
-        template:    "%(date)s/%(filter)s/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits"
+        template:    "%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ExposureF"
         persistable: "ExposureF"
         storage:     "FitsStorage"
@@ -65,7 +65,16 @@ exposures: {
         columns:     "visit"
         columns:     "ccdnum"
     }
-
+    icExp: {
+        template:    "%(visit)07d/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "raw"
+        columns:     "visit"
+        columns:     "ccdnum"
+    }
     calexp: {
         template:    "%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ExposureF"
@@ -276,6 +285,21 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
+    srcMatch: {
+        template:      "%(visit)07d/srcMatch/srcMatch-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        "raw"
+        tables:        "raw_visit"
+    }
+    icExpBackground: {
+        template:      "%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits"
+        python:        "lsst.afw.math.BackgroundList"
+        persistable:   "PurePythonClass"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+    }
     calexpBackground: {
         template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"
         python:        "lsst.afw.math.BackgroundList"
@@ -291,7 +315,7 @@ datasets: {
         storage:       "ConfigStorage"
     }
     processCcd_metadata: {
-        template:      "%(date)s/%(filter)s/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
+        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
         python:        "lsst.daf.base.PropertySet"
         persistable:   "PropertySet"
         storage:       "BoostStorage"
