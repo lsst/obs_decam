@@ -14,6 +14,8 @@ class DecamCalibsParseTask(CalibsParseTask):
         # Use info of primary header unit
         if not infoList:
             infoList.append(phuInfo)
+        for info in infoList:
+            info['path'] = filename
         # Try to fetch a date from filename
         # and use as the calibration dates if not already set
         found = re.search('(\d\d\d\d-\d\d-\d\d)', filename)
@@ -21,9 +23,8 @@ class DecamCalibsParseTask(CalibsParseTask):
             return phuInfo, infoList
         date = found.group(1)
         for info in infoList:
-            for col in ['calibDate', 'validStart', 'validEnd']:
-                if col not in info or (col in info and info[col] == "unknown"):
-                    info[col] = date
+            if 'calibDate' not in info or info['calibDate'] == "unknown":
+                info['calibDate'] = date
         return phuInfo, infoList
 
     def translate_ccdnum(self, md):

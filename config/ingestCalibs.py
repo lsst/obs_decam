@@ -11,8 +11,6 @@ config.parse.extnames = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', '
 config.parse.translators = {'filter': 'translate_filter',
                           'ccdnum': 'translate_ccdnum',
                           'calibDate': 'translate_date',
-                          'validStart': 'translate_date',
-                          'validEnd': 'translate_date',
                           }
 config.register.columns = {'filter': 'text',
                          'ccdnum': 'int',
@@ -21,6 +19,7 @@ config.register.columns = {'filter': 'text',
                          'validStart': 'text',
                          'validEnd': 'text',
                          }
+config.register.detector = ['filter', 'ccdnum']
 config.register.unique = ['filter', 'ccdnum', 'calibDate']
 config.register.tables = ['bias', 'flat', 'fringe', 'defect']
 config.register.visit = ['calibDate']
