@@ -44,7 +44,9 @@ class GetRawTestCase(unittest.TestCase):
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
-        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
+
+        self.repoPath = os.path.join(datadir, "rawData")
+        self.butler = dafPersist.Butler(root=self.repoPath)
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
@@ -54,7 +56,8 @@ class GetRawTestCase(unittest.TestCase):
         del self.butler
 
     def testPackageName(self):
-        self.assertEqual(self.butler.mapper.packageName, "obs_decam")
+        name = dafPersist.Butler.getMapperClass(root=self.repoPath).packageName
+        self.assertEqual(name, "obs_decam")
 
     def testRaw(self):
         """Test retrieval of raw image"""
