@@ -29,6 +29,11 @@ class DecamNullIsrConfig(pexConfig.Config):
         doc = "Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
         default = False,
     )
+    datasetType = pexConfig.Field(
+        dtype = str,
+        doc = "Dataset type for input data; read by ProcessCcdTask; users will typically leave this alone",
+        default = "instcal",
+    )
 
 ## \addtogroup LSST_task_documentation
 ## \{
@@ -52,7 +57,7 @@ class DecamNullIsrTask(pipeBase.Task):
     @section pipe_tasks_decamNullIsr_Purpose  Description
 
     Load "instcal" exposures from the community pipeline as a post-ISR exposure,
-    and optionally persists it as a `postISRCCD`.
+    and optionally persist it as a `postISRCCD`.
 
     This is used to retarget the `isr` subtask in `ProcessCcdTask` when you prefer to use
     the community pipeline instead of the LSST software stack to perform ISR on DECam images.
