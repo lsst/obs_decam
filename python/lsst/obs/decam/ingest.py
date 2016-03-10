@@ -61,11 +61,11 @@ class DecamIngestTask(IngestTask):
                 for infile in args.files:
                     fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
                     if len(hduInfoList) > 0:
-                        outfileInstcal = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                        outfileInstcal = os.path.join(root, self.parse.getDestination(args.butler,
                                                       hduInfoList[0], infile, "instcal"))
-                        outfileDqmask = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                        outfileDqmask = os.path.join(root, self.parse.getDestination(args.butler,
                                                      hduInfoList[0], infile, "dqmask"))
-                        outfileWtmap = os.path.join(args.butler, self.parse.getDestination(args.butler,
+                        outfileWtmap = os.path.join(root, self.parse.getDestination(args.butler,
                                                     hduInfoList[0], infile, "wtmap"))
 
                         ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal,
