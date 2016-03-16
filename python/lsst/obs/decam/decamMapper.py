@@ -60,6 +60,8 @@ class DecamMapper(CameraMapper):
         # template of the raw dataset, so is not in its keyDict automatically.
         # Add it so raw dataset know about the data ID key ccdnum.
         self.mappings["raw"].keyDict.update({'ccdnum': int})
+        self.mappings["raw"].keyDict.update({'filter': str})
+        self.mappings["src"].keyDict.update({'filter': str})
 
         # The number of bits allocated for fields in object IDs
         # TODO: This needs to be updated; also see Trac #2797
@@ -199,7 +201,7 @@ class DecamMapper(CameraMapper):
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
         # Keywords EXPTIME and MJD-OBS are used to set the calib object.
-        for kw in ('EXPTIME', 'MJD-OBS'):
+        for kw in ('EXPTIME', 'MJD-OBS', 'AIRMASS', 'HA', 'RA', 'DEC'):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
         # As TPV is not supported yet, the wcs keywords are not pruned
