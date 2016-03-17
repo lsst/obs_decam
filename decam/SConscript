@@ -1,0 +1,21 @@
+import lsst.sconsUtils
+import glob
+import os
+env = lsst.sconsUtils.env.Clone()
+
+for name in ("PYTHONPATH", "LD_LIBRARY_PATH",
+             "DYLD_LIBRARY_PATH", "PATH"):
+    if name in os.environ:
+        env.AppendENVPath(name, os.environ[name])
+
+# we may need an explicit library load path specified in the command
+libpathstr = lsst.sconsUtils.utils.libraryLoaderEnvironment()
+
+python = "{} python".format(libpathstr)
+
+defectsFileList = glob.glob("defects/*/*.fits")
+
+command = "{} `which ingestCalibs.py` decam/defects --create --calib decam/defects --calibType defect --validity=0 decam/defects/*/*.fits"
+registry = env.AlwaysBuild(env.Command("decam/defects/defectRegistry.sqlite3",
+                                       defectsFileList, command.format(python)))
+

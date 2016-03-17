@@ -15,6 +15,7 @@ defaultSubLevels: {
 }
 
 camera: "../decam/camGeom"
+defects: "../decam/defects"
 
 exposures: {
     raw: {
@@ -188,20 +189,6 @@ calibrations: {
         refCols:     "visit"
         filter:      true
         validRange:  false
-    }
-    defects: {
-        template:    "%(path)s"
-        python:      "lsst.afw.image.ImageU"
-        persistable: "ImageU"
-        storage:     "FitsStorage"
-        level:       "ccd"
-        tables:      "defect"
-        columns:     "date" "ccdnum"
-        reference:   "raw_visit"
-        refCols:     "visit"
-        filter:      false
-        validRange:  true
-        obsTimeName: date
     }
 }
 
