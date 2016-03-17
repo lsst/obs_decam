@@ -21,11 +21,9 @@
 #
 import re
 import numpy as np
-import lsst.afw.detection as afwDetection
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
-from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
 
 np.seterr(divide="ignore")
@@ -268,22 +266,6 @@ class DecamMapper(CameraMapper):
         @return daf.persistence.ButlerLocation
         """
         return self.mappings["defects"].map(self, dataId=dataId, write=write)
-
-    def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
-        """Return a defect list based on butlerLocation returned by map_defects.
-
-        Use all nonzero pixels in the Community Pipeline Bad Pixel Masks.
-
-        @param[in] butlerLocation: Butler Location with path to defects FITS
-        @param[in] dataId: data identifier
-        @return meas.algorithms.DefectListT
-        """
-        bpmFitsPath = butlerLocation.locationList[0]
-        bpmImg = afwImage.ImageU(bpmFitsPath)
-        idxBad = np.nonzero(bpmImg.getArray())
-        mim = afwImage.MaskedImageU(bpmImg.getDimensions())
-        mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
-        return isr.getDefectListFromMask(mim, "BAD", growFootprints=0)
 
     def std_defects(self, item, dataId):
         """Return the defect list as it is.
