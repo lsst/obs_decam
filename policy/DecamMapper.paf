@@ -4,8 +4,8 @@ needCalibRegistry: true
 
 levels: {
     # Keys that are NOT relevant for a particular level
-    skyTile: "visit" "ccdnum"
-    visit: "ccdnum"
+    skyTile: "visit" "ccdnum" "hdu"
+    visit: "ccdnum" "hdu"
     ccd: "none"
 }
 defaultLevel: "ccd"
