@@ -43,11 +43,11 @@ class DecamMapper(CameraMapper):
                           62:'N31'}
 
 
-    def __init__(self, inputPolicy=None, **kwargs):
+    def __init__(self, inputPolicy=None, root=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "DecamMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
-        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), root=root, **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
         afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
@@ -149,7 +149,7 @@ class DecamMapper(CameraMapper):
         var   = 1.0 / wtmArr
         varim = afwImage.ImageF(var)
         return varim
-        
+
     def bypass_instcal(self, datasetType, pythonType, butlerLocation, dataId):
         # Workaround until I can access the butler
         instcalMap  = self.map_instcal(dataId)
@@ -177,7 +177,7 @@ class DecamMapper(CameraMapper):
         calib.setExptime(md0.get("EXPTIME"))
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
-        
+
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
         return exp
 
