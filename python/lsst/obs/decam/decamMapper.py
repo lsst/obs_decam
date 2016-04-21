@@ -48,6 +48,24 @@ class DecamMapper(CameraMapper):
 
         super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
+        # Ensure each dataset type of interest knows all useful dataId keys
+        # For example, the data ID key ccdnum is not directly used in the policy
+        # template of the raw dataset, so is not in its keyDict automatically.
+        keys = {'visit': int,
+                'filter': str,
+                'date': str,
+                'expTime': float,
+                'ccdnum': int,
+        }
+
+        for name in ("raw",
+                     # processCcd outputs
+                     "postISRCCD", "calexp", "postISRCCD", "src", "icSrc", "icMatch", "srcMatch",
+                     # Warp
+                     "deepCoadd_tempExp",
+                     ):
+            self.mappings[name].keyDict.update(keys)
+
         afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
         afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
         afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
