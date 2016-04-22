@@ -755,4 +755,20 @@ datasets: {
         persistable:   "Config"
         storage:       "ConfigStorage"
     }
+    singleFrameDriver_config: {
+        template:      "config/singleFrameDriver.py"
+        python:        "lsst.pipe.drivers.singleFrameDriver.SingleFrameDriverConfig"
+        persistable:      "Config"
+        storage:    "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    singleFrameDriver_metadata: {
+        template:      "%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:        "PropertySet"
+        storage:    "BoostStorage"
+        tables:        raw  
+        tables:        raw_visit
+    } 
 }
