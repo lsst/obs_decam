@@ -73,10 +73,17 @@ class DecamMapper(CameraMapper):
                                      DecamMapper._nbit_filter)
 
     def _extractDetectorName(self, dataId):
+        copyId = self._transformId(dataId)
         try:
-            return DecamMapper.detectorNames[dataId['ccdnum']]
+            return DecamMapper.detectorNames[copyId['ccdnum']]
         except KeyError:
             raise RuntimeError("No name found for dataId: %s"%(dataId))
+
+    def _transformId(self, dataId):
+        copyId = CameraMapper._transformId(self, dataId)
+        if "ccd" in copyId:
+            copyId.setdefault("ccdnum", copyId["ccd"])
+        return copyId
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         return self._computeCcdExposureId(dataId)
@@ -87,8 +94,9 @@ class DecamMapper(CameraMapper):
 
         @param dataId (dict) Data identifier with visit, ccd
         """
-        visit = dataId['visit']
-        ccdnum = dataId['ccdnum']
+        copyId = self._transformId(dataId)
+        visit = copyId['visit']
+        ccdnum = copyId['ccdnum']
         return int("%07d%02d" % (visit, ccdnum))
 
     def _computeCoaddExposureId(self, dataId, singleFilter):
