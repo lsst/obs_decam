@@ -140,7 +140,8 @@ exposures: {
 calibrations: {
     bias: {
         # Given that MasterCal hdu number is identical to ccdnum
-        template:    "%(path)s[%(ccdnum)d]"
+#        template:    "%(path)s[%(ccdnum)d]"
+        template:    "BIAS/%(date)s/BIAS-%(date)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -153,8 +154,24 @@ calibrations: {
         validRange:  true
         obsTimeName: date
     }
+    dark: {
+#        template:    "%(path)s[%(ccdnum)d]"
+        template:    "DARK/%(date)s/DARK-%(date)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "dark"
+        columns:     "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      false
+        validRange:  true
+        obsTimeName: date
+    }
     flat: {
-        template:    "%(path)s[%(ccdnum)d]"
+#        template:    "%(path)s[%(ccdnum)d]"
+        template:    "FLAT/%(date)s/%(filter)s/FLAT-%(date)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -168,7 +185,8 @@ calibrations: {
         obsTimeName: date
     }
     fringe: {
-        template:    "%(path)s"
+#        template:    "%(path)s"
+        template:    "FRINGE/%(date)s/%(filter)s/FRINGE-%(date)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
         storage:     "FitsStorage"
@@ -777,4 +795,37 @@ datasets: {
         persistable:   "PurePythonClass"
         storage:       "FitsCatalogStorage"
     }
+    bias_config: {
+        template:      "config/bias.py"
+        python:        "lsst.pipe.drivers.constructCalibs.BiasConfig"
+        persistable:      "Config"
+        storage:    "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    dark_config: {
+        template:      "config/dark.py"
+        python:        "lsst.pipe.drivers.constructCalibs.DarkConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    flat_config: {
+        template:      "config/flat.py"
+        python:        "lsst.pipe.drivers.constructCalibs.FlatConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    fringe_config: {
+        template:      "config/fringe.py"
+        python:        "lsst.pipe.drivers.constructCalibs.FringeConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+
 }

@@ -48,12 +48,33 @@ class DecamMapper(CameraMapper):
 
         super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
+        # Ensure each dataset type of interest knows about the full range of keys available from the registry
+        keys = {'visit': int,
+                'side': str,
+                'ccd': int,
+                'filter': str,
+                'date': str,
+                'taiObs': str,
+                'expTime': float,
+                'ccdnum': int,
+                'hdu': int,
+        }
+
+        for name in ("raw",
+                     # processCcd outputs
+                     "postISRCCD", "calexp", "postISRCCD", "src", "icSrc", "icMatch", "srcMatch",
+                     # Warp
+                     "deepCoadd_tempExp",
+                     ):
+            self.mappings[name].keyDict.update(keys)
+
         afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
         afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
         afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
         afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
         afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
+        afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
         # The data ID key ccdnum is not directly used in the current policy
         # template of the raw dataset, so is not in its keyDict automatically.
