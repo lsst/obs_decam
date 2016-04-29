@@ -1,4 +1,4 @@
 config.dateObs="date"
 config.dateCalib="date"
-config.ccdKeys=["ccdnum", "ccd", "side"]
+config.ccdKeys=["ccdnum"]
 config.isr.assembleCcd.setGain = False
