@@ -130,6 +130,7 @@ def makeAmpTables(segmentsFile):
             record.setReadoutCorner(readCorner)
             record.setGain(gain)
             record.setSaturation(saturation)
+            record.setSuspectLevel(float("nan"))
             record.setReadNoise(readnoise)
             record.setLinearityCoeffs(linearityCoeffs)
             record.setLinearityType(linearityType)
