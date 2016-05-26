@@ -35,7 +35,7 @@ import shutil
 import lsst.utils
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
-from lsst.afw.cameraGeom import (DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS)
+from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS, NullLinearityType
 from lsst.obs.decam import DecamMapper
 
 def makeAmpTables(segmentsFile):
@@ -47,7 +47,7 @@ def makeAmpTables(segmentsFile):
     #TODO currently there is no linearity provided, but we should identify
     #how to get this information.
     linearityCoeffs = (0.,1.,0.,0.)
-    linearityType = "Polynomial"
+    linearityType = NullLinearityType
     readoutMap = {'LL':afwTable.LL, 'LR':afwTable.LR, 'UR':afwTable.UR, 'UL':afwTable.UL}
     detectorName = [] # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
