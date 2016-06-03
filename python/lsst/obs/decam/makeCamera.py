@@ -17,18 +17,18 @@ def makeRaft(raftName):
     dewar = cameraGeom.Raft(cameraGeom.Id("DECam"), 1, 1)
     dewar.addDetector(afwGeom.PointI(0, 0), cameraGeom.FpPoint(0.0, 0.0),
                       cameraGeom.Orientation(0), makeCcd(raftName))
-    return dewar 
+    return dewar
 
 def makeCamera(name="DECam"):
     camera = cameraGeom.Camera(cameraGeom.Id(name), 62, 1)
 
     for i in range(62):
         if i > 31:
-           dewarName = "S%d" % (62-i+1)
+            dewarName = "S%d" % (62-i+1)
         else:
-           dewarName = "S%d" % (i+1)
+            dewarName = "S%d" % (i+1)
         camera.addDetector(afwGeom.PointI(i, 0), cameraGeom.FpPoint(25.4*2.5*(2.5 - i), 0.0),
                            cameraGeom.Orientation(0), makeRaft(dewarName))
 
-    return camera 
+    return camera
 
