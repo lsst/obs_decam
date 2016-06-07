@@ -103,10 +103,10 @@ class DecamParseTask(ParseTask):
         for file in os.listdir(path):
             fileName = os.path.join(path, file)
             md = afwImage.readMetadata(fileName)
-            if not "EXPNUM" in md.names():
+            if "EXPNUM" not in md.names():
                 return
             expnum = md.get("EXPNUM")
-            if not expnum in self.expnumMapper.keys():
+            if expnum not in self.expnumMapper.keys():
                 self.expnumMapper[expnum] = {self.instcalPrefix: None,
                                              self.wtmapPrefix: None,
                                              self.dqmaskPrefix: None}
@@ -119,14 +119,14 @@ class DecamParseTask(ParseTask):
         dqmaskPath  = re.sub(self.instcalPrefix, self.dqmaskPrefix, instcalPath)
         wtmapPath   = re.sub(self.instcalPrefix, self.wtmapPrefix, instcalPath)
         if instcalPath == dqmaskPath:
-            raise RuntimeError, "instcal and mask directories are the same"
+            raise RuntimeError("instcal and mask directories are the same")
         if instcalPath == wtmapPath:
-            raise RuntimeError, "instcal and weight map directories are the same"
+            raise RuntimeError("instcal and weight map directories are the same")
             
         if not os.path.isdir(dqmaskPath):
-            raise OSError, "Directory %s does not exist" % (dqmaskPath)
+            raise OSError("Directory %s does not exist" % (dqmaskPath))
         if not os.path.isdir(wtmapPath):
-            raise OSError, "Directory %s does not exist" % (wtmapPath)
+            raise OSError("Directory %s does not exist" % (wtmapPath))
 
         # Traverse each directory and extract the expnums
         for path, prefix in zip((instcalPath, dqmaskPath, wtmapPath),

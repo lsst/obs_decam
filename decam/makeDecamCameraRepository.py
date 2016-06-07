@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
-# 
+#
 # LSST Data Management System
 # Copyright 2014 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -10,14 +10,14 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 """Generate camera geometry for DECam
@@ -29,13 +29,12 @@ Example of use (if decam/camGeom already exists, move it aside first):
 from __future__ import absolute_import
 import argparse
 import os
-import re
 import shutil
 
 import lsst.utils
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
-from lsst.afw.cameraGeom import (DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS)
+from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS, NullLinearityType
 from lsst.obs.decam import DecamMapper
 
 def makeAmpTables(segmentsFile):
@@ -47,7 +46,7 @@ def makeAmpTables(segmentsFile):
     #TODO currently there is no linearity provided, but we should identify
     #how to get this information.
     linearityCoeffs = (0.,1.,0.,0.)
-    linearityType = "Polynomial"
+    linearityType = NullLinearityType
     readoutMap = {'LL':afwTable.LL, 'LR':afwTable.LR, 'UR':afwTable.UR, 'UL':afwTable.UL}
     detectorName = [] # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
@@ -58,7 +57,7 @@ def makeAmpTables(segmentsFile):
             #skip focus and guiding for now:
             if detectorName[0] in ('F', 'G'):
                 continue
-            if not returnDict.has_key(detectorName):
+            if detectorName not in returnDict:
                 schema = afwTable.AmpInfoTable.makeMinimalSchema()
                 returnDict[detectorName] = afwTable.AmpInfoCatalog(schema)
             record = returnDict[detectorName].addNew()
@@ -71,8 +70,8 @@ def makeAmpTables(segmentsFile):
             ndatax = int(els[3])
             ndatay = int(els[4])
 
-            flipx = False 
-            flipy = False 
+            flipx = False
+            flipy = False
 
             if detectorName.startswith("S") and name == "A":
                 readCorner = readoutMap['UR']
@@ -195,8 +194,8 @@ def makeDetectorConfigs(detectorLayoutFile):
             detConfig.serial = els[0]
 
             # Convert from microns to mm.
-            detConfig.offset_x = (float(els[2]) + float(els[3]))/2. 
-            detConfig.offset_y = (float(els[4]) + float(els[5]))/2. 
+            detConfig.offset_x = (float(els[2]) + float(els[3]))/2.
+            detConfig.offset_y = (float(els[4]) + float(els[5]))/2.
 
             detConfig.refpos_x = (xsize - 1.)/2.
             detConfig.refpos_y = (ysize - 1.)/2.
@@ -217,7 +216,7 @@ def makeDetectorConfigs(detectorLayoutFile):
 
 if __name__ == "__main__":
     """
-    Create the configs for building a camera.  
+    Create the configs for building a camera.
     """
     baseDir = lsst.utils.getPackageDir("obs_decam")
     defaultOutDir = os.path.join(os.path.normpath(baseDir), "description", "camera")
@@ -237,7 +236,7 @@ if __name__ == "__main__":
     detectorConfigList = makeDetectorConfigs(args.DetectorLayoutFile)
 
     #Build the camera config.
-    camConfig = CameraConfig() 
+    camConfig = CameraConfig()
     camConfig.detectorList = dict([(i,detectorConfigList[i]) for i in xrange(len(detectorConfigList))])
     camConfig.name = 'DECAM'
     #From DECam calibration doc
