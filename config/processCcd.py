@@ -8,5 +8,7 @@ config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
                                        'BIASSECA', 'BIASSECB',
                                        'PRESECA', 'PRESECB',
                                        'POSTSECA', 'POSTSECB']
+config.isr.assembleCcd.setGain=False
+config.isr.doFringe=False
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
