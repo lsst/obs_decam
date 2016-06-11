@@ -1,3 +1,7 @@
 # -*- python -*-
-from lsst.sconsUtils import scripts
-scripts.BasicSConscript.tests()
+import lsst.sconsUtils
+
+env = lsst.sconsUtils.env.Clone()
+tests = lsst.sconsUtils.scripts.BasicSConscript.tests()
+
+env.Depends(tests, "../decam/linearizer")

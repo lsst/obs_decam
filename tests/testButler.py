@@ -28,6 +28,7 @@ import warnings
 import lsst.daf.persistence as dafPersist
 import lsst.pex.exceptions as pexExcept
 import lsst.utils.tests as utilsTests
+from lsst.ip.isr import LinearizeLookupTable
 from lsst.utils import getPackageDir
 
 
@@ -61,6 +62,21 @@ class ButlerTestCase(unittest.TestCase):
         subset = self.butler.subset("raw", level="visit", visit=229388)
         print("ButlerSubset.cache: %s" % subset.cache)
         self.assertEqual(len(subset), 1)
+
+
+    def testGetLinearizer(self):
+        """Test that we can get a linearizer
+        """
+        camera = self.butler.get("camera")
+        for ccdnum in (1, 62):
+            detector = camera[ccdnum]
+            linearizer = self.butler.get("linearizer", dataId=dict(ccdnum=ccdnum), immediate=True)
+            self.assertEqual(linearizer.LinearityType, LinearizeLookupTable.LinearityType)
+            linearizer.checkDetector(detector)
+        for badccdnum in (0, 63):
+            with self.assertRaises(Exception):
+                self.butler.get("linearizer", dataId=dict(ccdnum=badccdnum), immediate=True)
+
 
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

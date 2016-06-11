@@ -19,11 +19,14 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+import os
 import re
 import numpy as np
+from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
+from lsst.daf.persistence import ButlerLocation
 from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
 
@@ -290,3 +293,23 @@ class DecamMapper(CameraMapper):
         Do not standardize it to Exposure.
         """
         return item
+
+    @classmethod
+    def getLinearizerDir(cls):
+        """Directory containing linearizers"""
+        packageName = cls.getPackageName()
+        packageDir = getPackageDir(packageName)
+        return os.path.join(packageDir, "decam", "linearizer")
+
+    def map_linearizer(self, dataId, write=False):
+        """Map a linearizer"""
+        actualId = self._transformId(dataId)
+        location = os.path.join(self.getLinearizerDir(), "%02d.fits" % (dataId["ccdnum"]),)
+        return ButlerLocation(
+            pythonType = "lsst.ip.isr.LinearizeSquared",
+            cppType = "Config",
+            storageName = "PickleStorage",
+            locationList = [location],
+            dataId = actualId,
+            mapper = self,
+        )

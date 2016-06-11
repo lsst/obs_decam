@@ -1,0 +1,36 @@
+# -*- python -*-
+
+# Build the linearity tables
+# This code was adapted from obs_subaru hsc/SConscript
+
+import lsst.sconsUtils
+import glob
+import os
+
+# scons steals our environment away, so we have to reinstate it
+env = lsst.sconsUtils.env.Clone()
+for name in ("PYTHONPATH", "LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH", "PATH"):
+    if name in os.environ:
+        env.AppendENVPath(name, os.environ[name])
+
+# we may need an explicit library load path specified in the command
+libpathstr = lsst.sconsUtils.utils.libraryLoaderEnvironment()
+
+# We always run these commands with an explicit python rather than relying on the shebang
+python = "{} python".format(libpathstr)
+
+def getLinearizerInFile():
+    linearizerInFiles = glob.glob("linearity_table_*.fits")
+    if len(linearizerInFiles) == 1:
+        return linearizerInFiles[0]
+
+    if len(linearizerInFiles) == 0:
+        raise RuntimeError("Could not find a linearity table")
+    raise RuntimeError("Found %s linearity tables; need just one" % (len(linearizerInFiles),))
+
+linearizerInFile = getLinearizerInFile()
+# I would rather get this from DecamMapper, but could not figure out how to import it
+linearizerOutDir = "linearizer"
+command = "%s decam/makeLinearizer.py $SOURCE --force" % (python,)
+
+makeLinearizer = env.Command(linearizerOutDir, linearizerInFile, command)
