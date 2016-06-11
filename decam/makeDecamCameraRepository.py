@@ -34,7 +34,8 @@ import shutil
 import lsst.utils
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
-from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS, NullLinearityType
+from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS
+from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
 
 def makeAmpTables(segmentsFile):
@@ -43,10 +44,6 @@ def makeAmpTables(segmentsFile):
     @param segmentsFile -- String indicating where the file is located
     """
     returnDict = {}
-    #TODO currently there is no linearity provided, but we should identify
-    #how to get this information.
-    linearityCoeffs = (0.,1.,0.,0.)
-    linearityType = NullLinearityType
     readoutMap = {'LL':afwTable.LL, 'LR':afwTable.LR, 'UR':afwTable.UR, 'UL':afwTable.UL}
     detectorName = [] # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
@@ -124,7 +121,7 @@ def makeAmpTables(segmentsFile):
             rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
             rawPrescanBBox = afwGeom.Box2I(originPrescan, afwGeom.Extent2I(prescan, ndatay))
 
-            print name
+            print "\nDetector=%s; Amp=%s" % (detectorName, name)
             print rawHorizontalOverscanBBox
             print rawVerticalOverscanBBox
             print dataBBox
@@ -137,8 +134,10 @@ def makeAmpTables(segmentsFile):
             record.setSaturation(saturation)
             record.setSuspectLevel(float("nan"))
             record.setReadNoise(readnoise)
-            record.setLinearityCoeffs(linearityCoeffs)
-            record.setLinearityType(linearityType)
+            ampIndex = dict(A=0, B=1)[name]
+            record.setLinearityCoeffs([ampIndex, 0, 0, 0])
+            record.setLinearityType(LinearizeLookupTable.LinearityType)
+            print "Linearity type=%r; coeffs=%s" % (record.getLinearityType(), record.getLinearityCoeffs())
             record.setHasRawInfo(True)
             record.setRawFlipX(flipx)
             record.setRawFlipY(flipy)
