@@ -62,6 +62,13 @@ class ButlerTestCase(unittest.TestCase):
         print("ButlerSubset.cache: %s" % subset.cache)
         self.assertEqual(len(subset), 1)
 
+    def testGetCamera(self):
+        """Test that we can get a camera
+        """
+        camera = self.butler.get("camera")
+        self.assertEqual(len(camera), 62)
+        self.assertEqual(camera[1].getName(), "S29")
+        self.assertEqual(camera[62].getName(), "N31")
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
