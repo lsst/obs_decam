@@ -50,7 +50,6 @@ class DecamMapper(CameraMapper):
 
         # Ensure each dataset type of interest knows about the full range of keys available from the registry
         keys = {'visit': int,
-                'side': str,
                 'ccd': int,
                 'filter': str,
                 'date': str,
