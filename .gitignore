@@ -5,6 +5,7 @@ _build.*
 config.log
 tests/.tests
 ups/*.cfgc
+decam/linearizer
 python/lsst/obs/sst/version.py
 python/lsst/obs/decam/version.py
 bin/ingestImagesDecam.py
