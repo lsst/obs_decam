@@ -143,7 +143,7 @@ calibrations: {
     bias: {
         # Given that MasterCal hdu number is identical to ccdnum
 #        template:    "%(path)s[%(ccdnum)d]"
-        template:    "BIAS/%(date)s/BIAS-%(date)s-%(ccdnum)02d.fits"
+        template:    "BIAS/%(calibDate)s/BIAS-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -158,7 +158,7 @@ calibrations: {
     }
     dark: {
 #        template:    "%(path)s[%(ccdnum)d]"
-        template:    "DARK/%(date)s/DARK-%(date)s-%(ccdnum)02d.fits"
+        template:    "DARK/%(calibDate)s/DARK-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -173,7 +173,7 @@ calibrations: {
     }
     flat: {
 #        template:    "%(path)s[%(ccdnum)d]"
-        template:    "FLAT/%(date)s/%(filter)s/FLAT-%(date)s-%(ccdnum)02d.fits"
+        template:    "FLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -188,7 +188,7 @@ calibrations: {
     }
     fringe: {
 #        template:    "%(path)s"
-        template:    "FRINGE/%(date)s/%(filter)s/FRINGE-%(date)s-%(ccdnum)02d.fits"
+        template:    "FRINGE/%(calibDate)s/%(filter)s/FRINGE-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
         storage:     "FitsStorage"
