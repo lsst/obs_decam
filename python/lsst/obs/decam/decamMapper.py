@@ -275,11 +275,20 @@ class DecamMapper(CameraMapper):
         exp.setMetadata(md)
         return self._standardizeExposure(self.calibrations[datasetType], exp, dataId, filter=setFilter)
 
+    def std_dark(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        exp.getCalib().setExptime(1.0)
+        return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
+
     def std_bias(self, item, dataId):
-        return self._standardizeMasterCal("bias", item, dataId, setFilter=False)
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["bias"], exp, dataId, filter=False)
+        #return self._standardizeMasterCal("bias", item, dataId, setFilter=False)
 
     def std_flat(self, item, dataId):
-        return self._standardizeMasterCal("flat", item, dataId, setFilter=True)
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["flat"], exp, dataId, filter=False)
+        #return self._standardizeMasterCal("flat", item, dataId, setFilter=True)
 
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))

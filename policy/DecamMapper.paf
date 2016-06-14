@@ -143,9 +143,11 @@ calibrations: {
     bias: {
         # Given that MasterCal hdu number is identical to ccdnum
 #        template:    "%(path)s[%(ccdnum)d]"
+#        python:      "lsst.afw.image.DecoratedImageF"
+#        persistable: "DecoratedImageF"
         template:    "BIAS/%(calibDate)s/BIAS-%(calibDate)s-%(ccdnum)02d.fits"
-        python:      "lsst.afw.image.DecoratedImageF"
-        persistable: "DecoratedImageF"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
         storage:     "FitsStorage"
         level:       "ccd"
         tables:      "bias"
@@ -158,9 +160,11 @@ calibrations: {
     }
     dark: {
 #        template:    "%(path)s[%(ccdnum)d]"
+#        python:      "lsst.afw.image.DecoratedImageF"
+#        persistable: "DecoratedImageF"
         template:    "DARK/%(calibDate)s/DARK-%(calibDate)s-%(ccdnum)02d.fits"
-        python:      "lsst.afw.image.DecoratedImageF"
-        persistable: "DecoratedImageF"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
         storage:     "FitsStorage"
         level:       "ccd"
         tables:      "dark"
@@ -173,9 +177,11 @@ calibrations: {
     }
     flat: {
 #        template:    "%(path)s[%(ccdnum)d]"
+#        python:      "lsst.afw.image.DecoratedImageF"
+#        persistable: "DecoratedImageF"
         template:    "FLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s-%(ccdnum)02d.fits"
-        python:      "lsst.afw.image.DecoratedImageF"
-        persistable: "DecoratedImageF"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
         storage:     "FitsStorage"
         level:       "ccd"
         tables:      "flat"
