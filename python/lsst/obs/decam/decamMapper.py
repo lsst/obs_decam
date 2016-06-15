@@ -247,7 +247,7 @@ class DecamMapper(CameraMapper):
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
 
-    def _standardizeMasterCal(self, datasetType, item, dataId, setFilter=False):
+    def _standardizeCpMasterCal(self, datasetType, item, dataId, setFilter=False):
         """Standardize a MasterCal image obtained from NOAO archive into Exposure
 
         These MasterCal images are MEF files with one HDU for each detector.
@@ -283,16 +283,24 @@ class DecamMapper(CameraMapper):
     def std_bias(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["bias"], exp, dataId, filter=False)
-        #return self._standardizeMasterCal("bias", item, dataId, setFilter=False)
 
     def std_flat(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["flat"], exp, dataId, filter=False)
-        #return self._standardizeMasterCal("flat", item, dataId, setFilter=True)
 
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["fringe"], exp, dataId)
+
+    def std_cpBias(self, item, dataId):
+        return self._standardizeCpMasterCal("cpBias", item, dataId, setFilter=False)
+
+    def std_cpFlat(self, item, dataId):
+        return self._standardizeCpMasterCal("cpFlat", item, dataId, setFilter=True)
+
+    def std_cpFringe(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["cpFringe"], exp, dataId)
 
     def map_defects(self, dataId, write=False):
         """Map defects dataset with the calibration registry.

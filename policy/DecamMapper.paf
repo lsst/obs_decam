@@ -141,10 +141,6 @@ exposures: {
 
 calibrations: {
     bias: {
-        # Given that MasterCal hdu number is identical to ccdnum
-#        template:    "%(path)s[%(ccdnum)d]"
-#        python:      "lsst.afw.image.DecoratedImageF"
-#        persistable: "DecoratedImageF"
         template:    "BIAS/%(calibDate)s/BIAS-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
@@ -159,9 +155,6 @@ calibrations: {
         obsTimeName: date
     }
     dark: {
-#        template:    "%(path)s[%(ccdnum)d]"
-#        python:      "lsst.afw.image.DecoratedImageF"
-#        persistable: "DecoratedImageF"
         template:    "DARK/%(calibDate)s/DARK-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
@@ -176,9 +169,6 @@ calibrations: {
         obsTimeName: date
     }
     flat: {
-#        template:    "%(path)s[%(ccdnum)d]"
-#        python:      "lsst.afw.image.DecoratedImageF"
-#        persistable: "DecoratedImageF"
         template:    "FLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s-%(ccdnum)02d.fits"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
@@ -193,8 +183,49 @@ calibrations: {
         obsTimeName: date
     }
     fringe: {
-#        template:    "%(path)s"
         template:    "FRINGE/%(calibDate)s/%(filter)s/FRINGE-%(calibDate)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "fringe"
+        columns:     "filter" "ccdnum"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      true
+        validRange:  false
+    }
+    cpBias: {
+        # Given that MasterCal hdu number is identical to ccdnum
+        template:    "%(path)s[%(ccdnum)d]"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "bias"
+        columns:     "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      false
+        validRange:  true
+        obsTimeName: date
+    }
+    cpFlat: {
+        template:    "%(path)s[%(ccdnum)d]"
+        python:      "lsst.afw.image.DecoratedImageF"
+        persistable: "DecoratedImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "flat"
+        columns:     "filter" "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      true
+        validRange:  true
+        obsTimeName: date
+    }
+    cpFringe: {
+        template:    "%(path)s"
         python:      "lsst.afw.image.ImageF"
         persistable: "ImageF"
         storage:     "FitsStorage"
