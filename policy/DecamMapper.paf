@@ -86,6 +86,7 @@ exposures: {
         tables:      "raw"
         columns:     "visit"
         columns:     "ccdnum"
+        columns:     "ccd"
     }
     deepCoadd_tempExp: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
