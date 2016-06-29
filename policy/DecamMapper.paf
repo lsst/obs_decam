@@ -299,13 +299,34 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    processCcd_config: {
-        template:      "config/processCcd.py"
-        python:        "lsst.pipe.tasks.processCcd.ProcessCcdConfig"
+    processCcd_metadata: {
+        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    isr_config: {
+        template:      "config/isr.py"
+        python:        "lsst.obs.decam.isr.DecamIsrConfig"
         persistable:   "Config"
         storage:       "ConfigStorage"
     }
-    processCcd_metadata: {
+    isr_metadata: {
+        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    characterizeImage_metadata: {
+        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
+        python:        "lsst.daf.base.PropertySet"
+        persistable:   "PropertySet"
+        storage:       "BoostStorage"
+        tables:        raw
+    }
+    calibrate_metadata: {
         template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
         python:        "lsst.daf.base.PropertySet"
         persistable:   "PropertySet"
