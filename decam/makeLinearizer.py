@@ -12,7 +12,7 @@ import astropy.io.fits as fits
 
 from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
-from lsst.daf.persistence import Butler, posixRepoCfg
+from lsst.daf.persistence import Butler
 
 def makeLinearizerDecam(fromFile, force=False, verbose=False):
     """Convert the specified DECam linearity FITS table to standard LSST format
@@ -29,7 +29,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     @param[in] fromFile  path to DECam linearity table (a FITS file with one HDU per amplifier)
     """
     print("Making DECam linearizers from %r" % (fromFile,))
-    butler = Butler(Butler.cfg(posixRepoCfg(mapper=DecamMapper)))
+    butler = Butler(mapper=DecamMapper)
     linearizerDir = DecamMapper.getLinearizerDir()
     if os.path.exists(linearizerDir):
         if not force:
