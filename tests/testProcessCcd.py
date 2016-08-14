@@ -51,6 +51,7 @@ class ProcessCcdTestCase(utilsTests.TestCase):
         configPath = os.path.join(getPackageDir("obs_decam"), "config")
         argsList = [os.path.join(self.datadir, "rawData"), "--output", self.outPath, "--id"]
         argsList += ["%s=%s" % (key, val) for key, val in self.dataId.iteritems()]
+        argsList += ["--calib", os.path.join(self.datadir, "rawData/cpCalib")]
         argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
                      # Temporary until DM-4232 is fixed.
                      "isr.assembleCcd.setGain=False",

@@ -46,7 +46,8 @@ class GetRawTestCase(unittest.TestCase):
             raise unittest.SkipTest(message)
 
         self.repoPath = os.path.join(datadir, "rawData")
-        self.butler = dafPersist.Butler(root=self.repoPath)
+        calibPath = os.path.join(datadir, "rawData/cpCalib")
+        self.butler = dafPersist.Butler(root=self.repoPath, calibRoot=calibPath)
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
