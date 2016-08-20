@@ -56,7 +56,9 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
         afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
         afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0'])
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0', 'Y'])
+        afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 DECam c0008 9645.0 94.0'])
+        afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
         # The data ID key ccdnum is not directly used in the current policy
         # template of the raw dataset, so is not in its keyDict automatically.
@@ -73,10 +75,17 @@ class DecamMapper(CameraMapper):
                                      DecamMapper._nbit_filter)
 
     def _extractDetectorName(self, dataId):
+        copyId = self._transformId(dataId)
         try:
-            return DecamMapper.detectorNames[dataId['ccdnum']]
+            return DecamMapper.detectorNames[copyId['ccdnum']]
         except KeyError:
             raise RuntimeError("No name found for dataId: %s"%(dataId))
+
+    def _transformId(self, dataId):
+        copyId = CameraMapper._transformId(self, dataId)
+        if "ccd" in copyId:
+            copyId.setdefault("ccdnum", copyId["ccd"])
+        return copyId
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         return self._computeCcdExposureId(dataId)
@@ -87,8 +96,9 @@ class DecamMapper(CameraMapper):
 
         @param dataId (dict) Data identifier with visit, ccd
         """
-        visit = dataId['visit']
-        ccdnum = dataId['ccdnum']
+        copyId = self._transformId(dataId)
+        visit = copyId['visit']
+        ccdnum = copyId['ccdnum']
         return int("%07d%02d" % (visit, ccdnum))
 
     def _computeCoaddExposureId(self, dataId, singleFilter):
@@ -201,7 +211,7 @@ class DecamMapper(CameraMapper):
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
         # Keywords EXPTIME and MJD-OBS are used to set the calib object.
-        for kw in ('EXPTIME', 'MJD-OBS'):
+        for kw in ('EXPTIME', 'MJD-OBS', 'DARKTIME'):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
         # As TPV is not supported yet, the wcs keywords are not pruned
@@ -221,7 +231,20 @@ class DecamMapper(CameraMapper):
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
 
-    def _standardizeMasterCal(self, datasetType, item, dataId, setFilter=False):
+    def std_dark(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        exp.getCalib().setExptime(1.0)
+        return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
+
+    def std_bias(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["bias"], exp, dataId, filter=False)
+
+    def std_flat(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["flat"], exp, dataId, filter=True)
+
+    def _standardizeCpMasterCal(self, datasetType, item, dataId, setFilter=False):
         """Standardize a MasterCal image obtained from NOAO archive into Exposure
 
         These MasterCal images are MEF files with one HDU for each detector.
@@ -249,11 +272,11 @@ class DecamMapper(CameraMapper):
         exp.setMetadata(md)
         return self._standardizeExposure(self.calibrations[datasetType], exp, dataId, filter=setFilter)
 
-    def std_bias(self, item, dataId):
-        return self._standardizeMasterCal("bias", item, dataId, setFilter=False)
+    def std_cpBias(self, item, dataId):
+        return self._standardizeCpMasterCal("cpBias", item, dataId, setFilter=False)
 
-    def std_flat(self, item, dataId):
-        return self._standardizeMasterCal("flat", item, dataId, setFilter=True)
+    def std_cpFlat(self, item, dataId):
+        return self._standardizeCpMasterCal("cpFlat", item, dataId, setFilter=True)
 
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))

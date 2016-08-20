@@ -46,11 +46,13 @@ class GetRawTestCase(unittest.TestCase):
             raise unittest.SkipTest(message)
 
         self.repoPath = os.path.join(datadir, "rawData")
-        self.butler = dafPersist.Butler(root=self.repoPath)
+        calibPath = os.path.join(datadir, "rawData/cpCalib")
+        self.butler = dafPersist.Butler(root=self.repoPath, calibRoot=calibPath)
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
         self.exptime = 200.0
+        self.darktime = 201.15662
 
     def tearDown(self):
         del self.butler
@@ -77,6 +79,7 @@ class GetRawTestCase(unittest.TestCase):
         # Metadata which should have been copied from zeroth extension.
         self.assertIn("MJD-OBS", exp.getMetadata().paramNames())
         self.assertEqual(exp.getCalib().getExptime(), self.exptime)
+        self.assertEqual(exp.getMetadata().get("DARKTIME"), self.darktime)
 
         # Example of metadata which should *not* have been copied from zeroth extension.
         self.assertNotIn("PROPOSER", exp.getMetadata().paramNames())
@@ -91,7 +94,7 @@ class GetRawTestCase(unittest.TestCase):
 
     def testBias(self):
         """Test retrieval of bias image"""
-        exp = self.butler.get("bias", self.dataId)
+        exp = self.butler.get("cpBias", self.dataId)
         print("dataId: %s" % self.dataId)
         print("detector id: %s" % exp.getDetector().getId())
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
@@ -99,7 +102,7 @@ class GetRawTestCase(unittest.TestCase):
 
     def testFlat(self):
         """Test retrieval of flat image"""
-        exp = self.butler.get("flat", self.dataId)
+        exp = self.butler.get("cpFlat", self.dataId)
         print("dataId: %s" % self.dataId)
         print("detector id: %s" % exp.getDetector().getId())
         print("filter: %s" % self.filter)

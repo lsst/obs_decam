@@ -48,11 +48,15 @@ class ProcessCcdTestCase(utilsTests.TestCase):
 
         self.outPath = tempfile.mkdtemp() if OutputName is None else OutputName
         self.dataId = {'visit': 229388, 'ccdnum': 1}
+        configPath = os.path.join(getPackageDir("obs_decam"), "config")
         argsList = [os.path.join(self.datadir, "rawData"), "--output", self.outPath, "--id"]
         argsList += ["%s=%s" % (key, val) for key, val in self.dataId.iteritems()]
+        argsList += ["--calib", os.path.join(self.datadir, "rawData/cpCalib")]
         argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
                      # Temporary until DM-4232 is fixed.
-                     "isr.assembleCcd.setGain=False"]
+                     "isr.assembleCcd.setGain=False",
+                     # This test uses CP-MasterCal calibration products
+                     "-C", "%s/processCcdCpIsr.py" % configPath]
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
         self.butler = fullResult.parsedCmd.butler
         self.config = fullResult.parsedCmd.config
@@ -70,6 +74,11 @@ class ProcessCcdTestCase(utilsTests.TestCase):
         self.assertIsInstance(exp, afwImage.ExposureF)
         self.assertEqual(exp.getWidth(), 2048)
         self.assertEqual(exp.getHeight(), 4096)
+
+    def testCcdKey(self):
+        """Test to retrieve calexp using ccd as the ccd key"""
+        exp = self.butler.get("calexp", visit=229388, ccd=1, immediate=True)
+        self.assertIsInstance(exp, afwImage.ExposureF)
 
     def testWcsPostIsr(self):
         """Test the wcs of postISRCCD products

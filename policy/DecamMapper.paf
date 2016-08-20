@@ -4,14 +4,15 @@ needCalibRegistry: true
 
 levels: {
     # Keys that are NOT relevant for a particular level
-    skyTile: "visit" "ccdnum" "hdu"
-    visit: "ccdnum" "hdu"
-    ccd: "none"
+    skyTile: "visit" "ccdnum" "hdu" "ccd"
+    tract: "patch"
+    visit: "ccdnum" "hdu" "ccd"
+    sensor: "none"
 }
-defaultLevel: "ccd"
+defaultLevel: "sensor"
 defaultSubLevels: {
-    skyTile: "ccd"
-    visit: "ccd"
+    skyTile: "sensor"
+    visit: "sensor"
 }
 
 camera: "../decam/camGeom"
@@ -26,6 +27,7 @@ exposures: {
         tables:      "raw"
         columns:     "visit"
         columns:     "ccdnum"
+        columns:     "ccd"
     }
     postISRCCD: {
         template:    "%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits"
@@ -84,6 +86,7 @@ exposures: {
         tables:      "raw"
         columns:     "visit"
         columns:     "ccdnum"
+        columns:     "ccd"
     }
     deepCoadd_tempExp: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
@@ -139,6 +142,61 @@ exposures: {
 
 calibrations: {
     bias: {
+        template:    "BIAS/%(calibDate)s/BIAS-%(calibDate)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "bias"
+        columns:     "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      false
+        validRange:  true
+        obsTimeName: date
+    }
+    dark: {
+        template:    "DARK/%(calibDate)s/DARK-%(calibDate)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "dark"
+        columns:     "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      false
+        validRange:  true
+        obsTimeName: date
+    }
+    flat: {
+        template:    "FLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "flat"
+        columns:     "filter" "date"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      true
+        validRange:  true
+        obsTimeName: date
+    }
+    fringe: {
+        template:    "FRINGE/%(calibDate)s/%(filter)s/FRINGE-%(calibDate)s-%(ccdnum)02d.fits"
+        python:      "lsst.afw.image.ImageF"
+        persistable: "ImageF"
+        storage:     "FitsStorage"
+        level:       "ccd"
+        tables:      "fringe"
+        columns:     "filter" "ccdnum"
+        reference:   "raw_visit"
+        refCols:     "visit"
+        filter:      true
+        validRange:  false
+    }
+    cpBias: {
         # Given that MasterCal hdu number is identical to ccdnum
         template:    "%(path)s[%(ccdnum)d]"
         python:      "lsst.afw.image.DecoratedImageF"
@@ -153,7 +211,7 @@ calibrations: {
         validRange:  true
         obsTimeName: date
     }
-    flat: {
+    cpFlat: {
         template:    "%(path)s[%(ccdnum)d]"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
@@ -166,19 +224,6 @@ calibrations: {
         filter:      true
         validRange:  true
         obsTimeName: date
-    }
-    fringe: {
-        template:    "%(path)s"
-        python:      "lsst.afw.image.ImageF"
-        persistable: "ImageF"
-        storage:     "FitsStorage"
-        level:       "ccd"
-        tables:      "fringe"
-        columns:     "filter" "ccdnum"
-        reference:   "raw_visit"
-        refCols:     "visit"
-        filter:      true
-        validRange:  false
     }
     defects: {
         template:    "%(path)s"
@@ -267,6 +312,7 @@ datasets: {
         persistable:   "SourceCatalog"
         storage:       "FitsCatalogStorage"
         tables:        "raw"
+        columns:       "ccd"
     }
     icMatch: {
         template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits"
@@ -798,4 +844,37 @@ datasets: {
         persistable:   "PurePythonClass"
         storage:       "FitsCatalogStorage"
     }
+    bias_config: {
+        template:      "config/bias.py"
+        python:        "lsst.pipe.drivers.constructCalibs.BiasConfig"
+        persistable:      "Config"
+        storage:    "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    dark_config: {
+        template:      "config/dark.py"
+        python:        "lsst.pipe.drivers.constructCalibs.DarkConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    flat_config: {
+        template:      "config/flat.py"
+        python:        "lsst.pipe.drivers.constructCalibs.FlatConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+    fringe_config: {
+        template:      "config/fringe.py"
+        python:        "lsst.pipe.drivers.constructCalibs.FringeConfig"
+        persistable:   "Config"
+        storage:       "ConfigStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
+
 }
