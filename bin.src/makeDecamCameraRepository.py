@@ -20,11 +20,11 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-"""Generate camera geometry for DECam
+"""
+Generate camera geometry FITS files for DECam.
 
-Example of use (if decam/camGeom already exists, move it aside first):
-
-    python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
+Scons should have automatically run this when building obs_decam. To produce
+the same files that scons would have, run with no arguments.
 """
 from __future__ import absolute_import, division, print_function
 import argparse
@@ -225,11 +225,19 @@ if __name__ == "__main__":
     Create the configs for building a camera.
     """
     baseDir = lsst.utils.getPackageDir("obs_decam")
-    defaultOutDir = os.path.join(os.path.normpath(baseDir), "description", "camera")
+    defaultDataDir = os.path.join(os.path.normpath(baseDir), "decam")
+    defaultOutDir = os.path.join(os.path.normpath(baseDir), "decam", "camera")
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("DetectorLayoutFile", help="Path to detector layout file")
-    parser.add_argument("SegmentsFile", help="Path to amp segments file")
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("DetectorLayoutFile",
+                        default=os.path.join(defaultDataDir, 'chipcenters.txt'),
+                        nargs='?',
+                        help="Path to detector layout file")
+    parser.add_argument("SegmentsFile",
+                        default=os.path.join(defaultDataDir, 'segmentfile.txt'),
+                        nargs='?',
+                        help="Path to amp segments file")
     parser.add_argument("OutputDir",
                         help = "Path to dump configs and AmpInfo Tables; defaults to %r" % (defaultOutDir,),
                         nargs = "?",
