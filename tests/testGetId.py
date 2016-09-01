@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # LSST Data Management System
 # Copyright 2008-2015 AURA/LSST.
@@ -23,12 +21,13 @@
 #
 
 import unittest
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 
 import lsst.daf.persistence as dafPersist
 from lsst.obs.decam import DecamMapper
 
-class GetIdTestCase(unittest.TestCase):
+
+class GetIdTestCase(lsst.utils.tests.TestCase):
     """Testing butler exposure id retrieval"""
 
     def setUp(self):
@@ -46,21 +45,15 @@ class GetIdTestCase(unittest.TestCase):
         id = self.butler.get("ccdExposureId", visit=229388, ccdnum=13, filter="z")
         self.assertEqual(id, 22938813)
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-def suite():
-    """Returns a suite containing all the test cases in this module."""
+class MemoryTester(lsst.utils.tests.MemoryTestCase):
+    pass
 
-    utilsTests.init()
 
-    suites = []
-    suites += unittest.makeSuite(GetIdTestCase)
-    suites += unittest.makeSuite(utilsTests.MemoryTestCase)
-    return unittest.TestSuite(suites)
+def setup_module(module):
+    lsst.utils.tests.init()
 
-def run(shouldExit = False):
-    """Run the tests"""
-    utilsTests.run(suite(), shouldExit)
 
 if __name__ == "__main__":
-    run(True)
+    lsst.utils.tests.init()
+    unittest.main()
