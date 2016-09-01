@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import print_function
 #
 # LSST Data Management System
@@ -27,7 +26,7 @@ import unittest
 import warnings
 import lsst.daf.persistence as dafPersist
 import lsst.pex.exceptions as pexExcept
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 from lsst.ip.isr import LinearizeLookupTable
 from lsst.utils import getPackageDir
 
@@ -64,16 +63,14 @@ class ButlerTestCase(unittest.TestCase):
         self.assertEqual(len(subset), 1)
 
     def testGetCamera(self):
-        """Test that we can get a camera
-        """
+        """Test that we can get a camera"""
         camera = self.butler.get("camera")
         self.assertEqual(len(camera), 62)
         self.assertEqual(camera[1].getName(), "S29")
         self.assertEqual(camera[62].getName(), "N31")
 
     def testGetLinearizer(self):
-        """Test that we can get a linearizer
-        """
+        """Test that we can get a linearizer"""
         camera = self.butler.get("camera")
         for ccdnum in (1, 62):
             detector = camera[ccdnum]
@@ -85,23 +82,14 @@ class ButlerTestCase(unittest.TestCase):
                 self.butler.get("linearizer", dataId=dict(ccdnum=badccdnum), immediate=True)
 
 
-
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-def suite():
-    """Returns a suite containing all the test cases in this module."""
-
-    utilsTests.init()
-
-    suites = []
-    suites += unittest.makeSuite(ButlerTestCase)
-    suites += unittest.makeSuite(utilsTests.MemoryTestCase)
-    return unittest.TestSuite(suites)
+class MemoryTester(lsst.utils.tests.MemoryTestCase):
+    pass
 
 
-def run(shouldExit=False):
-    """Run the tests"""
-    utilsTests.run(suite(), shouldExit)
+def setup_module(module):
+    lsst.utils.tests.init()
+
 
 if __name__ == "__main__":
-    run(True)
+    lsst.utils.tests.init()
+    unittest.main()
