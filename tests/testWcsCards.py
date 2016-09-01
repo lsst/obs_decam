@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # LSST Data Management System
 # Copyright 2016 AURA/LSST.
@@ -26,13 +25,13 @@ import unittest
 import warnings
 
 from lsst.utils import getPackageDir
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 
 import lsst.daf.persistence as dafPersist
 import lsst.pex.exceptions as pexExcept
 
 
-class WcsCardsTestCase(unittest.TestCase):
+class WcsCardsTestCase(lsst.utils.tests.TestCase):
     """Test wcs keywords in the metadata"""
     def setUp(self):
         try:
@@ -58,21 +57,14 @@ class WcsCardsTestCase(unittest.TestCase):
         self.assertFalse(exp.getMetadata().exists('PV2_10'))
 
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+class MemoryTester(lsst.utils.tests.MemoryTestCase):
+    pass
 
-def suite():
-    """Returns a suite containing all the test cases in this module."""
 
-    utilsTests.init()
+def setup_module(module):
+    lsst.utils.tests.init()
 
-    suites = []
-    suites += unittest.makeSuite(WcsCardsTestCase)
-    suites += unittest.makeSuite(utilsTests.MemoryTestCase)
-    return unittest.TestSuite(suites)
-
-def run(shouldExit=False):
-    """Run the tests"""
-    utilsTests.run(suite(), shouldExit)
 
 if __name__ == "__main__":
-    run(True)
+    lsst.utils.tests.init()
+    unittest.main()
