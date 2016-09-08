@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # LSST Data Management System
 # Copyright 2016 AURA/LSST.
@@ -28,15 +27,16 @@ import tempfile
 import unittest
 import warnings
 
+import lsst.utils.tests
 import lsst.afw.image as afwImage
 import lsst.pex.exceptions as pexExcept
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
 from lsst.utils import getPackageDir
-import lsst.utils.tests as utilsTests
 
 OutputName = None  # Specify a name (as a string) to save the output repository
 
-class ProcessCcdTestCase(utilsTests.TestCase):
+
+class ProcessCcdTestCase(lsst.utils.tests.TestCase):
     """Tests to run processCcd or tests with processed data"""
     def setUp(self):
         try:
@@ -99,21 +99,14 @@ class ProcessCcdTestCase(utilsTests.TestCase):
         self.assertWcsNearlyEqualOverBBox(wcsRaw, wcsPost, expPost.getBBox())
 
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+class MemoryTester(lsst.utils.tests.MemoryTestCase):
+    pass
 
-def suite():
-    """Returns a suite containing all the test cases in this module."""
 
-    utilsTests.init()
+def setup_module(module):
+    lsst.utils.tests.init()
 
-    suites = []
-    suites += unittest.makeSuite(ProcessCcdTestCase)
-    suites += unittest.makeSuite(utilsTests.MemoryTestCase)
-    return unittest.TestSuite(suites)
-
-def run(shouldExit=False):
-    """Run the tests"""
-    utilsTests.run(suite(), shouldExit)
 
 if __name__ == "__main__":
-    run(True)
+    lsst.utils.tests.init()
+    unittest.main()

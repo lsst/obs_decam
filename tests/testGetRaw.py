@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import print_function
 #
 # LSST Data Management System
@@ -27,7 +26,7 @@ import os
 import warnings
 import unittest
 import lsst.afw.image as afwImage
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
@@ -126,21 +125,15 @@ class GetRawTestCase(unittest.TestCase):
         for d in defectList:
             self.assertIsInstance(d, afwImage.DefectBase)
 
-#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-def suite():
-    """Returns a suite containing all the test cases in this module."""
+class MemoryTester(lsst.utils.tests.MemoryTestCase):
+    pass
 
-    utilsTests.init()
 
-    suites = []
-    suites += unittest.makeSuite(GetRawTestCase)
-    suites += unittest.makeSuite(utilsTests.MemoryTestCase)
-    return unittest.TestSuite(suites)
+def setup_module(module):
+    lsst.utils.tests.init()
 
-def run(shouldExit = False):
-    """Run the tests"""
-    utilsTests.run(suite(), shouldExit)
 
 if __name__ == "__main__":
-    run(True)
+    lsst.utils.tests.init()
+    unittest.main()
