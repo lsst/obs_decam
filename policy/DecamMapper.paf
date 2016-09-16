@@ -18,6 +18,20 @@ defaultSubLevels: {
 camera: "../decam/camGeom"
 
 exposures: {
+    deepCoadd: {
+        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+    }
+    deepCoadd_calexp: {
+        template:    "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/calexp-%(filter)s-%(tract)d-%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+    }
     raw: {
         template:    "%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]"
         python:      "lsst.afw.image.DecoratedImageF"
@@ -95,23 +109,6 @@ exposures: {
         storage:     "FitsStorage"
         level:       "None"
         tables:      raw
-    }
-    deepCoadd: {
-        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)s.fits"
-        python:      "lsst.afw.image.ExposureF"
-        persistable: "ExposureF"
-        storage:     "FitsStorage"
-        level:       "None"
-        tables:      raw
-    }
-    deepCoadd_calexp: {
-        template:    "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/calexp-%(filter)s-%(tract)d-%(patch)s.fits"
-        python:      "lsst.afw.image.ExposureF"
-        persistable: "ExposureF"
-        storage:     "FitsStorage"
-        level:       "None"
-        tables:      raw
-        tables:      raw_skyTile
     }
     goodSeeingCoadd_tempExp: {
         template:    "goodSeeingCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
@@ -243,6 +240,20 @@ calibrations: {
 
 datasets: {
 
+    deepCoadd: {
+        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+    }
+    deepCoadd_calexp: {
+        template:    "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/calexp-%(filter)s-%(tract)d-%(patch)s.fits"
+        python:      "lsst.afw.image.ExposureF"
+        persistable: "ExposureF"
+        storage:     "FitsStorage"
+        level:       "None"
+    }
     ccdExposureId: {
         template:     "ignored"
         python:       "lsst.daf.base.PropertySet"
