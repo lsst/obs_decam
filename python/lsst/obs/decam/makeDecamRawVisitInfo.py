@@ -48,6 +48,7 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
         @param[in,out] argdict  a dict of arguments
         """
         MakeRawVisitInfo.setArgDict(self, md, argDict)
+        argDict["darkTime"] = self.popFloat(md, "DARKTIME")
         argDict["boresightAzAlt"] = Coord(
             self.popAngle(md, "AZ"),
             self.altitudeFromZenithDistance(self.popAngle(md, "ZD")),
@@ -65,7 +66,7 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
         argDict["weather"] = Weather(
             self.popFloat(md, "OUTTEMP"),
             self.pascalFromMmHg(self.popFloat(md, "PRESSURE")),
-            self.popFloat(md, "HUMIDITY")/100.0,
+            self.popFloat(md, "HUMIDITY")
         )
 
     def getDateAvg(self, md, exposureTime):
