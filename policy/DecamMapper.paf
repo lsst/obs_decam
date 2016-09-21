@@ -367,6 +367,14 @@ datasets: {
         persistable:   "PropertySet"
         storage:       "BoostStorage"
     }
+    deepCoadd_srcMatch: {
+        template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits"
+        python:        "lsst.afw.table.BaseCatalog"
+        persistable:   "BaseCatalog"
+        storage:       "FitsCatalogStorage"
+        tables:        raw
+        tables:        raw_visit
+    }
     detectCoaddSources_config: {
         template:      "config/detectCoadd.py"
         python:        "lsst.pipe.tasks.multiBand.DetectCoaddSourcesConfig"
