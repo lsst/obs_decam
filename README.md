@@ -20,7 +20,7 @@ Copyleft
 --------
 
 LSST Data Management System
-Copyright 2012 LSST Corporation.
+Copyright 2012-2016 AURA/LSST.
 
 This package is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,9 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Use
 ===
 
-Documentation for this can be found at:
-        $ https://confluence.lsstcorp.org/display/LSWUG/Process+DECam+Images
-Currently, there is only support for "instcal" (plus dqmask and wtmap) processing.
+Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
 
 1. Create a data repository directory:
 
