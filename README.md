@@ -20,7 +20,7 @@ Copyleft
 --------
 
 LSST Data Management System
-Copyright 2012 LSST Corporation.
+Copyright 2012-2016 AURA/LSST.
 
 This package is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,9 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Use
 ===
 
-Documentation for this can be found at:
-        $ https://confluence.lsstcorp.org/display/LSWUG/Process+DECam+Images
-Currently, there is only support for "instcal" (plus dqmask and wtmap) processing.
+Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
 
 1. Create a data repository directory:
 
@@ -56,27 +54,22 @@ Currently, there is only support for "instcal" (plus dqmask and wtmap) processin
         $ setup -t <CURRENT_TAG> -r .
         $ scons install declare --tag=current
 
-3. Import data into the data repository:
+3. Import instcal/dqmask/wtmap data into the data repository:
 
-        $ cd /path/to/data
-        $ setup -t <CURRENT_TAG> pipe_tasks
-        $ setup -k -t <CURRENT_TAG> obs_decam
         $ ingestImagesDecam.py /path/to/repo --mode=link instcal/*.fits.fz
 
-4. Process data
+4. Alternatively, import raw and calibration data into the data repository, for example:
 
-        $ setup -t <CURRENT_TAG> pipe_tasks
-        $ setup -k -t <CURRENT_TAG> obs_decam
-        $ processCcdDecam.py /path/to/repo --id visit=283453 ccdnum=10 --config calibrate.doPhotoCal=False calibrate.doAstrometry=False calibrate.measurePsf.starSelector.name="secondMoment" doWriteCalibrateMatches=False --clobber-config
+        $ ingestImagesDecam.py /path/to/repo --filetype raw /path/to/raw/*.fits.fz
+        $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ --calibType defect /path/to/calib/*fits --validity 999
 
-5. Import raw data into the data repository: 
+5. Process data:
 
-        $  ingestImagesDecam.py /path/to/repo --filetype raw /path/to/raw/*.fits.fz
+        $ processCcd.py /path/to/repo/ --id visit=283453 ccdnum=10 --output /path/to/your/output/repo/ -C /path/to/your/config/override/file --config calibrate.doAstrometry=False calibrate.doPhotoCal=False
 
-6. Import calibration data into the data repository. The calibration type can be flat/bias/fringe/defect.
+6. To read instcal files from the community pipeline, replace the ISR task with `DecamNullIsrTask` by using a config override file containing the following:
 
-        $ ingestCalibs.py /path/to/repo/  --calibType defect /path/to/calib/*fits
+        from lsst.obs.decam.decamNullIsr import DecamNullIsrTask
+        config.isr.retarget(DecamNullIsrTask)
 
-7. Process raw data:
-
-        $ processCcd.py /path/to/repo
+7. To process raw data with the Community-Pipeline calibration products, retarget the ISR task to `DecamCpIsrTask` by using the config override file config/processCcdCpIsr.py
