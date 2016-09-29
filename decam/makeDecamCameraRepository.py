@@ -27,6 +27,7 @@ Example of use (if decam/camGeom already exists, move it aside first):
     python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
 """
 from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import os
 import shutil
@@ -122,11 +123,11 @@ def makeAmpTables(segmentsFile):
             rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
             rawPrescanBBox = afwGeom.Box2I(originPrescan, afwGeom.Extent2I(prescan, ndatay))
 
-            print "\nDetector=%s; Amp=%s" % (detectorName, name)
-            print rawHorizontalOverscanBBox
-            print rawVerticalOverscanBBox
-            print dataBBox
-            print rawBBox
+            print("\nDetector=%s; Amp=%s" % (detectorName, name))
+            print(rawHorizontalOverscanBBox)
+            print(rawVerticalOverscanBBox)
+            print(dataBBox)
+            print(rawBBox)
             #Set the elements of the record for this amp
             record.setBBox(dataBBox) # This is the box for the amp in the assembled frame
             record.setName(name)
@@ -138,7 +139,7 @@ def makeAmpTables(segmentsFile):
             ampIndex = dict(A=0, B=1)[name]
             record.setLinearityCoeffs([ampIndex, 0, 0, 0])
             record.setLinearityType(LinearizeLookupTable.LinearityType)
-            print "Linearity type=%r; coeffs=%s" % (record.getLinearityType(), record.getLinearityCoeffs())
+            print("Linearity type=%r; coeffs=%s" % (record.getLinearityType(), record.getLinearityCoeffs()))
             record.setHasRawInfo(True)
             record.setRawFlipX(flipx)
             record.setRawFlipY(flipy)
@@ -267,11 +268,11 @@ if __name__ == "__main__":
         """
         if os.path.exists(dirPath):
             if doClobber and os.path.isdir(dirPath):
-                print "Clobbering directory %r" % (dirPath,)
+                print("Clobbering directory %r" % (dirPath,))
                 shutil.rmtree(dirPath)
             else:
                 raise RuntimeError("Directory %r exists" % (dirPath,))
-        print "Creating directory %r" % (dirPath,)
+        print("Creating directory %r" % (dirPath,))
         os.makedirs(dirPath)
 
     # write data products

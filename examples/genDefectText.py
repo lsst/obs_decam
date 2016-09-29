@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import argparse
 import os
 import shutil
@@ -16,7 +17,7 @@ args = parser.parse_args()
 
 if os.path.exists(args.outputDir):
     if args.clobber and os.path.isdir(args.outputDir):
-        print "Clobbering directory %r" % args.outputDir
+        print("Clobbering directory %r" % args.outputDir)
         shutil.rmtree(args.outputDir)
     else:
         raise RuntimeError("Directory %r exists" % args.outputDir)
@@ -35,7 +36,7 @@ for row in rows:
     date = row[0]
     os.makedirs(os.path.join(args.outputDir, date))
     filePath = os.path.join(args.outputDir, date, 'defects.dat')
-    print "Writing file ", filePath
+    print("Writing file ", filePath)
     f = open(filePath, 'w')
     f.write("#CCD x0    y0    width height\n")
     for ccdnum in range(1, 63):

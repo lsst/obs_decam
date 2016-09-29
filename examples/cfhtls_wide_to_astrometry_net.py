@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import re
 import os
@@ -46,7 +47,7 @@ header = "id,ra,dec,u,g,r,i,z,u_err,g_err,r_err,i_err,z_err,starnotgal,variable"
 np.savetxt(outfile, vstack, header=header, delimiter=",",
            fmt=["%d", "%.7f", "%.7f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.1d", "%.1d"])
 
-print """
+print("""
 Next you need to grab a new-ish version of astrometry.net
 
  cd $OBS_DECAM_DIR/../astrometry_net
@@ -96,4 +97,4 @@ And finally, edit script andConfig.py
        'index-123456703.fits',
        'index-123456704.fits',
        ]
-"""
+""")

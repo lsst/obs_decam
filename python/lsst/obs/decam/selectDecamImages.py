@@ -20,6 +20,7 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import print_function
 import MySQLdb
 import os
 import re
@@ -227,7 +228,7 @@ if __name__ == "__main__":
     filenames = set()
 
     for ccdInfo in results.exposureInfoList:
-        print "dataId=%s, fwhm=%s, filename=%s" % (ccdInfo.dataId, ccdInfo.fwhm, ccdInfo.filename)
+        print("dataId=%s, fwhm=%s, filename=%s" % (ccdInfo.dataId, ccdInfo.fwhm, ccdInfo.filename))
         filenames.add(ccdInfo.filename)
 
-    print filenames
+    print(filenames)
