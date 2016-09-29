@@ -14,6 +14,7 @@ from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
 from lsst.daf.persistence import Butler
 
+
 def makeLinearizerDecam(fromFile, force=False, verbose=False):
     """Convert the specified DECam linearity FITS table to standard LSST format
 
@@ -57,9 +58,9 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             # convert DECam replacement table to LSST offset table
             if verbose:
                 print("DECam table for %s=%s..." % (ampName, fromData["ADU_LINEAR_" + ampName][0:5],))
-            lsstTable[i,:] = fromData["ADU_LINEAR_" + ampName] - uncorr
+            lsstTable[i, :] = fromData["ADU_LINEAR_" + ampName] - uncorr
             if verbose:
-                print("LSST  table for %s=%s..." % (ampName, lsstTable[i,0:5],))
+                print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
         linearizer = LinearizeLookupTable(table=lsstTable, detector=detector)
         butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
     print("Wrote %s linearizers" % (ccdind+1,))

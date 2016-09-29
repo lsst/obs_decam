@@ -51,6 +51,7 @@ class DecamCpIsrTask(DecamIsrTask):
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
     different from the LSST-generated calibration products (bias/flat).
     """
+
     def readIsrData(self, dataRef, rawExposure):
         """Retrieve necessary frames for instrument signature removal
 
@@ -82,18 +83,18 @@ class DecamCpIsrTask(DecamIsrTask):
         defectList = dataRef.get("defects")
 
         if self.config.doFringe and self.fringe.checkFilter(rawExposure):
-            fringeStruct = self.fringe.readFringes(dataRef, assembler=self.assembleCcd \
-                                              if self.config.doAssembleIsrExposures else None)
+            fringeStruct = self.fringe.readFringes(dataRef, assembler=self.assembleCcd
+                                                   if self.config.doAssembleIsrExposures else None)
         else:
-            fringeStruct = pipeBase.Struct(fringes = None)
+            fringeStruct = pipeBase.Struct(fringes=None)
 
-        return pipeBase.Struct(bias = biasExposure,
-                               linearizer = linearizer,
-                               dark = darkExposure,
-                               flat = flatExposure,
-                               defects = defectList,
-                               fringes = fringeStruct,
-                               bfKernel = brighterFatterKernel
+        return pipeBase.Struct(bias=biasExposure,
+                               linearizer=linearizer,
+                               dark=darkExposure,
+                               flat=flatExposure,
+                               defects=defectList,
+                               fringes=fringeStruct,
+                               bfKernel=brighterFatterKernel
                                )
 
     def biasCorrection(self, exposure, biasExposure):

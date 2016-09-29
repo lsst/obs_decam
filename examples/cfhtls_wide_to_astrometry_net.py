@@ -1,44 +1,50 @@
-import sys, re, os
+import sys
+import re
+import os
 import numpy as np
 
 # python $OBS_DECAM_DIR/examples/cfhtls_wide_to_astrometry_net.py CFHT.txt CFHTLS_W_ugriz_090*cat
 
-nobj    = 0
-vstack  = np.empty((0,15))
+nobj = 0
+vstack = np.empty((0, 15))
 outfile = sys.argv[1]
 infiles = sys.argv[2:]
 for file in infiles:
-    #       id       x          y        ra        dec         r2   flag    u        g        r        i         z       uerr     gerr     rerr     ierr         zerr   e(b-v) u(SExflag) g(SExflag) r(SExflag) i(SExflag)   z(SExflag)     dk
+    # id       x          y        ra        dec         r2   flag    u
+    # g        r        i         z       uerr     gerr     rerr     ierr
+    # zerr   e(b-v) u(SExflag) g(SExflag) r(SExflag) i(SExflag)   z(SExflag)
+    # dk
 
-    data     = np.loadtxt(file, unpack=True, comments="#")
-    flags    = data[6].astype(np.int) 
-    isStar   = flags & 1                  # star galaxy separation : 0/1  galaxy/star
+    data = np.loadtxt(file, unpack=True, comments="#")
+    flags = data[6].astype(np.int)
+    isStar = flags & 1                  # star galaxy separation : 0/1  galaxy/star
     isNotSat = np.logical_not(flags & 2)  # saturated star in one of the filters
     isBright = data[9] < 23               # r-band mag
-    idx      = np.where(isNotSat & isStar & isBright)
+    idx = np.where(isNotSat & isStar & isBright)
 
-    ra       = data[3][idx]
-    decl     = data[4][idx]
-    u        = data[7][idx]
-    g        = data[8][idx]
-    r        = data[9][idx]
-    i        = data[10][idx]
-    z        = data[11][idx]
-    du       = np.sqrt(0.001**2 + data[12][idx]**2)
-    dg       = np.sqrt(0.001**2 + data[13][idx]**2)
-    dr       = np.sqrt(0.001**2 + data[14][idx]**2)
-    di       = np.sqrt(0.001**2 + data[15][idx]**2)
-    dz       = np.sqrt(0.001**2 + data[16][idx]**2)
-    isStar   = isStar[idx]
-    isVar    = np.zeros_like(isStar)
-    ids      = np.cumsum(np.ones_like(isStar)) + nobj
-    nobj     = max(ids)
+    ra = data[3][idx]
+    decl = data[4][idx]
+    u = data[7][idx]
+    g = data[8][idx]
+    r = data[9][idx]
+    i = data[10][idx]
+    z = data[11][idx]
+    du = np.sqrt(0.001**2 + data[12][idx]**2)
+    dg = np.sqrt(0.001**2 + data[13][idx]**2)
+    dr = np.sqrt(0.001**2 + data[14][idx]**2)
+    di = np.sqrt(0.001**2 + data[15][idx]**2)
+    dz = np.sqrt(0.001**2 + data[16][idx]**2)
+    isStar = isStar[idx]
+    isVar = np.zeros_like(isStar)
+    ids = np.cumsum(np.ones_like(isStar)) + nobj
+    nobj = max(ids)
 
-    vstack   = np.vstack((vstack, np.array((ids, ra, decl, u, g, r, i, z, du, dg, dr, di, dz, isStar, isVar)).T))
+    vstack = np.vstack(
+        (vstack, np.array((ids, ra, decl, u, g, r, i, z, du, dg, dr, di, dz, isStar, isVar)).T))
 
 header = "id,ra,dec,u,g,r,i,z,u_err,g_err,r_err,i_err,z_err,starnotgal,variable"
 np.savetxt(outfile, vstack, header=header, delimiter=",",
-           fmt=["%d","%.7f","%.7f","%.3f","%.3f","%.3f","%.3f","%.3f","%.3f","%.3f","%.3f","%.3f","%.3f","%.1d","%.1d"])
+           fmt=["%d", "%.7f", "%.7f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.1d", "%.1d"])
 
 print """
 Next you need to grab a new-ish version of astrometry.net

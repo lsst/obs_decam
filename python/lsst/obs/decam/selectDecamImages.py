@@ -33,6 +33,7 @@ from lsst.pipe.tasks.selectImages import DatabaseSelectImagesConfig, BaseSelectI
 
 __all__ = ["SelectDecamImagesTask"]
 
+
 class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
     """Config for SelectDecamImagesTask
     """
@@ -64,15 +65,16 @@ class ExposureInfo(BaseExposureInfo):
     - airmass: mean airmass of exposure
     - filename: original filename of exposure
     """
+
     def __init__(self, result):
         """Set exposure information based on a query result from a db connection
         """
         self._ind = -1
 
         dataId = dict(
-           visit = result[self._nextInd],
-           ccdnum = result[self._nextInd],
-           filter = result[self._nextInd],
+            visit=result[self._nextInd],
+            ccdnum=result[self._nextInd],
+            filter=result[self._nextInd],
         )
         coordList = []
         for i in range(4):
@@ -110,7 +112,7 @@ class ExposureInfo(BaseExposureInfo):
         @return database column names as list of strings
         """
         return (
-            "visit ccdNum filter ra1 dec1 ra2 dec2 ra3 dec3 ra4 dec4".split() + \
+            "visit ccdNum filter ra1 dec1 ra2 dec2 ra3 dec3 ra4 dec4".split() +
             "fwhm airmass filename".split()
         )
 
@@ -134,19 +136,18 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
         if filter not in set(("g", "r", "i", "z", "Y")):
             raise RuntimeError("filter=%r is an invalid name" % (filter,))
 
-        read_default_file=os.path.expanduser("~/.my.cnf")
+        read_default_file = os.path.expanduser("~/.my.cnf")
 
         try:
             open(read_default_file)
             kwargs = dict(
                 read_default_file=read_default_file,
-                )
+            )
         except IOError:
             kwargs = dict(
-                user = DbAuth.username(self.config.host, str(self.config.port)),
-                passwd = DbAuth.password(self.config.host, str(self.config.port)),
+                user=DbAuth.username(self.config.host, str(self.config.port)),
+                passwd=DbAuth.password(self.config.host, str(self.config.port)),
             )
-
 
         db = MySQLdb.connect(
             host=self.config.host,
@@ -198,7 +199,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
         exposureInfoList = [ExposureInfo(result) for result in cursor]
 
         return pipeBase.Struct(
-            exposureInfoList = exposureInfoList,
+            exposureInfoList=exposureInfoList,
         )
 
     def _runArgDictFromDataId(self, dataId):
@@ -206,7 +207,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
         @return keyword arguments for run (other than coordList), as a dict
         """
         return dict(
-            filter = dataId["filter"],
+            filter=dataId["filter"],
         )
 
 if __name__ == "__main__":
@@ -222,11 +223,11 @@ if __name__ == "__main__":
         IcrsCoord(maxRa, maxDec),
         IcrsCoord(minRa, maxDec),
     ]
-    results = selectTask.run(coordList = coordList, filter = 'r')
+    results = selectTask.run(coordList=coordList, filter='r')
     filenames = set()
 
     for ccdInfo in results.exposureInfoList:
         print "dataId=%s, fwhm=%s, filename=%s" % (ccdInfo.dataId, ccdInfo.fwhm, ccdInfo.filename)
         filenames.add(ccdInfo.filename)
 
-    print  filenames
+    print filenames

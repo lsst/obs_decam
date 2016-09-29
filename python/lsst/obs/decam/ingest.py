@@ -26,6 +26,7 @@ from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
 
 class DecamIngestArgumentParser(IngestArgumentParser):
+
     def __init__(self, *args, **kwargs):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
         self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"],
@@ -41,9 +42,10 @@ class DecamIngestArgumentParser(IngestArgumentParser):
 
 class DecamIngestTask(IngestTask):
     ArgumentParser = DecamIngestArgumentParser
+
     def __init__(self, *args, **kwargs):
         super(DecamIngestTask, self).__init__(*args, **kwargs)
-        
+
     def run(self, args):
         """Ingest all specified files and add them to the registry"""
         if args.filetype == "instcal":
@@ -53,11 +55,11 @@ class DecamIngestTask(IngestTask):
                     fileInfo, hduInfoList = self.parse.getInfo(infile, args.filetype)
                     if len(hduInfoList) > 0:
                         outfileInstcal = os.path.join(root, self.parse.getDestination(args.butler,
-                                                      hduInfoList[0], infile, "instcal"))
+                                                                                      hduInfoList[0], infile, "instcal"))
                         outfileDqmask = os.path.join(root, self.parse.getDestination(args.butler,
-                                                     hduInfoList[0], infile, "dqmask"))
+                                                                                     hduInfoList[0], infile, "dqmask"))
                         outfileWtmap = os.path.join(root, self.parse.getDestination(args.butler,
-                                                    hduInfoList[0], infile, "wtmap"))
+                                                                                    hduInfoList[0], infile, "wtmap"))
 
                         ingestedInstcal = self.ingest(fileInfo["instcal"], outfileInstcal,
                                                       mode=args.mode, dryrun=args.dryrun)
@@ -79,16 +81,17 @@ class DecamIngestTask(IngestTask):
 
 
 class DecamParseTask(ParseTask):
+
     def __init__(self, *args, **kwargs):
         super(ParseTask, self).__init__(*args, **kwargs)
-        
-        self.expnumMapper  = None
+
+        self.expnumMapper = None
 
         # Note that these should be syncronized with the fields in
         # root.register.columns defined in config/ingest.py
         self.instcalPrefix = "instcal"
-        self.dqmaskPrefix  = "dqmask"
-        self.wtmapPrefix   = "wtmap"
+        self.dqmaskPrefix = "dqmask"
+        self.wtmapPrefix = "wtmap"
 
     def _listdir(self, path, prefix):
         for file in os.listdir(path):
@@ -102,18 +105,18 @@ class DecamParseTask(ParseTask):
                                              self.wtmapPrefix: None,
                                              self.dqmaskPrefix: None}
             self.expnumMapper[expnum][prefix] = fileName
-            
+
     def buildExpnumMapper(self, basepath):
         self.expnumMapper = {}
-        
+
         instcalPath = basepath
-        dqmaskPath  = re.sub(self.instcalPrefix, self.dqmaskPrefix, instcalPath)
-        wtmapPath   = re.sub(self.instcalPrefix, self.wtmapPrefix, instcalPath)
+        dqmaskPath = re.sub(self.instcalPrefix, self.dqmaskPrefix, instcalPath)
+        wtmapPath = re.sub(self.instcalPrefix, self.wtmapPrefix, instcalPath)
         if instcalPath == dqmaskPath:
             raise RuntimeError("instcal and mask directories are the same")
         if instcalPath == wtmapPath:
             raise RuntimeError("instcal and weight map directories are the same")
-            
+
         if not os.path.isdir(dqmaskPath):
             raise OSError("Directory %s does not exist" % (dqmaskPath))
         if not os.path.isdir(wtmapPath):
@@ -123,7 +126,7 @@ class DecamParseTask(ParseTask):
         for path, prefix in zip((instcalPath, dqmaskPath, wtmapPath),
                                 (self.instcalPrefix, self.dqmaskPrefix, self.wtmapPrefix)):
             self._listdir(path, prefix)
-        
+
     def getInfo(self, filename, filetype="raw"):
         """
         The science pixels, mask, and weight (inverse variance) are
@@ -149,13 +152,13 @@ class DecamParseTask(ParseTask):
             phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
             expnum = phuInfo["visit"]
             phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
-            phuInfo[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
-            phuInfo[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
+            phuInfo[self.dqmaskPrefix] = self.expnumMapper[expnum][self.dqmaskPrefix]
+            phuInfo[self.wtmapPrefix] = self.expnumMapper[expnum][self.wtmapPrefix]
             for idx, info in enumerate(infoList):
                 expnum = info["visit"]
                 info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
-                info[self.dqmaskPrefix]  = self.expnumMapper[expnum][self.dqmaskPrefix]
-                info[self.wtmapPrefix]   = self.expnumMapper[expnum][self.wtmapPrefix]
+                info[self.dqmaskPrefix] = self.expnumMapper[expnum][self.dqmaskPrefix]
+                info[self.wtmapPrefix] = self.expnumMapper[expnum][self.wtmapPrefix]
         elif filetype == "raw":
             md = afwImage.readMetadata(filename, self.config.hdu)
             phuInfo = self.getInfoFromMetadata(md)
@@ -185,7 +188,7 @@ class DecamParseTask(ParseTask):
                     infoList.append(info)
                     extnames.discard(ext)
         return phuInfo, infoList
-    
+
     @staticmethod
     def getExtensionName(md):
         return md.get('EXTNAME')
@@ -204,5 +207,3 @@ class DecamParseTask(ParseTask):
         if c > 0:
             raw = raw[:c]
         return raw
-
-

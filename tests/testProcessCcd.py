@@ -38,6 +38,7 @@ OutputName = None  # Specify a name (as a string) to save the output repository
 
 class ProcessCcdTestCase(lsst.utils.tests.TestCase):
     """Tests to run processCcd or tests with processed data"""
+
     def setUp(self):
         try:
             self.datadir = getPackageDir("testdata_decam")
