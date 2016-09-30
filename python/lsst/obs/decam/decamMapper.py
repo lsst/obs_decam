@@ -1,3 +1,4 @@
+from builtins import map
 #
 # LSST Data Management System
 # Copyright 2012-2016 LSST Corporation.
@@ -95,7 +96,7 @@ class DecamMapper(CameraMapper):
         return self._computeCcdExposureId(dataId)
 
     def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
-        return 32 # not really, but this leaves plenty of space for sources
+        return 32  # not really, but this leaves plenty of space for sources
 
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
@@ -115,10 +116,10 @@ class DecamMapper(CameraMapper):
                                    filter coadd, in which case dataId
                                    must contain filter.
         """
-        tract = long(dataId['tract'])
+        tract = int(dataId['tract'])
         if tract < 0 or tract >= 2**DecamMapper._nbit_tract:
             raise RuntimeError('tract not in range [0,%d)' % (2**DecamMapper._nbit_tract))
-        patchX, patchY = map(int, dataId['patch'].split(','))
+        patchX, patchY = [int(x) for x in dataId['patch'].split(',')]
         for p in (patchX, patchY):
             if p < 0 or p >= 2**DecamMapper._nbit_patch:
                 raise RuntimeError('patch component not in range [0, %d)' % 2**DecamMapper._nbit_patch)

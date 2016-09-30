@@ -28,6 +28,7 @@ Example of use (if decam/camGeom already exists, move it aside first):
 """
 from __future__ import absolute_import
 from __future__ import print_function
+from builtins import range
 import argparse
 import os
 import shutil
@@ -239,7 +240,7 @@ if __name__ == "__main__":
 
     #Build the camera config.
     camConfig = CameraConfig()
-    camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in xrange(len(detectorConfigList))])
+    camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in range(len(detectorConfigList))])
     camConfig.name = 'DECAM'
     #From DECam calibration doc
     camConfig.plateScale = 17.575
@@ -282,7 +283,7 @@ if __name__ == "__main__":
     camConfigPath = os.path.join(outDir, "camera.py")
     camConfig.save(camConfigPath)
 
-    for detectorName, ampTable in ampTableDict.iteritems():
+    for detectorName, ampTable in ampTableDict.items():
         shortDetectorName = DecamMapper.getShortCcdName(detectorName)
         ampInfoPath = os.path.join(outDir, shortDetectorName + ".fits")
         ampTable.writeFits(ampInfoPath)

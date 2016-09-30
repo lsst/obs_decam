@@ -51,7 +51,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         configPath = os.path.join(getPackageDir("obs_decam"), "config")
         argsList = [os.path.join(self.datadir, "rawData"), "--output", self.outPath, "--id"]
-        argsList += ["%s=%s" % (key, val) for key, val in self.dataId.iteritems()]
+        argsList += ["%s=%s" % (key, val) for key, val in self.dataId.items()]
         argsList += ["--calib", os.path.join(self.datadir, "rawData/cpCalib")]
         argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
                      # Temporary until DM-4232 is fixed.

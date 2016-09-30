@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function
 import argparse
 import sys
 import os.path
-from itertools import izip
+
 
 import numpy as np
 import astropy.io.fits as fits
@@ -44,7 +44,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     camera = DecamMapper().camera
     fromHDUs = fits.open(fromFile)[1:] # HDU 0 has no data
     assert len(fromHDUs) == len(camera)
-    for ccdind, (detector, hdu) in enumerate(izip(camera, fromHDUs)):
+    for ccdind, (detector, hdu) in enumerate(zip(camera, fromHDUs)):
         ccdnum = ccdind + 1
         if verbose:
             print("ccdnum=%s; detector=%s" % (ccdnum, detector.getName()))

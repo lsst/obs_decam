@@ -1,3 +1,4 @@
+from builtins import zip
 #
 # LSST Data Management System
 # Copyright 2012,2015 LSST Corporation.
@@ -100,7 +101,7 @@ class DecamParseTask(ParseTask):
             if "EXPNUM" not in md.names():
                 return
             expnum = md.get("EXPNUM")
-            if expnum not in self.expnumMapper.keys():
+            if expnum not in self.expnumMapper:
                 self.expnumMapper[expnum] = {self.instcalPrefix: None,
                                              self.wtmapPrefix: None,
                                              self.dqmaskPrefix: None}
