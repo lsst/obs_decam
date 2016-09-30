@@ -49,27 +49,6 @@ class ButlerTestCase(unittest.TestCase):
     def tearDown(self):
         del self.butler
 
-    def testButlerSubsetLevel(self):
-        """Test if subset is gathered correctly for the specified level"""
-        subset = self.butler.subset("raw", level="sensor", visit=229388, ccdnum=1)
-        print("ButlerSubset.cache: %s" % subset.cache)
-        self.assertEqual(len(subset), 1)
-
-        subset = self.butler.subset("raw", level="sensor", visit=229388)
-        print("ButlerSubset.cache: %s" % subset.cache)
-        self.assertEqual(len(subset), 2)
-
-        subset = self.butler.subset("raw", level="visit", visit=229388)
-        print("ButlerSubset.cache: %s" % subset.cache)
-        self.assertEqual(len(subset), 1)
-
-    def testGetCamera(self):
-        """Test that we can get a camera"""
-        camera = self.butler.get("camera")
-        self.assertEqual(len(camera), 62)
-        self.assertEqual(camera[1].getName(), "S29")
-        self.assertEqual(camera[62].getName(), "N31")
-
     def testGetLinearizer(self):
         """Test that we can get a linearizer"""
         camera = self.butler.get("camera")

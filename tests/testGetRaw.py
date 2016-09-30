@@ -94,17 +94,6 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         """Test retrieval of raw image"""
         exp = self.butler.get("raw", self.dataId)
 
-        print("dataId: %s" % self.dataId)
-        print("width: %s" % exp.getWidth())
-        print("height: %s" % exp.getHeight())
-        print("detector id: %s" % exp.getDetector().getId())
-
-        self.assertEqual(exp.getWidth(), self.size[0])
-        self.assertEqual(exp.getHeight(), self.size[1])
-        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
-        self.assertTrue(exp.hasWcs())
-
         # Metadata which should have been copied from zeroth extension.
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
