@@ -21,19 +21,25 @@ from __future__ import print_function
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+import math
 import os
-
 import warnings
 import unittest
+
+from lsst.daf.base import DateTime
 import lsst.afw.image as afwImage
 import lsst.utils.tests
 from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
+from lsst.daf.butlerUtils import MakeRawVisitInfo
+from lsst.afw.image import RotType_UNKNOWN
+from lsst.afw.coord import IcrsCoord, Coord
+from lsst.afw.geom import degrees
 
 
-class GetRawTestCase(unittest.TestCase):
+class GetRawTestCase(lsst.utils.tests.TestCase):
     """Testing butler raw image retrieval"""
 
     def setUp(self):
@@ -50,8 +56,20 @@ class GetRawTestCase(unittest.TestCase):
         self.size = (2160, 4146)
         self.dataId = {'visit': 229388, 'ccdnum': 1}
         self.filter = "z"
-        self.exptime = 200.0
-        self.darktime = 201.15662
+        self.dateAvg = DateTime("2013-09-01T06:05:10.753848", DateTime.TAI)
+        self.exposureTime = 200.0
+        self.darkTime = 201.15662
+        self.boresightRaDec = IcrsCoord('02:51:16.790', '-00:00:05.699')
+        self.boresightAzAlt = Coord(61.24*degrees, (90-50.46)*degrees)
+        self.boresightAirmass = 1.57
+        self.boresightRotAngle = float("nan")*degrees
+        self.rotType = RotType_UNKNOWN
+        self.obs_longitude = 70.81489000000001*degrees
+        self.obs_latitude = -30.16606*degrees
+        self.obs_elevation = 2215.0
+        self.weath_airTemperature = 11.9
+        self.weath_airPressure = MakeRawVisitInfo.pascalFromMmHg(779.0)
+        self.weath_humidity = 23.0
 
     def tearDown(self):
         del self.butler
@@ -76,9 +94,25 @@ class GetRawTestCase(unittest.TestCase):
         self.assertTrue(exp.hasWcs())
 
         # Metadata which should have been copied from zeroth extension.
-        self.assertIn("MJD-OBS", exp.getMetadata().paramNames())
-        self.assertEqual(exp.getCalib().getExptime(), self.exptime)
-        self.assertEqual(exp.getMetadata().get("DARKTIME"), self.darktime)
+        visitInfo = exp.getInfo().getVisitInfo()
+        self.assertEqual(visitInfo.getDate(), self.dateAvg)
+        self.assertEqual(visitInfo.getExposureTime(), self.exposureTime)
+        self.assertEqual(visitInfo.getDarkTime(), self.darkTime)
+        visitInfo = exp.getInfo().getVisitInfo()
+        self.assertEqual(visitInfo.getDate(), self.dateAvg)
+        self.assertCoordsNearlyEqual(visitInfo.getBoresightRaDec(), self.boresightRaDec)
+        self.assertCoordsNearlyEqual(visitInfo.getBoresightAzAlt(), self.boresightAzAlt)
+        self.assertAlmostEqual(visitInfo.getBoresightAirmass(), self.boresightAirmass)
+        self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
+        self.assertEqual(visitInfo.getRotType(), self.rotType)
+        observatory = visitInfo.getObservatory()
+        self.assertAnglesNearlyEqual(observatory.getLongitude(), self.obs_longitude)
+        self.assertAnglesNearlyEqual(observatory.getLatitude(), self.obs_latitude)
+        self.assertAlmostEqual(observatory.getElevation(), self.obs_elevation)
+        weather = visitInfo.getWeather()
+        self.assertAlmostEqual(weather.getAirTemperature(), self.weath_airTemperature)
+        self.assertAlmostEqual(weather.getAirPressure(), self.weath_airPressure)
+        self.assertAlmostEqual(weather.getHumidity(), self.weath_humidity)
 
         # Example of metadata which should *not* have been copied from zeroth extension.
         self.assertNotIn("PROPOSER", exp.getMetadata().paramNames())

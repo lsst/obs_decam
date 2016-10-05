@@ -29,11 +29,14 @@ from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation
 from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
+from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
 np.seterr(divide="ignore")
 
 class DecamMapper(CameraMapper):
     packageName = 'obs_decam'
+
+    MakeRawVisitInfoClass = MakeDecamRawVisitInfo
 
     detectorNames = {1:'S29', 2:'S30', 3:'S31', 4:'S25', 5:'S26', 6:'S27', 7:'S28', 8:'S20', 9:'S21',
                       10:'S22', 11:'S23', 12:'S24', 13:'S14', 14:'S15', 15:'S16', 16:'S17', 17:'S18',
@@ -186,10 +189,12 @@ class DecamMapper(CameraMapper):
         header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocations()[0])
         md0 = afwImage.readMetadata(header)
         calib = afwImage.Calib()
-        calib.setExptime(md0.get("EXPTIME"))
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
-        
+        exposureId = self._computeCcdExposureId(dataId)
+        visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
+        exp.getInfo().setVisitInfo(visitInfo)
+
         exp.setMetadata(md) # Do we need to remove WCS/calib info?
         return exp
 
@@ -210,10 +215,13 @@ class DecamMapper(CameraMapper):
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
-        # Keywords EXPTIME and MJD-OBS are used to set the calib object.
-        for kw in ('EXPTIME', 'MJD-OBS', 'DARKTIME'):
+        # extra keywords to copy to the exposure
+        for kw in ('DARKTIME', ):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
+        exposureId = self._computeCcdExposureId(dataId)
+        visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
+        exp.getInfo().setVisitInfo(visitInfo)
         # As TPV is not supported yet, the wcs keywords are not pruned
         # from the metadata. Once TPV is supported, the following keyword
         # removal may not be necessary here and would probably be done at
@@ -233,7 +241,11 @@ class DecamMapper(CameraMapper):
 
     def std_dark(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
-        exp.getCalib().setExptime(1.0)
+        rawPath = self.map_raw(dataId).getLocations()[0]
+        headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
+        md0 = afwImage.readMetadata(headerPath)
+        visitInfo = self.makeRawVisitInfo(md0)
+        exp.getInfo().setVisitInfo(visitInfo)
         return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
 
     def std_bias(self, item, dataId):
