@@ -60,6 +60,7 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
         afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
         afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0', 'Y'])
+        afwImageUtils.defineFilter('VR', lambdaEff=630, alias=['VR DECam c0007 6300.0 2600.0'])
         afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 DECam c0008 9645.0 94.0'])
         afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
