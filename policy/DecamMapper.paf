@@ -342,6 +342,13 @@ datasets: {
         tables:        raw
     }
 
+    cal_ref_cat: {
+        template: "photo_astro_ref/%(pixel_id)s.fits"
+        persistable: SourceCatalog
+        python: lsst.afw.table.SourceCatalog
+        storage: FitsCatalogStorage
+        table: ignored
+    }
     deep_makeSkyMap_config: {
         template:      "config/deep_makeSkyMap.py"
         python:        "lsst.pipe.tasks.makeSkyMap.MakeSkyMapTask.ConfigClass"
