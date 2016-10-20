@@ -96,11 +96,8 @@ exposures: {
         level:       "None"
         tables:      raw
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepCoadd: {
-        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)s.fits"
-        python:      "lsst.afw.image.ExposureF"
-        persistable: "ExposureF"
-        storage:     "FitsStorage"
         level:       "None"
     }
 }
@@ -324,23 +321,17 @@ datasets: {
         storage:       "ConfigStorage"
         tables:        raw
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deep_makeCoaddTempExp_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deep_safeClipAssembleCoadd_config: {
         template:      "config/deep_assembleCoadd.py"
-        python:        "lsst.pipe.tasks.assembleCoadd.SafeClipAssembleCoaddConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deep_safeClipAssembleCoadd_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
     deepCoadd_srcMatch: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits"
@@ -350,35 +341,25 @@ datasets: {
         tables:        raw
         tables:        raw_visit
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     detectCoaddSources_config: {
         template:      "config/detectCoadd.py"
-        python:        "lsst.pipe.tasks.multiBand.DetectCoaddSourcesConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     detectCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     measureCoaddSources_config: {
         template:      "config/measureMergedCoadd.py"
-        python:        "lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     measureCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     mergeCoaddMeasurements_metadata: {
         template:      "deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
     forcedPhotCcd_metadata: {
         template:      "forced/%(filter)s/%(tract)d/forcedPhotCcd_metadata/%(visit)07d-%(ccdnum)03d.boost"
@@ -396,57 +377,33 @@ datasets: {
         tables:        raw
         tables:        raw_visit
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepCoadd_forced_metadata: {
         template:      "deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepCoadd_forced_src: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "ignored"
-        storage:       "FitsCatalogStorage"
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_config: {
-        template:      "config/deepDiff.py"
         python:        "lsst.pipe.tasks.imageDifference.ImageDifferenceConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_metadata: {
         template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_differenceExp: {
         template:      "deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:   "ExposureF"
-        storage:       "FitsStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_matchedExp: {
         template:      "deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits"
-        python:        "lsst.afw.image.ExposureF"
-        persistable:   "ExposureF"
-        storage:       "FitsStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_diaSrc: {
         template:      "deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "SourceCatalog"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     deepDiff_diaSrc_schema: {
         template:      "schema/deepDiff_diaSrc.fits"
@@ -456,13 +413,9 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
+    # dataset defined in obs_base modifield in this mapper as follows:
     deepDiff_kernelSrc: {
         template:      "deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "SourceCatalog"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     singleFrameDriver_metadata: {
         template:      "%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.boost"
