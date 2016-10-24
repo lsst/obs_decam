@@ -96,9 +96,17 @@ exposures: {
         level:       "None"
         tables:      raw
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd: {
         level:       "None"
+    }
+    # dataset defined in obs_base modified in this mapper as follows:
+    deepDiff_differenceExp: {
+        template:      "deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits"
+    }
+    # dataset defined in obs_base modified in this mapper as follows:
+    deepDiff_matchedExp: {
+        template:      "deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits"
     }
 }
 
@@ -321,15 +329,15 @@ datasets: {
         storage:       "ConfigStorage"
         tables:        raw
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deep_makeCoaddTempExp_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deep_safeClipAssembleCoadd_config: {
         template:      "config/deep_assembleCoadd.py"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deep_safeClipAssembleCoadd_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost"
     }
@@ -341,23 +349,23 @@ datasets: {
         tables:        raw
         tables:        raw_visit
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     detectCoaddSources_config: {
         template:      "config/detectCoadd.py"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     detectCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.boost"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     measureCoaddSources_config: {
         template:      "config/measureMergedCoadd.py"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     measureCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.boost"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     mergeCoaddMeasurements_metadata: {
         template:      "deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.boost"
     }
@@ -377,31 +385,23 @@ datasets: {
         tables:        raw
         tables:        raw_visit
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_forced_metadata: {
         template:      "deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.boost"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_forced_src: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_config: {
         python:        "lsst.pipe.tasks.imageDifference.ImageDifferenceConfig"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_metadata: {
         template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
-    deepDiff_differenceExp: {
-        template:      "deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits"
-    }
-    # dataset defined in obs_base modifield in this mapper as follows:
-    deepDiff_matchedExp: {
-        template:      "deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits"
-    }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_diaSrc: {
         template:      "deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits"
     }
@@ -413,7 +413,7 @@ datasets: {
         tables:        raw
         tables:        raw_skyTile
     }
-    # dataset defined in obs_base modifield in this mapper as follows:
+    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_kernelSrc: {
         template:      "deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits"
     }
