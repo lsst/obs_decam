@@ -199,7 +199,17 @@ class DecamMapper(CameraMapper):
         visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
         exp.getInfo().setVisitInfo(visitInfo)
 
-        exp.setMetadata(md)  # Do we need to remove WCS/calib info?
+        afwImage.stripWcsKeywords(md, wcs)
+
+        for kw in ('LTV1', 'LTV2'):
+            md.remove(kw)
+
+        # Remove TPV keywords from the metadata
+        for kw in md.paramNames():
+            if re.match(r'PV\d_\d', kw):
+                md.remove(kw)
+
+        exp.setMetadata(md)
         return exp
 
     def std_raw(self, item, dataId):
@@ -230,10 +240,10 @@ class DecamMapper(CameraMapper):
         # from the metadata. Once TPV is supported, the following keyword
         # removal may not be necessary here and would probably be done at
         # makeWcs() when the raw image is converted to an Exposure.
-        for kw in exp.getWcs().getFitsMetadata().paramNames():
-            md.remove(kw)
+        afwImage.stripWcsKeywords(md, exp.getWcs())
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
+
         # Currently the existence of some PV cards in the metadata combined
         # with a CTYPE of TAN is interpreted as TPV (DM-2883).
         for kw in md.paramNames():
