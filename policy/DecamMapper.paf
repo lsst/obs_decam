@@ -88,17 +88,9 @@ exposures: {
         columns:     "ccdnum"
         columns:     "ccd"
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_tempExp: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
-        python:      "lsst.afw.image.ExposureF"
-        persistable: "ExposureF"
-        storage:     "FitsStorage"
-        level:       "None"
-        tables:      raw
-    }
-    # dataset defined in obs_base modified in this mapper as follows:
-    deepCoadd: {
-        level:       "None"
     }
     # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_differenceExp: {
@@ -341,13 +333,9 @@ datasets: {
     deep_safeClipAssembleCoadd_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost"
     }
+    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_srcMatch: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits"
-        python:        "lsst.afw.table.BaseCatalog"
-        persistable:   "BaseCatalog"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_visit
     }
     # dataset defined in obs_base modified in this mapper as follows:
     detectCoaddSources_config: {
@@ -394,24 +382,12 @@ datasets: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits"
     }
     # dataset defined in obs_base modified in this mapper as follows:
-    deepDiff_config: {
-        python:        "lsst.pipe.tasks.imageDifference.ImageDifferenceConfig"
-    }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_metadata: {
         template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
     }
     # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_diaSrc: {
         template:      "deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits"
-    }
-    deepDiff_diaSrc_schema: {
-        template:      "schema/deepDiff_diaSrc.fits"
-        python:        "lsst.afw.table.SourceCatalog"
-        persistable:   "SourceCatalog"
-        storage:       "FitsCatalogStorage"
-        tables:        raw
-        tables:        raw_skyTile
     }
     # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_kernelSrc: {
