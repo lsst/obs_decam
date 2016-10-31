@@ -299,28 +299,6 @@ datasets: {
         storage:       "BoostStorage"
         tables:        raw
     }
-    processCcdDecam_config: {
-        template:      "config/processCcdDecam.py"
-        python:        "lsst.obs.decam.processCcdDecam.ProcessCcdDecamConfig"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
-        tables:        raw
-    }
-    processCcdDecam_metadata: {
-        template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
-        python:        "lsst.daf.base.PropertySet"
-        persistable:   "PropertySet"
-        storage:       "BoostStorage"
-        tables:        raw
-    }
-
-    deep_makeSkyMap_config: {
-        template:      "config/deep_makeSkyMap.py"
-        python:        "lsst.pipe.tasks.makeSkyMap.MakeSkyMapTask.ConfigClass"
-        persistable:   "Config"
-        storage:       "ConfigStorage"
-        tables:        raw
-    }
     # dataset defined in obs_base modified in this mapper as follows:
     deep_makeCoaddTempExp_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost"
@@ -401,5 +379,4 @@ datasets: {
         tables:        raw  
         tables:        raw_visit
     } 
-
 }
