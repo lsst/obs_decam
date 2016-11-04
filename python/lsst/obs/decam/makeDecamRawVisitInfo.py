@@ -37,7 +37,7 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
     Fields that are not set:
     - exposureId
     - ut1
-    - era
+    - era (set by back-computing from HourAngle and RA, but not fully correct: see DM-8503)
     - boresightRotAngle
     - rotType
     """
@@ -68,6 +68,8 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
             self.pascalFromMmHg(self.popFloat(md, "PRESSURE")),
             self.popFloat(md, "HUMIDITY")
         )
+        longitude = argDict["observatory"].getLongitude()
+        argDict['era'] = self.decamGetEra(md, argDict["boresightRaDec"][0], longitude)
 
     def getDateAvg(self, md, exposureTime):
         """Return date at the middle of the exposure
@@ -77,3 +79,12 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
         """
         dateObs = self.popIsoDate(md, "DATE-OBS")
         return self.offsetDate(dateObs, 0.5*exposureTime)
+
+    def decamGetEra(self, md, RA, longitude):
+        """
+        DECAM provides HA, so we can get LST and thus an ERA-equivalent from that.
+
+        NOTE: if we deal with DM-8053 and implement UT1, we can delete this method and use UT1 directly.
+        """
+        HA = self.popAngle(md, "HA", units=astropy.units.h)
+        return HA + RA - longitude
