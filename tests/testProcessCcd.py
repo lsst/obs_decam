@@ -58,6 +58,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
                      "isr.assembleCcd.setGain=False",
                      # This test uses CP-MasterCal calibration products
                      "-C", "%s/processCcdCpIsr.py" % configPath]
+        argsList.append('--doraise')
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
         self.butler = fullResult.parsedCmd.butler
         self.config = fullResult.parsedCmd.config

@@ -1,3 +1,4 @@
+from __future__ import absolute_import, division, print_function
 #
 # LSST Data Management System
 #
@@ -42,7 +43,7 @@ def _computeEdgeSize(rawExposure, calibExposure):
     assert nx == ny, "Exposure is trimmed differently in X and Y"
     assert nx%2 == 0, "Exposure is trimmed unevenly in X"
     assert nx >= 0, "Calibration image is larger than raw data"
-    return nx/2
+    return nx//2
 
 
 class DecamCpIsrTask(DecamIsrTask):
