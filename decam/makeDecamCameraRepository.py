@@ -27,6 +27,8 @@ Example of use (if decam/camGeom already exists, move it aside first):
     python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
 """
 from __future__ import absolute_import
+from __future__ import print_function
+from builtins import range
 import argparse
 import os
 import shutil
@@ -38,13 +40,14 @@ from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE
 from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
 
+
 def makeAmpTables(segmentsFile):
     """
     Read the segments file from a PhoSim release and produce the appropriate AmpInfo
     @param segmentsFile -- String indicating where the file is located
     """
     returnDict = {}
-    readoutMap = {'LL':afwTable.LL, 'LR':afwTable.LR, 'UR':afwTable.UR, 'UL':afwTable.UL}
+    readoutMap = {'LL': afwTable.LL, 'LR': afwTable.LR, 'UR': afwTable.UR, 'UL': afwTable.UL}
     detectorName = [] # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
         fh.readline()
@@ -121,11 +124,11 @@ def makeAmpTables(segmentsFile):
             rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
             rawPrescanBBox = afwGeom.Box2I(originPrescan, afwGeom.Extent2I(prescan, ndatay))
 
-            print "\nDetector=%s; Amp=%s" % (detectorName, name)
-            print rawHorizontalOverscanBBox
-            print rawVerticalOverscanBBox
-            print dataBBox
-            print rawBBox
+            print("\nDetector=%s; Amp=%s" % (detectorName, name))
+            print(rawHorizontalOverscanBBox)
+            print(rawVerticalOverscanBBox)
+            print(dataBBox)
+            print(rawBBox)
             #Set the elements of the record for this amp
             record.setBBox(dataBBox) # This is the box for the amp in the assembled frame
             record.setName(name)
@@ -137,13 +140,13 @@ def makeAmpTables(segmentsFile):
             ampIndex = dict(A=0, B=1)[name]
             record.setLinearityCoeffs([ampIndex, 0, 0, 0])
             record.setLinearityType(LinearizeLookupTable.LinearityType)
-            print "Linearity type=%r; coeffs=%s" % (record.getLinearityType(), record.getLinearityCoeffs())
+            print("Linearity type=%r; coeffs=%s" % (record.getLinearityType(), record.getLinearityCoeffs()))
             record.setHasRawInfo(True)
             record.setRawFlipX(flipx)
             record.setRawFlipY(flipy)
             record.setRawBBox(rawBBox)
             # I believe that xy offset is not needed if the raw data are pre-assembled
-            record.setRawXYOffset(afwGeom.Extent2I(0,0))
+            record.setRawXYOffset(afwGeom.Extent2I(0, 0))
             """
             if readCorner is afwTable.LL:
                 record.setRawXYOffset(afwGeom.Extent2I(xoff + prescan + hoverscan, yoff))
@@ -161,6 +164,7 @@ def makeAmpTables(segmentsFile):
             # don't know how you would do a prescan in the serial direction.
             record.setRawPrescanBBox(afwGeom.Box2I())
     return returnDict
+
 
 def makeDetectorConfigs(detectorLayoutFile):
     """
@@ -224,26 +228,26 @@ if __name__ == "__main__":
     parser.add_argument("DetectorLayoutFile", help="Path to detector layout file")
     parser.add_argument("SegmentsFile", help="Path to amp segments file")
     parser.add_argument("OutputDir",
-        help = "Path to dump configs and AmpInfo Tables; defaults to %r" % (defaultOutDir,),
-        nargs = "?",
-        default = defaultOutDir,
-    )
+                        help="Path to dump configs and AmpInfo Tables; defaults to %r" % (defaultOutDir,),
+                        nargs="?",
+                        default=defaultOutDir,
+                        )
     parser.add_argument("--clobber", action="store_true", dest="clobber", default=False,
-        help=("remove and re-create the output directory if it already exists?"))
+                        help=("remove and re-create the output directory if it already exists?"))
     args = parser.parse_args()
     ampTableDict = makeAmpTables(args.SegmentsFile)
     detectorConfigList = makeDetectorConfigs(args.DetectorLayoutFile)
 
     #Build the camera config.
     camConfig = CameraConfig()
-    camConfig.detectorList = dict([(i,detectorConfigList[i]) for i in xrange(len(detectorConfigList))])
+    camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in range(len(detectorConfigList))])
     camConfig.name = 'DECAM'
     #From DECam calibration doc
     camConfig.plateScale = 17.575
     pScaleRad = afwGeom.arcsecToRad(camConfig.plateScale)
     tConfig = afwGeom.TransformConfig()
     tConfig.transform.name = 'radial'
-    nomWavelen =  0.625 #nominal wavelen in microns
+    nomWavelen = 0.625 #nominal wavelen in microns
     coeff0 = 0
     coeff1 = 1 - 2.178e-4 - 2.329e-4/nomWavelen + 4.255e-5/nomWavelen**2
     coeff2 = 0
@@ -252,7 +256,7 @@ if __name__ == "__main__":
                                        pScaleRad*coeff3]
     tmc = afwGeom.TransformMapConfig()
     tmc.nativeSys = FOCAL_PLANE.getSysName()
-    tmc.transforms = {PUPIL.getSysName():tConfig}
+    tmc.transforms = {PUPIL.getSysName(): tConfig}
     camConfig.transformDict = tmc
 
     def makeDir(dirPath, doClobber=False):
@@ -265,11 +269,11 @@ if __name__ == "__main__":
         """
         if os.path.exists(dirPath):
             if doClobber and os.path.isdir(dirPath):
-                print "Clobbering directory %r" % (dirPath,)
+                print("Clobbering directory %r" % (dirPath,))
                 shutil.rmtree(dirPath)
             else:
                 raise RuntimeError("Directory %r exists" % (dirPath,))
-        print "Creating directory %r" % (dirPath,)
+        print("Creating directory %r" % (dirPath,))
         os.makedirs(dirPath)
 
     # write data products
@@ -279,7 +283,7 @@ if __name__ == "__main__":
     camConfigPath = os.path.join(outDir, "camera.py")
     camConfig.save(camConfigPath)
 
-    for detectorName, ampTable in ampTableDict.iteritems():
+    for detectorName, ampTable in ampTableDict.items():
         shortDetectorName = DecamMapper.getShortCcdName(detectorName)
         ampInfoPath = os.path.join(outDir, shortDetectorName + ".fits")
         ampTable.writeFits(ampInfoPath)

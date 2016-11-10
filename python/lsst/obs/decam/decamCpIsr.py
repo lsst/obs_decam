@@ -1,3 +1,4 @@
+from __future__ import absolute_import, division, print_function
 #
 # LSST Data Management System
 #
@@ -42,7 +43,7 @@ def _computeEdgeSize(rawExposure, calibExposure):
     assert nx == ny, "Exposure is trimmed differently in X and Y"
     assert nx%2 == 0, "Exposure is trimmed unevenly in X"
     assert nx >= 0, "Calibration image is larger than raw data"
-    return nx/2
+    return nx//2
 
 
 class DecamCpIsrTask(DecamIsrTask):
@@ -51,6 +52,7 @@ class DecamCpIsrTask(DecamIsrTask):
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
     different from the LSST-generated calibration products (bias/flat).
     """
+
     def readIsrData(self, dataRef, rawExposure):
         """Retrieve necessary frames for instrument signature removal
 
@@ -82,18 +84,18 @@ class DecamCpIsrTask(DecamIsrTask):
         defectList = dataRef.get("defects")
 
         if self.config.doFringe and self.fringe.checkFilter(rawExposure):
-            fringeStruct = self.fringe.readFringes(dataRef, assembler=self.assembleCcd \
-                                              if self.config.doAssembleIsrExposures else None)
+            fringeStruct = self.fringe.readFringes(dataRef, assembler=self.assembleCcd
+                                                   if self.config.doAssembleIsrExposures else None)
         else:
-            fringeStruct = pipeBase.Struct(fringes = None)
+            fringeStruct = pipeBase.Struct(fringes=None)
 
-        return pipeBase.Struct(bias = biasExposure,
-                               linearizer = linearizer,
-                               dark = darkExposure,
-                               flat = flatExposure,
-                               defects = defectList,
-                               fringes = fringeStruct,
-                               bfKernel = brighterFatterKernel
+        return pipeBase.Struct(bias=biasExposure,
+                               linearizer=linearizer,
+                               dark=darkExposure,
+                               flat=flatExposure,
+                               defects=defectList,
+                               fringes=fringeStruct,
+                               bfKernel=brighterFatterKernel
                                )
 
     def biasCorrection(self, exposure, biasExposure):

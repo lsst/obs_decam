@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function
 import argparse
 import sys
 import os.path
-from itertools import izip
+
 
 import numpy as np
 import astropy.io.fits as fits
@@ -13,6 +13,7 @@ import astropy.io.fits as fits
 from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
 from lsst.daf.persistence import Butler
+
 
 def makeLinearizerDecam(fromFile, force=False, verbose=False):
     """Convert the specified DECam linearity FITS table to standard LSST format
@@ -43,7 +44,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     camera = DecamMapper().camera
     fromHDUs = fits.open(fromFile)[1:] # HDU 0 has no data
     assert len(fromHDUs) == len(camera)
-    for ccdind, (detector, hdu) in enumerate(izip(camera, fromHDUs)):
+    for ccdind, (detector, hdu) in enumerate(zip(camera, fromHDUs)):
         ccdnum = ccdind + 1
         if verbose:
             print("ccdnum=%s; detector=%s" % (ccdnum, detector.getName()))
@@ -57,9 +58,9 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             # convert DECam replacement table to LSST offset table
             if verbose:
                 print("DECam table for %s=%s..." % (ampName, fromData["ADU_LINEAR_" + ampName][0:5],))
-            lsstTable[i,:] = fromData["ADU_LINEAR_" + ampName] - uncorr
+            lsstTable[i, :] = fromData["ADU_LINEAR_" + ampName] - uncorr
             if verbose:
-                print("LSST  table for %s=%s..." % (ampName, lsstTable[i,0:5],))
+                print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
         linearizer = LinearizeLookupTable(table=lsstTable, detector=detector)
         butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
     print("Wrote %s linearizers" % (ccdind+1,))

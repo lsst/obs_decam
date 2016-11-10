@@ -29,22 +29,22 @@ from lsst.meas.algorithms.detection import SourceDetectionTask
 
 class DecamIsrConfig(IsrTask.ConfigClass):
     overscanBiasJumpBKP = pexConfig.ListField(
-        dtype = str,
-        doc = "Names of the backplanes for CCDs showing bias jump due to " +
-              "the simultaneous readout of the smaller ancillary CCDs.",
-        default = ['DECAM_BKP3', 'DECAM_BKP5', 'DECAM_BKP1', 'DECAM_BKP4'],
+        dtype=str,
+        doc="Names of the backplanes for CCDs showing bias jump due to " +
+        "the simultaneous readout of the smaller ancillary CCDs.",
+        default=['DECAM_BKP3', 'DECAM_BKP5', 'DECAM_BKP1', 'DECAM_BKP4'],
     )
     overscanBiasJumpLocation = pexConfig.Field(
-        dtype = int,
-        doc = "The y distance of the bias jump location measured in units " +
-              "of pixels from the readout corner; this should be the y " +
-              "dimension of the smaller ancillary CCDs.",
-        default = 2098,
+        dtype=int,
+        doc="The y distance of the bias jump location measured in units " +
+        "of pixels from the readout corner; this should be the y " +
+        "dimension of the smaller ancillary CCDs.",
+        default=2098,
     )
     numEdgeSuspect = pexConfig.Field(
-        dtype = int,
-        doc = "Number of edge pixels to be flagged as untrustworthy.",
-        default = 35,
+        dtype=int,
+        doc="Number of edge pixels to be flagged as untrustworthy.",
+        default=35,
     )
 
 
@@ -120,16 +120,16 @@ class DecamIsrTask(IsrTask):
         upperOverscanImage = expImage.Factory(expImage, upperOverscanBBox)
 
         overscanCorrection(
-            ampMaskedImage = lowerDataView,
-            overscanImage = lowerOverscanImage,
-            fitType = self.config.overscanFitType,
-            order = self.config.overscanOrder,
-            collapseRej = self.config.overscanRej,
+            ampMaskedImage=lowerDataView,
+            overscanImage=lowerOverscanImage,
+            fitType=self.config.overscanFitType,
+            order=self.config.overscanOrder,
+            collapseRej=self.config.overscanRej,
         )
         overscanCorrection(
-            ampMaskedImage = upperDataView,
-            overscanImage = upperOverscanImage,
-            fitType = self.config.overscanFitType,
-            order = self.config.overscanOrder,
-            collapseRej = self.config.overscanRej,
+            ampMaskedImage=upperDataView,
+            overscanImage=upperOverscanImage,
+            fitType=self.config.overscanFitType,
+            order=self.config.overscanOrder,
+            collapseRej=self.config.overscanRej,
         )

@@ -23,16 +23,17 @@
 import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
+
 class DecamNullIsrConfig(pexConfig.Config):
     doWrite = pexConfig.Field(
-        dtype = bool,
-        doc = "Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
-        default = False,
+        dtype=bool,
+        doc="Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
+        default=False,
     )
     datasetType = pexConfig.Field(
-        dtype = str,
-        doc = "Dataset type for input data; read by ProcessCcdTask; users will typically leave this alone",
-        default = "instcal",
+        dtype=str,
+        doc="Dataset type for input data; read by ProcessCcdTask; users will typically leave this alone",
+        default="instcal",
     )
 
 ## \addtogroup LSST_task_documentation
@@ -42,11 +43,12 @@ class DecamNullIsrConfig(pexConfig.Config):
 ## \copybrief DecamNullIsrTask
 ## \}
 
+
 class DecamNullIsrTask(pipeBase.Task):
     """!Load an "instcal" exposure as a post-ISR CCD exposure
 
     @anchor DecamNullIsrTask_
-    
+
     @section pipe_tasks_decamNullIsr_Contents  Contents
 
      - @ref pipe_tasks_decamNullIsr_Purpose
@@ -94,5 +96,5 @@ class DecamNullIsrTask(pipeBase.Task):
             sensorRef.put("postISRCCD", exposure)
 
         return pipeBase.Struct(
-            exposure = exposure,
+            exposure=exposure,
         )
