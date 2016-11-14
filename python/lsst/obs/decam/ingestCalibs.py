@@ -87,6 +87,8 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         if md.exists("FILTER"):
+            if md.exists("OBSTYPE") and "zero" in md.get("OBSTYPE").strip().lower():
+                return "NONE"
             return CalibsParseTask.translate_filter(self, md)
         elif md.exists("CALIB_ID"):
             return self._translateFromCalibId("filter", md)
