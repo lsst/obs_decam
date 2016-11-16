@@ -17,6 +17,12 @@ defaultSubLevels: {
 
 camera: "../decam/camGeom"
 
+# exposures and datasets which are needed for all of the mappers are defined
+# in the obs_base package (in either exposures.yaml or datasets.yaml).
+# Where a modification to such a dataset is required for a particular camera,
+# (e.g., for a template or specialized python type), the modification will
+# appear in the definition below as a partial dataset definition.
+
 exposures: {
     raw: {
         template:    "%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]"
@@ -70,15 +76,12 @@ exposures: {
         columns:     "ccdnum"
         columns:     "ccd"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_tempExp: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_differenceExp: {
         template:      "deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_matchedExp: {
         template:      "deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits"
     }
@@ -226,39 +229,30 @@ datasets: {
     calibrate_metadata: {
         template:      "%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deep_makeCoaddTempExp_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deep_safeClipAssembleCoadd_config: {
         template:      "config/deep_assembleCoadd.py"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deep_safeClipAssembleCoadd_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_srcMatch: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     detectCoaddSources_config: {
         template:      "config/detectCoadd.py"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     detectCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     measureCoaddSources_config: {
         template:      "config/measureMergedCoadd.py"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     measureCoaddSources_metadata: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     mergeCoaddMeasurements_metadata: {
         template:      "deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.boost"
     }
@@ -268,23 +262,18 @@ datasets: {
     forced_src: {
         template:      "forced/%(filter)s/%(tract)d/forcedSrc-%(visit)07d-%(ccdnum)03d.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_forced_metadata: {
         template:      "deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepCoadd_forced_src: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_metadata: {
         template:      "deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_diaSrc: {
         template:      "deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits"
     }
-    # dataset defined in obs_base modified in this mapper as follows:
     deepDiff_kernelSrc: {
         template:      "deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits"
     }
