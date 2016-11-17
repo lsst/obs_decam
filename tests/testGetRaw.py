@@ -46,12 +46,11 @@ boresightRaDec = IcrsCoord('02:51:16.790', '-00:00:05.699')
 # NOTE: if we deal with DM-8053 and implement UT1, ERA will not come from HA, so this will change.
 HA = -42.505291666666665*degrees
 era = HA + boresightRaDec[0] - 70.81489000000001*degrees
-
 visit229388_info = {
     "dateAvg": DateTime("2013-09-01T06:05:10.753848", DateTime.TAI),
     "exposureTime": 200.0,
     "darkTime": 201.15662,
-    "era" = era,
+    "era": era,
     "boresightRaDec": boresightRaDec,
     "boresightAzAlt": Coord(61.24*degrees, (90-50.46)*degrees),
     "boresightAirmass": 1.57,
@@ -126,7 +125,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
-        self.assertAnglesNearlyEqual(visitInfo.getEra(), self.era)
+        self.assertAnglesNearlyEqual(visitInfo.getEra(), visit229388_info['era'])
         self.assertCoordsNearlyEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
         self.assertCoordsNearlyEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
