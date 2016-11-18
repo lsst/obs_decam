@@ -7,7 +7,7 @@ import os
 import pdb
 
 def setupButler():
-    datadir= getPackageDir('testdata_decam')
+    datadir= getPackageDir('testdata_mosaic')
     repoPath=os.path.join(datadir, 'rawData')
     butler=Butler(root=repoPath)
     dataId={"field":'F2', "subfield":'p23', "filter":"R", "dateObs":'2003-01-04', "objname":'obj074', 'hdu':1, 'ccdnum':1}
