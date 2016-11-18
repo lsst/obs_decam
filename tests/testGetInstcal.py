@@ -70,6 +70,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
+        self.assertAnglesNearlyEqual(visitInfo.getEra(), visit229388_info['era'])
         self.assertCoordsNearlyEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
         self.assertCoordsNearlyEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
