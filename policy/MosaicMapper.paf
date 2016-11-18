@@ -24,6 +24,47 @@ camera: "../mosaic/camGeom"
 # appear in the definition below as a partial dataset definition.
 
 exposures: {
+    exp: {
+        template:      "exp/%(field)s/%(subfield)s/%(filter)s/%(dateObs)s/%(objname)s_%(ccdnum)d.exp.fits"
+        python:        "lsst.afw.image.ExposureF"
+        persistable:        "ExposureF"
+        storage:    "FitsStorage"
+        level:        "Ccd"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    calexp: {
+
+        template:      "calexp/%(field)s/%(subfield)s/%(filter)s/%(dateObs)s/%(objname)s_%(ccdnum)d.calexp.fits"
+        tables:        raw
+    }
+    postISRMosaic: {
+        template:      "mosaic/%(field)s/%(subfield)s/%(filter)s/%(dateObs)s/%(objname)s.fits#%(hdu)d"
+        python:        "lsst.afw.image.ImageF"
+        persistable:   "ImageF"
+        storage:    "FitsStorage"
+        level:        "Ccd"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    bpm: {
+        template:      "bpm/%(field)s/%(subfield)s/%(filter)s/%(dateObs)s/%(objname)s_%(ccdnum)d.bpm.fits"
+        python:        "lsst.afw.image.ImageU"
+        persistable:   "ImageU"
+        storage:    "FitsStorage"
+        level:        "Ccd"
+        tables:        raw
+        tables:        raw_skyTile
+    }
+    uberbpm: {
+        template:      "bpm/%(observatory)s/%(year)s/bpm_%(ccdnum)d.fits"
+        python:        "lsst.afw.image.ImageU"
+        persistable:   "ImageU"
+        storage:    "FitsStorage"
+        level:        "Ccd"
+        tables:        raw
+        tables:        raw_skyTile
+    }
     raw: {
         template:    "%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]"
         python:      "lsst.afw.image.DecoratedImageF"
@@ -66,15 +107,10 @@ exposures: {
         columns:     "ccdnum"
     }
     icExp: {
-        template:    "%(visit)07d/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits"
-        columns:     "visit"
+        template:    "%(dateObs)s/icExp/%(objname)s_%(ccdnum)d.fits"
         columns:     "ccdnum"
-    }
-    calexp: {
-        template:    "%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits"
-        columns:     "visit"
-        columns:     "ccdnum"
-        columns:     "ccd"
+        columns:     "objname"
+        columns:     "dateObs"
     }
     deepCoadd_tempExp: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
@@ -191,11 +227,10 @@ calibrations: {
 datasets: {
 
     icSrc: {
-        template:      "%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccdnum)02d.fits"
+        template:    "%(dateObs)s/icSrc/%(objname)s_%(ccdnum)d.fits"
     }
     src: {
         template:      "%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits"
-        columns:       "ccd"
     }
     icMatch: {
         template:      "%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits"
@@ -209,7 +244,7 @@ datasets: {
         template:      "%(visit)07d/srcMatch/srcMatch-%(visit)07d_%(ccdnum)02d.fits"
     }
     icExpBackground: {
-        template:      "%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits"
+        template:      "%(dateObs)s/icExp/icExpBackground-%(objname)s_%(ccdnum)02d.fits"
     }
     calexpBackground: {
         template:      "%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits"

@@ -40,14 +40,7 @@ class MosaicMapper(CameraMapper):
 
     MakeRawVisitInfoClass = MakeMosaicRawVisitInfo
 
-    detectorNames = {1: 'S29', 2: 'S30', 3: 'S31', 4: 'S25', 5: 'S26', 6: 'S27', 7: 'S28', 8: 'S20', 9: 'S21',
-                     10: 'S22', 11: 'S23', 12: 'S24', 13: 'S14', 14: 'S15', 15: 'S16', 16: 'S17', 17: 'S18',
-                     18: 'S19', 19: 'S8', 20: 'S9', 21: 'S10', 22: 'S11', 23: 'S12', 24: 'S13', 25: 'S1', 26: 'S2',
-                     27: 'S3', 28: 'S4', 29: 'S5', 30: 'S6', 31: 'S7', 32: 'N1', 33: 'N2', 34: 'N3', 35: 'N4',
-                     36: 'N5', 37: 'N6', 38: 'N7', 39: 'N8', 40: 'N9', 41: 'N10', 42: 'N11', 43: 'N12', 44: 'N13',
-                     45: 'N14', 46: 'N15', 47: 'N16', 48: 'N17', 49: 'N18', 50: 'N19', 51: 'N20', 52: 'N21',
-                     53: 'N22', 54: 'N23', 55: 'N24', 56: 'N25', 57: 'N26', 58: 'N27', 59: 'N28', 60: 'N29',
-                     62: 'N31'}
+    detectorNames = {1:'E1', 2:'E2', 3:'E3', 4:'E4', 5:'W5', 6:'W6', 7:'W7', 8:'W8'}
 
     def __init__(self, inputPolicy=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "MosaicMapper.paf", "policy")
@@ -55,15 +48,11 @@ class MosaicMapper(CameraMapper):
 
         super(MosaicMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
-        afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u Mosaic c0006 3500.0 1000.0'])
-        afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g Mosaic SDSS c0001 4720.0 1520.0'])
-        afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r Mosaic SDSS c0002 6415.0 1480.0'])
-        afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i Mosaic SDSS c0003 7835.0 1470.0'])
-        afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z Mosaic SDSS c0004 9260.0 1520.0'])
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y Mosaic c0005 10095.0 1130.0', 'Y'])
-        afwImageUtils.defineFilter('VR', lambdaEff=630, alias=['VR Mosaic c0007 6300.0 2600.0'])
-        afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 Mosaic c0008 9645.0 94.0'])
-        afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
+        #I found these values in the mosaic 1 manual from september 2004. lambda is in nm
+        afwImageUtils.defineFilter('B', lambdaEff=436, alias=['B'])
+        afwImageUtils.defineFilter('V', lambdaEff=537, alias=['V'])
+        afwImageUtils.defineFilter('R', lambdaEff=644, alias=['R'])
+        afwImageUtils.defineFilter('z', lambdaEff=940, alias=["SDSS z'"])
 
         # The data ID key ccdnum is not directly used in the current policy
         # template of the raw dataset, so is not in its keyDict automatically.
@@ -104,9 +93,13 @@ class MosaicMapper(CameraMapper):
         @param dataId (dict) Data identifier with visit, ccd
         """
         copyId = self._transformId(dataId)
-        visit = copyId['visit']
+        date=dataId['dateObs'].replace('-','')
+        #you have to do remove the middle 2 didgets in the date so the
+        #exposureId ddoesnt exceed 32 bits and is still unique for each ccd exp
+        dateCat=date[0]+date[3]+date[4:]
+        obj=dataId['objname'].replace('obj','')
         ccdnum = copyId['ccdnum']
-        return int("%07d%02d" % (visit, ccdnum))
+        return int("%03s%01s" % (obj, ccdnum))
 
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.

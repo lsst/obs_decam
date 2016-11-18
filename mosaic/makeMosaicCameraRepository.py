@@ -75,20 +75,21 @@ def makeAmpTables(segmentsFile):
 
             if detectorName.startswith("S") and name == "A":
                 readCorner = readoutMap['UR']
-            elif detectorName.startswith("S") and name == "B":
+            elif detectorName.startswith("W") and name == "B":
                 readCorner = readoutMap['UL']
             elif detectorName.startswith("N") and name == "A":
                 readCorner = readoutMap['LL']
-            elif detectorName.startswith("N") and name == "B":
+            elif detectorName.startswith("E") and name == "B":
                 readCorner = readoutMap['LR']
             else:
                 raise RuntimeError("Did not recognize detector name or amp name")
 
-            prescan = 6
+            prescan = 24
             hoverscan = 50
-            voverscan = 50
+            voverscan = 0
+            hjunk = 14
             rawBBox = afwGeom.Box2I(afwGeom.Point2I(xoff, yoff),
-                                    afwGeom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan))
+                                    afwGeom.Extent2I(ndatax + prescan + hjunk + hoverscan, ndatay + voverscan))
             # Note: I'm not particularry happy with how the data origin is derived (it neglects [xy]off),
             # but I don't see a better way.
             if readCorner is afwTable.LL:
@@ -99,16 +100,16 @@ def makeAmpTables(segmentsFile):
                 originPrescan = afwGeom.Point2I(xoff, yoff)
             elif readCorner is afwTable.LR:
                 originRawData = afwGeom.Point2I(xoff, yoff)
-                originData = afwGeom.Point2I(ndatax, 0)
-                originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff)
-                originVOverscan = afwGeom.Point2I(xoff, yoff + ndatay)
-                originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan, yoff)
-            elif readCorner is afwTable.UL:
-                originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
                 originData = afwGeom.Point2I(0, 0)
-                originHOverscan = afwGeom.Point2I(xoff + prescan, yoff + voverscan)
+                originHOverscan = afwGeom.Point2I(xoff, yoff)
+                originVOverscan = afwGeom.Point2I(xoff, yoff + ndatay)
+                originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan + hjunk, yoff)
+            elif readCorner is afwTable.UL:
+                originRawData = afwGeom.Point2I(xoff, yoff)
+                originData = afwGeom.Point2I(0, 0)
+                originHOverscan = afwGeom.Point2I(xoff + prescan + ndatax + + hjunk, yoff)
                 originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
-                originPrescan = afwGeom.Point2I(xoff, yoff + voverscan)
+                originPrescan = afwGeom.Point2I(xoff, yoff)
             elif readCorner is afwTable.UR:
                 originRawData = afwGeom.Point2I(xoff, yoff + voverscan)
                 originData = afwGeom.Point2I(ndatax, 0)
@@ -127,6 +128,7 @@ def makeAmpTables(segmentsFile):
             print("\nDetector=%s; Amp=%s" % (detectorName, name))
             print(rawHorizontalOverscanBBox)
             print(rawVerticalOverscanBBox)
+            print(rawPrescanBBox)
             print(dataBBox)
             print(rawBBox)
             #Set the elements of the record for this amp
@@ -241,7 +243,7 @@ if __name__ == "__main__":
     #Build the camera config.
     camConfig = CameraConfig()
     camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in range(len(detectorConfigList))])
-    camConfig.name = 'Mosaic'
+    camConfig.name = 'MOSAIC1'
     #From Mosaic calibration doc
     camConfig.plateScale = 17.575
     pScaleRad = afwGeom.arcsecToRad(camConfig.plateScale)
