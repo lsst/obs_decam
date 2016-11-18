@@ -30,15 +30,15 @@ from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation
 from lsst.ip.isr import isr
 import lsst.pex.policy as pexPolicy
-from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
+from .makeMosaicRawVisitInfo import MakeMosaicRawVisitInfo
 
 np.seterr(divide="ignore")
 
 
-class DecamMapper(CameraMapper):
-    packageName = 'obs_decam'
+class MosaicMapper(CameraMapper):
+    packageName = 'obs_mosaic'
 
-    MakeRawVisitInfoClass = MakeDecamRawVisitInfo
+    MakeRawVisitInfoClass = MakeMosaicRawVisitInfo
 
     detectorNames = {1: 'S29', 2: 'S30', 3: 'S31', 4: 'S25', 5: 'S26', 6: 'S27', 7: 'S28', 8: 'S20', 9: 'S21',
                      10: 'S22', 11: 'S23', 12: 'S24', 13: 'S14', 14: 'S15', 15: 'S16', 16: 'S17', 17: 'S18',
@@ -50,19 +50,19 @@ class DecamMapper(CameraMapper):
                      62: 'N31'}
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "DecamMapper.paf", "policy")
+        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "MosaicMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
 
-        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(MosaicMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
-        afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
-        afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
-        afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
-        afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
-        afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0', 'Y'])
-        afwImageUtils.defineFilter('VR', lambdaEff=630, alias=['VR DECam c0007 6300.0 2600.0'])
-        afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 DECam c0008 9645.0 94.0'])
+        afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u Mosaic c0006 3500.0 1000.0'])
+        afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g Mosaic SDSS c0001 4720.0 1520.0'])
+        afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r Mosaic SDSS c0002 6415.0 1480.0'])
+        afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i Mosaic SDSS c0003 7835.0 1470.0'])
+        afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z Mosaic SDSS c0004 9260.0 1520.0'])
+        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y Mosaic c0005 10095.0 1130.0', 'Y'])
+        afwImageUtils.defineFilter('VR', lambdaEff=630, alias=['VR Mosaic c0007 6300.0 2600.0'])
+        afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 Mosaic c0008 9645.0 94.0'])
         afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
         # The data ID key ccdnum is not directly used in the current policy
@@ -72,17 +72,17 @@ class DecamMapper(CameraMapper):
 
         # The number of bits allocated for fields in object IDs
         # TODO: This needs to be updated; also see Trac #2797
-        DecamMapper._nbit_tract = 10
-        DecamMapper._nbit_patch = 10
-        DecamMapper._nbit_filter = 4
-        DecamMapper._nbit_id = 64 - (DecamMapper._nbit_tract +
-                                     2*DecamMapper._nbit_patch +
-                                     DecamMapper._nbit_filter)
+        MosaicMapper._nbit_tract = 10
+        MosaicMapper._nbit_patch = 10
+        MosaicMapper._nbit_filter = 4
+        MosaicMapper._nbit_id = 64 - (MosaicMapper._nbit_tract +
+                                     2*MosaicMapper._nbit_patch +
+                                     MosaicMapper._nbit_filter)
 
     def _extractDetectorName(self, dataId):
         copyId = self._transformId(dataId)
         try:
-            return DecamMapper.detectorNames[copyId['ccdnum']]
+            return MosaicMapper.detectorNames[copyId['ccdnum']]
         except KeyError:
             raise RuntimeError("No name found for dataId: %s"%(dataId))
 
@@ -117,28 +117,28 @@ class DecamMapper(CameraMapper):
                                    must contain filter.
         """
         tract = int(dataId['tract'])
-        if tract < 0 or tract >= 2**DecamMapper._nbit_tract:
-            raise RuntimeError('tract not in range [0,%d)' % (2**DecamMapper._nbit_tract))
+        if tract < 0 or tract >= 2**MosaicMapper._nbit_tract:
+            raise RuntimeError('tract not in range [0,%d)' % (2**MosaicMapper._nbit_tract))
         patchX, patchY = [int(x) for x in dataId['patch'].split(',')]
         for p in (patchX, patchY):
-            if p < 0 or p >= 2**DecamMapper._nbit_patch:
-                raise RuntimeError('patch component not in range [0, %d)' % 2**DecamMapper._nbit_patch)
-        oid = (((tract << DecamMapper._nbit_patch) + patchX) << DecamMapper._nbit_patch) + patchY
+            if p < 0 or p >= 2**MosaicMapper._nbit_patch:
+                raise RuntimeError('patch component not in range [0, %d)' % 2**MosaicMapper._nbit_patch)
+        oid = (((tract << MosaicMapper._nbit_patch) + patchX) << MosaicMapper._nbit_patch) + patchY
         if singleFilter:
-            return (oid << DecamMapper._nbit_filter) + afwImage.Filter(dataId['filter']).getId()
+            return (oid << MosaicMapper._nbit_filter) + afwImage.Filter(dataId['filter']).getId()
         return oid
 
     def bypass_deepCoaddId(self, datasetType, pythonType, location, dataId):
         return self._computeCoaddExposureId(dataId, True)
 
     def bypass_deepCoaddId_bits(self, *args, **kwargs):
-        return 64 - DecamMapper._nbit_id
+        return 64 - MosaicMapper._nbit_id
 
     def bypass_deepMergedCoaddId(self, datasetType, pythonType, location, dataId):
         return self._computeCoaddExposureId(dataId, False)
 
     def bypass_deepMergedCoaddId_bits(self, *args, **kwargs):
-        return 64 - DecamMapper._nbit_id
+        return 64 - MosaicMapper._nbit_id
 
     def translate_dqmask(self, dqmask):
         # TODO: make a class member variable that knows the mappings
@@ -348,7 +348,7 @@ class DecamMapper(CameraMapper):
         """Directory containing linearizers"""
         packageName = cls.getPackageName()
         packageDir = getPackageDir(packageName)
-        return os.path.join(packageDir, "decam", "linearizer")
+        return os.path.join(packageDir, "mosaic", "linearizer")
 
     def map_linearizer(self, dataId, write=False):
         """Map a linearizer"""

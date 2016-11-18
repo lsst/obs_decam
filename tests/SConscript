@@ -4,4 +4,4 @@ import lsst.sconsUtils
 env = lsst.sconsUtils.env.Clone()
 tests = lsst.sconsUtils.scripts.BasicSConscript.tests()
 
-env.Depends(tests, "../decam/linearizer")
+env.Depends(tests, "../mosaic/linearizer")

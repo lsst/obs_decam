@@ -24,14 +24,14 @@ import unittest
 import lsst.utils.tests
 
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamMapper
+from lsst.obs.mosaic import MosaicMapper
 
 
 class GetIdTestCase(lsst.utils.tests.TestCase):
     """Testing butler exposure id retrieval"""
 
     def setUp(self):
-        self.bf = dafPersist.ButlerFactory(mapper=DecamMapper(root="."))
+        self.bf = dafPersist.ButlerFactory(mapper=MosaicMapper(root="."))
         self.butler = self.bf.create()
 
     def tearDown(self):

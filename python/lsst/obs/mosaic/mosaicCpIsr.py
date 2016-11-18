@@ -25,7 +25,7 @@ from __future__ import absolute_import, division, print_function
 from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 import lsst.pipe.base as pipeBase
-from .isr import DecamIsrTask
+from .isr import MosaicIsrTask
 
 
 def _computeEdgeSize(rawExposure, calibExposure):
@@ -46,7 +46,7 @@ def _computeEdgeSize(rawExposure, calibExposure):
     return nx//2
 
 
-class DecamCpIsrTask(DecamIsrTask):
+class MosaicCpIsrTask(MosaicIsrTask):
     """Perform ISR task using Community Pipeline Calibration Products MasterCal
 
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
@@ -101,7 +101,7 @@ class DecamCpIsrTask(DecamIsrTask):
     def biasCorrection(self, exposure, biasExposure):
         """Apply bias correction in place
 
-        DECam bias products have been trimmed and are smaller than
+        Mosaic bias products have been trimmed and are smaller than
         the raw exposure.  The size of edge trim is computed based
         on the dimensions of the input data.  Only process the inner
         part of the raw exposure, and mask the outer pixels as EDGE.
@@ -126,7 +126,7 @@ class DecamCpIsrTask(DecamIsrTask):
     def flatCorrection(self, exposure, flatExposure):
         """Apply flat correction in place
 
-        DECam flat products have been trimmed and are smaller than
+        Mosaic flat products have been trimmed and are smaller than
         the raw exposure.  The size of edge trim is computed based
         on the dimensions of the input data.  Only process the inner
         part of the raw exposure, and mask the outer pixels as EDGE.

@@ -27,12 +27,12 @@ from lsst.ip.isr import IsrTask, overscanCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 
 
-class DecamIsrConfig(IsrTask.ConfigClass):
+class MosaicIsrConfig(IsrTask.ConfigClass):
     overscanBiasJumpBKP = pexConfig.ListField(
         dtype=str,
         doc="Names of the backplanes for CCDs showing bias jump due to " +
         "the simultaneous readout of the smaller ancillary CCDs.",
-        default=['DECAM_BKP3', 'DECAM_BKP5', 'DECAM_BKP1', 'DECAM_BKP4'],
+        default=['MOSAIC_BKP3', 'MOSAIC_BKP5', 'MOSAIC_BKP1', 'MOSAIC_BKP4'],
     )
     overscanBiasJumpLocation = pexConfig.Field(
         dtype=int,
@@ -48,8 +48,8 @@ class DecamIsrConfig(IsrTask.ConfigClass):
     )
 
 
-class DecamIsrTask(IsrTask):
-    ConfigClass = DecamIsrConfig
+class MosaicIsrTask(IsrTask):
+    ConfigClass = MosaicIsrConfig
 
     def convertIntToFloat(self, exp):
         """No conversion necessary."""

@@ -3,7 +3,7 @@ import re
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
 
 
-class DecamCalibsParseTask(CalibsParseTask):
+class MosaicCalibsParseTask(CalibsParseTask):
 
     def getInfo(self, filename):
         """Get information about the image from the filename and/or its contents

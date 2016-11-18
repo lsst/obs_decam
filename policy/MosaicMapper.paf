@@ -15,7 +15,7 @@ defaultSubLevels: {
     visit: "sensor"
 }
 
-camera: "../decam/camGeom"
+camera: "../mosaic/camGeom"
 
 # exposures and datasets which are needed for all of the mappers are defined
 # in the obs_base package (in either exposures.yaml or datasets.yaml).

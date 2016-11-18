@@ -36,9 +36,9 @@ class ButlerTestCase(unittest.TestCase):
 
     def setUp(self):
         try:
-            datadir = getPackageDir("testdata_decam")
+            datadir = getPackageDir("testdata_mosaic")
         except pexExcept.NotFoundError:
-            message = "testdata_decam not setup. Skipping."
+            message = "testdata_mosaic not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, print_function
-"""Convert a DECam official linearity FITS table into LSST linearizers
+"""Convert a Mosaic official linearity FITS table into LSST linearizers
 """
 import argparse
 import sys
@@ -11,12 +11,12 @@ import numpy as np
 import astropy.io.fits as fits
 
 from lsst.ip.isr import LinearizeLookupTable
-from lsst.obs.decam import DecamMapper
+from lsst.obs.mosaic import MosaicMapper
 from lsst.daf.persistence import Butler
 
 
-def makeLinearizerDecam(fromFile, force=False, verbose=False):
-    """Convert the specified DECam linearity FITS table to standard LSST format
+def makeLinearizerMosaic(fromFile, force=False, verbose=False):
+    """Convert the specified Mosaic linearity FITS table to standard LSST format
 
     Details:
     - Input format is one table per CCD, HDU is amplifier number,
@@ -27,11 +27,11 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     - Output is a set of LinearizeLookupTable instances, one per CCD, saved as dataset type "linearizer"
     - The row indices for the linearization lookup table are (row index=amp name): 0=A, 1=B
 
-    @param[in] fromFile  path to DECam linearity table (a FITS file with one HDU per amplifier)
+    @param[in] fromFile  path to Mosaic linearity table (a FITS file with one HDU per amplifier)
     """
-    print("Making DECam linearizers from %r" % (fromFile,))
-    butler = Butler(mapper=DecamMapper)
-    linearizerDir = DecamMapper.getLinearizerDir()
+    print("Making Mosaic linearizers from %r" % (fromFile,))
+    butler = Butler(mapper=MosaicMapper)
+    linearizerDir = MosaicMapper.getLinearizerDir()
     if os.path.exists(linearizerDir):
         if not force:
             print("Output directory %r exists; use --force to replace" % (linearizerDir,))
@@ -41,7 +41,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
         print("Creating linearizer directory %r" % (linearizerDir,))
         os.makedirs(linearizerDir)
 
-    camera = DecamMapper().camera
+    camera = MosaicMapper().camera
     fromHDUs = fits.open(fromFile)[1:] # HDU 0 has no data
     assert len(fromHDUs) == len(camera)
     for ccdind, (detector, hdu) in enumerate(zip(camera, fromHDUs)):
@@ -55,9 +55,9 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
         if not np.allclose(uncorr, np.arange(len(fromData))):
             raise RuntimeError("ADU data not a range of integers starting at 0")
         for i, ampName in enumerate("AB"):
-            # convert DECam replacement table to LSST offset table
+            # convert Mosaic replacement table to LSST offset table
             if verbose:
-                print("DECam table for %s=%s..." % (ampName, fromData["ADU_LINEAR_" + ampName][0:5],))
+                print("Mosaic table for %s=%s..." % (ampName, fromData["ADU_LINEAR_" + ampName][0:5],))
             lsstTable[i, :] = fromData["ADU_LINEAR_" + ampName] - uncorr
             if verbose:
                 print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
@@ -66,10 +66,10 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     print("Wrote %s linearizers" % (ccdind+1,))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Convert a DECam linearity FITS file into LSST linearizers")
-    parser.add_argument(dest="fromFile", help="DECam linearity FITS file")
+    parser = argparse.ArgumentParser(description="Convert a Mosaic linearity FITS file into LSST linearizers")
+    parser.add_argument(dest="fromFile", help="Mosaic linearity FITS file")
     parser.add_argument("-v", "--verbose", action="store_true", help="print data about each detector")
     parser.add_argument("--force", action="store_true", help="overwrite existing data")
     cmd = parser.parse_args()
 
-    makeLinearizerDecam(fromFile=cmd.fromFile, force=cmd.force, verbose=cmd.verbose)
+    makeLinearizerMosaic(fromFile=cmd.fromFile, force=cmd.force, verbose=cmd.verbose)

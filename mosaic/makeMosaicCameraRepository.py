@@ -20,11 +20,11 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-"""Generate camera geometry for DECam
+"""Generate camera geometry for Mosaic
 
-Example of use (if decam/camGeom already exists, move it aside first):
+Example of use (if mosaic/camGeom already exists, move it aside first):
 
-    python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
+    python mosaic/makeMosaicCameraRepository.py mosaic/chipcenters.txt mosaic/segmentfile.txt mosaic/camGeom
 """
 from __future__ import absolute_import
 from __future__ import print_function
@@ -38,7 +38,7 @@ import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
 from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS
 from lsst.ip.isr import LinearizeLookupTable
-from lsst.obs.decam import DecamMapper
+from lsst.obs.mosaic import MosaicMapper
 
 
 def makeAmpTables(segmentsFile):
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     """
     Create the configs for building a camera.
     """
-    baseDir = lsst.utils.getPackageDir("obs_decam")
+    baseDir = lsst.utils.getPackageDir("obs_mosaic")
     defaultOutDir = os.path.join(os.path.normpath(baseDir), "description", "camera")
 
     parser = argparse.ArgumentParser()
@@ -241,8 +241,8 @@ if __name__ == "__main__":
     #Build the camera config.
     camConfig = CameraConfig()
     camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in range(len(detectorConfigList))])
-    camConfig.name = 'DECAM'
-    #From DECam calibration doc
+    camConfig.name = 'Mosaic'
+    #From Mosaic calibration doc
     camConfig.plateScale = 17.575
     pScaleRad = afwGeom.arcsecToRad(camConfig.plateScale)
     tConfig = afwGeom.TransformConfig()
@@ -284,6 +284,6 @@ if __name__ == "__main__":
     camConfig.save(camConfigPath)
 
     for detectorName, ampTable in ampTableDict.items():
-        shortDetectorName = DecamMapper.getShortCcdName(detectorName)
+        shortDetectorName = MosaicMapper.getShortCcdName(detectorName)
         ampInfoPath = os.path.join(outDir, shortDetectorName + ".fits")
         ampTable.writeFits(ampInfoPath)

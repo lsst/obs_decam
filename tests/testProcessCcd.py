@@ -41,15 +41,15 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
 
     def setUp(self):
         try:
-            self.datadir = getPackageDir("testdata_decam")
+            self.datadir = getPackageDir("testdata_mosaic")
         except pexExcept.NotFoundError:
-            message = "testdata_decam not setup. Skipping."
+            message = "testdata_mosaic not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
 
         self.outPath = tempfile.mkdtemp() if OutputName is None else OutputName
         self.dataId = {'visit': 229388, 'ccdnum': 1}
-        configPath = os.path.join(getPackageDir("obs_decam"), "config")
+        configPath = os.path.join(getPackageDir("obs_mosaic"), "config")
         argsList = [os.path.join(self.datadir, "rawData"), "--output", self.outPath, "--id"]
         argsList += ["%s=%s" % (key, val) for key, val in self.dataId.items()]
         argsList += ["--calib", os.path.join(self.datadir, "rawData/cpCalib")]

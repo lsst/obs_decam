@@ -26,10 +26,10 @@ import lsst.afw.image as afwImage
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
 
-class DecamIngestArgumentParser(IngestArgumentParser):
+class MosaicIngestArgumentParser(IngestArgumentParser):
 
     def __init__(self, *args, **kwargs):
-        super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
+        super(MosaicIngestArgumentParser, self).__init__(*args, **kwargs)
         self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"],
                           help="Data processing level of the files to be ingested")
         self.description = "To ingest instcal data, the following directory structure is expected:"\
@@ -38,14 +38,14 @@ class DecamIngestArgumentParser(IngestArgumentParser):
             "\nseparate files each with a unique name but with a common unique identifier"\
             "\nEXPNUM in the FITS header. The 3 files of the same EXPNUM will be aggregated."\
             "\nFor example, the user creates the registry by running"\
-            "\n    ingestImagesDecam.py outputRepository --mode=link instcal/*fits"
+            "\n    ingestImagesMosaic.py outputRepository --mode=link instcal/*fits"
 
 
-class DecamIngestTask(IngestTask):
-    ArgumentParser = DecamIngestArgumentParser
+class MosaicIngestTask(IngestTask):
+    ArgumentParser = MosaicIngestArgumentParser
 
     def __init__(self, *args, **kwargs):
-        super(DecamIngestTask, self).__init__(*args, **kwargs)
+        super(MosaicIngestTask, self).__init__(*args, **kwargs)
 
     def run(self, args):
         """Ingest all specified files and add them to the registry"""
@@ -81,7 +81,7 @@ class DecamIngestTask(IngestTask):
             IngestTask.run(self, args)
 
 
-class DecamParseTask(ParseTask):
+class MosaicParseTask(ParseTask):
 
     def __init__(self, *args, **kwargs):
         super(ParseTask, self).__init__(*args, **kwargs)
@@ -142,7 +142,7 @@ class DecamParseTask(ParseTask):
 
         The user creates the registry by running
 
-          ingestImagesDecam.py outputRepository --mode=link instcal/*fits
+          ingestImagesMosaic.py outputRepository --mode=link instcal/*fits
         """
         if filetype == "instcal":
             if self.expnumMapper is None:
@@ -150,7 +150,7 @@ class DecamParseTask(ParseTask):
 
             # Note that phuInfo will have
             #   'side': 'X', 'ccd': 0
-            phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
+            phuInfo, infoList = super(MosaicParseTask, self).getInfo(filename)
             expnum = phuInfo["visit"]
             phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
             phuInfo[self.dqmaskPrefix] = self.expnumMapper[expnum][self.dqmaskPrefix]

@@ -29,8 +29,8 @@ def getLinearizerInFile():
     raise RuntimeError("Found %s linearity tables; need just one" % (len(linearizerInFiles),))
 
 linearizerInFile = getLinearizerInFile()
-# I would rather get this from DecamMapper, but could not figure out how to import it
+# I would rather get this from MosaicMapper, but could not figure out how to import it
 linearizerOutDir = "linearizer"
-command = "%s decam/makeLinearizer.py $SOURCE --force" % (python,)
+command = "%s mosaic/makeLinearizer.py $SOURCE --force" % (python,)
 
 makeLinearizer = env.Command(linearizerOutDir, linearizerInFile, command)

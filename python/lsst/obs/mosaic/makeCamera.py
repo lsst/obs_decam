@@ -19,13 +19,13 @@ def makeCcd(ccdName):
 
 
 def makeRaft(raftName):
-    dewar = cameraGeom.Raft(cameraGeom.Id("DECam"), 1, 1)
+    dewar = cameraGeom.Raft(cameraGeom.Id("Mosaic"), 1, 1)
     dewar.addDetector(afwGeom.PointI(0, 0), cameraGeom.FpPoint(0.0, 0.0),
                       cameraGeom.Orientation(0), makeCcd(raftName))
     return dewar
 
 
-def makeCamera(name="DECam"):
+def makeCamera(name="Mosaic"):
     camera = cameraGeom.Camera(cameraGeom.Id(name), 62, 1)
 
     for i in range(62):

@@ -33,11 +33,11 @@ from lsst.daf.persistence import DbAuth
 import lsst.pipe.base as pipeBase
 from lsst.pipe.tasks.selectImages import DatabaseSelectImagesConfig, BaseSelectImagesTask, BaseExposureInfo
 
-__all__ = ["SelectDecamImagesTask"]
+__all__ = ["SelectMosaicImagesTask"]
 
 
-class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
-    """Config for SelectDecamImagesTask
+class SelectMosaicImagesConfig(DatabaseSelectImagesConfig):
+    """Config for SelectMosaicImagesTask
     """
     table = pexConfig.Field(
         doc="Name of database table",
@@ -119,15 +119,15 @@ class ExposureInfo(BaseExposureInfo):
         )
 
 
-class SelectDecamImagesTask(BaseSelectImagesTask):
-    """Select Decam images suitable for coaddition
+class SelectMosaicImagesTask(BaseSelectImagesTask):
+    """Select Mosaic images suitable for coaddition
     """
-    ConfigClass = SelectDecamImagesConfig
+    ConfigClass = SelectMosaicImagesConfig
     _DefaultName = "selectImages"
 
     @pipeBase.timeMethod
     def run(self, coordList, filter):
-        """Select Decam images suitable for coaddition in a particular region
+        """Select Mosaic images suitable for coaddition in a particular region
 
         @param[in] filter: filter for images (one of g", "r", "i", "z", Y")
         @param[in] coordList: list of coordinates defining region of interest
@@ -214,7 +214,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
 
 if __name__ == "__main__":
     # example of use
-    selectTask = SelectDecamImagesTask()
+    selectTask = SelectMosaicImagesTask()
     minRa = afwGeom.Angle(351, afwGeom.degrees)
     maxRa = afwGeom.Angle(354, afwGeom.degrees)
     minDec = afwGeom.Angle(-1, afwGeom.degrees)

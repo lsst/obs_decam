@@ -28,11 +28,11 @@ import astropy.units
 from lsst.afw.coord import Coord, IcrsCoord, Observatory, Weather
 from lsst.obs.base import MakeRawVisitInfo
 
-__all__ = ["MakeDecamRawVisitInfo"]
+__all__ = ["MakeMosaicRawVisitInfo"]
 
 
-class MakeDecamRawVisitInfo(MakeRawVisitInfo):
-    """Make a VisitInfo from the FITS header of a raw DECam image
+class MakeMosaicRawVisitInfo(MakeRawVisitInfo):
+    """Make a VisitInfo from the FITS header of a raw Mosaic image
 
     Fields that are not set:
     - exposureId

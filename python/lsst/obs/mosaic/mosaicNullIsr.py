@@ -24,7 +24,7 @@ import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
 
-class DecamNullIsrConfig(pexConfig.Config):
+class MosaicNullIsrConfig(pexConfig.Config):
     doWrite = pexConfig.Field(
         dtype=bool,
         doc="Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
@@ -38,50 +38,50 @@ class DecamNullIsrConfig(pexConfig.Config):
 
 ## \addtogroup LSST_task_documentation
 ## \{
-## \page DecamNullIsrTask
-## \ref DecamNullIsrTask_ "DecamNullIsrTask"
-## \copybrief DecamNullIsrTask
+## \page MosaicNullIsrTask
+## \ref MosaicNullIsrTask_ "MosaicNullIsrTask"
+## \copybrief MosaicNullIsrTask
 ## \}
 
 
-class DecamNullIsrTask(pipeBase.Task):
+class MosaicNullIsrTask(pipeBase.Task):
     """!Load an "instcal" exposure as a post-ISR CCD exposure
 
-    @anchor DecamNullIsrTask_
+    @anchor MosaicNullIsrTask_
 
-    @section pipe_tasks_decamNullIsr_Contents  Contents
+    @section pipe_tasks_mosaicNullIsr_Contents  Contents
 
-     - @ref pipe_tasks_decamNullIsr_Purpose
-     - @ref pipe_tasks_decamNullIsr_Initialize
-     - @ref pipe_tasks_decamNullIsr_IO
-     - @ref pipe_tasks_decamNullIsr_Config
+     - @ref pipe_tasks_mosaicNullIsr_Purpose
+     - @ref pipe_tasks_mosaicNullIsr_Initialize
+     - @ref pipe_tasks_mosaicNullIsr_IO
+     - @ref pipe_tasks_mosaicNullIsr_Config
 
-    @section pipe_tasks_decamNullIsr_Purpose  Description
+    @section pipe_tasks_mosaicNullIsr_Purpose  Description
 
     Load "instcal" exposures from the community pipeline as a post-ISR exposure,
     and optionally persist it as a `postISRCCD`.
 
     This is used to retarget the `isr` subtask in `ProcessCcdTask` when you prefer to use
-    the community pipeline instead of the LSST software stack to perform ISR on DECam images.
+    the community pipeline instead of the LSST software stack to perform ISR on Mosaic images.
 
-    @section pipe_tasks_decamNullIsr_Initialize  Task initialisation
+    @section pipe_tasks_mosaicNullIsr_Initialize  Task initialisation
 
     @copydoc \_\_init\_\_
 
-    @section pipe_tasks_decamNullIsr_IO  Invoking the Task
+    @section pipe_tasks_mosaicNullIsr_IO  Invoking the Task
 
     The main method is `runDataRef`.
 
-    @section pipe_tasks_decamNullIsr_Config  Configuration parameters
+    @section pipe_tasks_mosaicNullIsr_Config  Configuration parameters
 
-    See @ref DecamNullIsrConfig
+    See @ref MosaicNullIsrConfig
     """
-    ConfigClass = DecamNullIsrConfig
+    ConfigClass = MosaicNullIsrConfig
     _DefaultName = "isr"
 
     @pipeBase.timeMethod
     def runDataRef(self, sensorRef):
-        """!Load a DECam community pipeline "instcal" exposure as a post-ISR CCD exposure
+        """!Load a Mosaic community pipeline "instcal" exposure as a post-ISR CCD exposure
 
         @param[in] sensorRef  butler data reference for post-ISR exposure
             (a daf.persistence.butlerSubset.ButlerDataRef)
@@ -89,7 +89,7 @@ class DecamNullIsrTask(pipeBase.Task):
         @return a pipeBase.Struct with fields:
         - exposure: exposure after application of ISR: the "instcal" exposure, unchanged
         """
-        self.log.info("Loading DECam community pipeline file %s" % (sensorRef.dataId))
+        self.log.info("Loading Mosaic community pipeline file %s" % (sensorRef.dataId))
 
         exposure = sensorRef.get("instcal", immediate=True)
         if self.config.doWrite:
