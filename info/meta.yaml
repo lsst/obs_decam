@@ -1,0 +1,70 @@
+#
+# Run `conda build .` to build this package
+#
+
+package:
+  name: "lsst-obs-decam"
+  version: "0.12.1.post1"
+
+source:
+#  git_rev: "33e0211b155df886025cbd9bfbe008cbf2ee289e"
+#  git_url: "https://github.com/LSST/obs_decam"
+  git_rev: "455562beef1ebc8766223ea30b0f903d0a964531"
+  git_url: "../"
+
+
+build:
+  number: 0
+  string: "0"
+#  noarch_python: True
+#  binary_relocation: false
+
+requirements:
+  build:
+    - eups >=2.0.2
+    - gcc ==4.8.5                   # [not osx]
+    - lsst-afw ==0.12.1.post1
+    - lsst-log ==0.12.1
+    - lsst-daf-base ==0.12.1
+    - lsst-daf-butlerutils ==0.12.1.post1
+    - lsst-daf-persistence ==0.12.1
+    - lsst-numpy-eups-configs ==0.0.3
+    - lsst-pex-config ==0.12.1
+    - lsst-pex-policy ==0.12.1
+    - lsst-python-future ==0.15.2.post1
+    - lsst-skypix ==0.12.1.post1
+    - lsst-utils ==0.12.1
+    - lsst-pyfits ==3.4.0.post6
+#    - lsst-obs-base ==0.12.1.post1
+    - lsst-meas-algorithms ==0.12.1.post1
+    - lsst-pipe-tasks ==0.12.1.post1
+    - lsst-pipe-base ==0.12.1.post1
+    - nomkl                         #
+    - numpy 1.10.4
+    - patchelf ==0.8                # [not osx]
+
+  run:
+    - eups >=2.0.2
+    - libgcc >=4.8.5                # [not osx]
+    - lsst-afw ==0.12.1.post1
+    - lsst-log ==0.12.1
+    - lsst-daf-base ==0.12.1
+    - lsst-daf-butlerutils ==0.12.1.post1
+    - lsst-daf-persistence ==0.12.1
+    - lsst-numpy-eups-configs ==0.0.3
+    - lsst-pex-config ==0.12.1
+    - lsst-pex-policy ==0.12.1
+    - lsst-python-future ==0.15.2.post1
+    - lsst-skypix ==0.12.1.post1
+    - lsst-utils ==0.12.1
+    - lsst-pyfits ==3.4.0.post6
+#    - lsst-obs-base ==0.12.1.post1
+    - lsst-meas-algorithms ==0.12.1.post1
+    - lsst-pipe-tasks ==0.12.1.post1
+    - lsst-pipe-base ==0.12.1.post1
+    - nomkl                         #
+
+about:
+  home: "https://github.com/LSST/obs_decam"
+#  license: GPLv2
+#  summary: A version manager tracking product dependencies
