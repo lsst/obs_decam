@@ -4,12 +4,13 @@
 
 package:
   name: "lsst-obs-decam"
-  version: "0.12.1"
+  version: "0.12.1.post1"
 
 source:
 #  git_rev: "33e0211b155df886025cbd9bfbe008cbf2ee289e"
 #  git_url: "https://github.com/LSST/obs_decam"
-  git_rev: "455562beef1ebc8766223ea30b0f903d0a964531"
+##  git_rev: "455562beef1ebc8766223ea30b0f903d0a964531"
+  git_rev: "991d32b4dbcbfd742ab9589e8f0be93975ff52f6"
   git_url: "../"
 
 
