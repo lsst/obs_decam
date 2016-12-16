@@ -10,3 +10,6 @@ config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
                                        'POSTSECA', 'POSTSECB']
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
+config.isr.assembleCcd.setGain=False
+config.charImage.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'y': 'J'}
+config.calibrate.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'y': 'J'}
