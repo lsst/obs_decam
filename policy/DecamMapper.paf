@@ -285,7 +285,7 @@ datasets: {
         template:      "deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits"
     }
     singleFrameDriver_metadata: {
-        template:      "%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.boost"
+        template:      "singleFrameDriver_metadata/%(filter)s/%(visit)07d.boost"
         python:        "lsst.daf.base.PropertySet"
         persistable:        "PropertySet"
         storage:    "BoostStorage"
