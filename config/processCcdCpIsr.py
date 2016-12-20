@@ -11,5 +11,5 @@ config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
 config.isr.assembleCcd.setGain=False
-config.charImage.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'y': 'J'}
-config.calibrate.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'y': 'J'}
+config.charImage.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'Y': 'J'}
+config.calibrate.refObjLoader.filterMap={'u':'J', 'g':'J', 'r':'J', 'i': 'J', 'z':'J', 'Y': 'J'}
