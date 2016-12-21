@@ -66,9 +66,11 @@ class DecamMapper(CameraMapper):
         afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
         # The data ID key ccdnum is not directly used in the current policy
-        # template of the raw dataset, so is not in its keyDict automatically.
-        # Add it so raw dataset know about the data ID key ccdnum.
-        self.mappings["raw"].keyDict.update({'ccdnum': int})
+        # template of the raw and instcal et al. datasets, so is not in its
+        # keyDict automatically. Add it so the butler know about the data ID key
+        # ccdnum.
+        for datasetType in ("raw", "instcal", "dqmask", "wtmap"):
+            self.mappings[datasetType].keyDict.update({'ccdnum': int})
 
         # The number of bits allocated for fields in object IDs
         # TODO: This needs to be updated; also see Trac #2797
