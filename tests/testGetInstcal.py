@@ -94,6 +94,13 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         for keyword in wcs_keywords:
             self.assertNotIn(keyword, exp.getMetadata().paramNames())
 
+    def testCcdName(self):
+        """Verify that we get the proper CCD for a specified ccdnum."""
+        dataId = {'visit': 229388, 'ccdnum': 62}
+        exp = self.butler.get("instcal", dataId, immediate=True)
+        md = exp.getMetadata()
+        self.assertEqual(md.get("DETPOS"), "N31")
+
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
     pass

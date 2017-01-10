@@ -73,7 +73,6 @@ class DecamIngestTask(IngestTask):
                             continue
 
                     for info in hduInfoList:
-                        info['hdu'] = None
                         self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
 
                 self.register.addVisits(registry, dryrun=args.dryrun)
@@ -155,39 +154,26 @@ class DecamParseTask(ParseTask):
             phuInfo[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
             phuInfo[self.dqmaskPrefix] = self.expnumMapper[expnum][self.dqmaskPrefix]
             phuInfo[self.wtmapPrefix] = self.expnumMapper[expnum][self.wtmapPrefix]
-            for idx, info in enumerate(infoList):
+            for info in infoList:
                 expnum = info["visit"]
                 info[self.instcalPrefix] = self.expnumMapper[expnum][self.instcalPrefix]
                 info[self.dqmaskPrefix] = self.expnumMapper[expnum][self.dqmaskPrefix]
                 info[self.wtmapPrefix] = self.expnumMapper[expnum][self.wtmapPrefix]
+
         elif filetype == "raw":
-            md = afwImage.readMetadata(filename, self.config.hdu)
-            phuInfo = self.getInfoFromMetadata(md)
-            # Some data IDs can not be extracted from the zeroth extension
-            # of the MEF. Add them so Butler does not try to find them
-            # in the registry which may still yet to be created.
-            for key in ("ccdnum", "hdu", "ccd"):
-                if key not in phuInfo:
-                    phuInfo[key] = 0
-            extnames = set(self.config.extnames)
-            extnum = 1
-            infoList = []
-            while len(extnames) > 0:
-                extnum += 1
-                try:
-                    md = afwImage.readMetadata(filename, extnum)
-                except:
-                    self.log.warn("Error reading %s extensions %s" % (filename, extnames))
-                    break
-                ext = self.getExtensionName(md)
-                if ext in extnames:
-                    info = self.getInfoFromMetadata(md, info=phuInfo.copy())
-                    info['hdu'] = extnum - 1
-                    info[self.instcalPrefix] = ""
-                    info[self.dqmaskPrefix] = ""
-                    info[self.wtmapPrefix] = ""
-                    infoList.append(info)
-                    extnames.discard(ext)
+            phuInfo, infoList = super(DecamParseTask, self).getInfo(filename)
+            for info in infoList:
+                info[self.instcalPrefix] = ""
+                info[self.dqmaskPrefix] = ""
+                info[self.wtmapPrefix] = ""
+
+        # Some data IDs can not be extracted from the zeroth extension
+        # of the MEF. Add them so Butler does not try to find them
+        # in the registry which may still yet to be created.
+        for key in ("ccdnum", "hdu", "ccd"):
+            if key not in phuInfo:
+                phuInfo[key] = 0
+
         return phuInfo, infoList
 
     @staticmethod
