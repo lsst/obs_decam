@@ -72,6 +72,9 @@ exposures: {
         template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits"
     }
 
+    deepCoadd_tempExpPsfMatched: {
+        template:    "deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/psfMatched-v%(visit)d-f%(filter)s.fits"
+    }
     dcrCoadd_tempExp: {
         template:    "dcrCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s%(subfilter)s.fits"
     }
