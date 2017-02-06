@@ -35,7 +35,7 @@ from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.obs.base import MakeRawVisitInfo
-from lsst.afw.image import RotType_UNKNOWN
+from lsst.afw.image import RotType
 from lsst.afw.coord import IcrsCoord, Coord
 from lsst.afw.geom import degrees
 
@@ -56,7 +56,7 @@ visit229388_info = {
     "boresightAzAlt": Coord(61.24*degrees, (90-50.46)*degrees),
     "boresightAirmass": 1.57,
     "boresightRotAngle": float("nan")*degrees,
-    "rotType": RotType_UNKNOWN,
+    "rotType": RotType.UNKNOWN,
     "obs_longitude": 70.81489000000001*degrees,
     "obs_latitude": -30.16606*degrees,
     "obs_elevation": 2215.0,
