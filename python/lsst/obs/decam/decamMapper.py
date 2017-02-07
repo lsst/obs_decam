@@ -188,7 +188,7 @@ class DecamMapper(CameraMapper):
 
         mi = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
         md = instcal.getMetadata()
-        wcs = afwImage.makeWcs(md)
+        wcs = afwImage.makeWcs(md, True)
         exp = afwImage.ExposureF(mi, wcs)
 
         # Set the calib by hand; need to grab the zeroth extension
@@ -200,8 +200,6 @@ class DecamMapper(CameraMapper):
         exposureId = self._computeCcdExposureId(dataId)
         visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
         exp.getInfo().setVisitInfo(visitInfo)
-
-        afwImage.stripWcsKeywords(md, wcs)
 
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
@@ -242,12 +240,14 @@ class DecamMapper(CameraMapper):
         # from the metadata. Once TPV is supported, the following keyword
         # removal may not be necessary here and would probably be done at
         # makeWcs() when the raw image is converted to an Exposure.
-        afwImage.stripWcsKeywords(md, exp.getWcs())
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
 
         # Currently the existence of some PV cards in the metadata combined
         # with a CTYPE of TAN is interpreted as TPV (DM-2883).
+        # However, `lsst.afw.image.makeWcs` (which is called by `exposureFromImage`,
+        # and strips most WCS keywords from the metadata) does not strip the PVn_n keywords
+        # (except on an internal deep copy), so do that here.
         for kw in md.paramNames():
             if re.match(r'PV\d_\d', kw):
                 md.remove(kw)
