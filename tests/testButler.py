@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2016 LSST Corporation.
@@ -20,10 +19,12 @@ from __future__ import print_function
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import, division, print_function
 
 import os
 import unittest
 import warnings
+
 import lsst.daf.persistence as dafPersist
 import lsst.pex.exceptions as pexExcept
 import lsst.utils.tests

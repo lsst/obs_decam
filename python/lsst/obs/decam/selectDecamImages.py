@@ -20,7 +20,7 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 from builtins import range
 import MySQLdb
 import os
@@ -163,7 +163,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
         if not columnNames:
             raise RuntimeError("Bug: no column names")
         queryStr = "select %s " % (", ".join(columnNames),)
-        dataTuple = () # tuple(columnNames)
+        dataTuple = ()  # tuple(columnNames)
 
         if coordList is not None:
             # look for exposures that overlap the specified region
@@ -174,7 +174,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
             coordStr = ", ".join(coordStrList)
             coordCmd = "call scisql.scisql_s2CPolyRegion(scisql_s2CPolyToBin(%s), 10)" % (coordStr,)
             cursor.execute(coordCmd)
-            cursor.nextset() # ignore one-line result of coordCmd
+            cursor.nextset()  # ignore one-line result of coordCmd
 
             queryStr += """
     from %s as ccdExp,

@@ -19,10 +19,11 @@
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import absolute_import, division, print_function
 
 import unittest
-import lsst.utils.tests
 
+import lsst.utils.tests
 import lsst.daf.persistence as dafPersist
 from lsst.obs.decam import DecamMapper
 
