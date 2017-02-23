@@ -2,39 +2,16 @@ from __future__ import absolute_import, division, print_function
 
 import collections
 import re
-
+from glob import glob
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
+from lsst.pipe.tasks.ingestCalibs import IngestCalibsTask
+from lsst.pipe.tasks.ingestCalibs import IngestCalibsConfig, IngestCalibsArgumentParser
+from lsst.pex.config import Field
 
 
 class DecamCalibsParseTask(CalibsParseTask):
-
-    def getInfo(self, filename):
-        """Get information about the image from the filename and/or its contents
-
-        @param filename: Name of file to inspect
-        @return File properties; list of file properties for each extension
-        """
-        phuInfo, infoList = CalibsParseTask.getInfo(self, filename)
-        # Single-extension fits without EXTNAME can be a valid CP calibration product
-        # Use info of primary header unit
-        if not infoList:
-            infoList.append(phuInfo)
-        for info in infoList:
-            info['path'] = filename
-        # Try to fetch a date from filename
-        # and use as the calibration dates if not already set
-        found = re.search('(\d\d\d\d-\d\d-\d\d)', filename)
-        if not found:
-            return phuInfo, infoList
-        date = found.group(1)
-        for info in infoList:
-            if 'calibDate' not in info or info['calibDate'] == "unknown":
-                info['calibDate'] = date
-        return phuInfo, infoList
-
     def _translateFromCalibId(self, field, md):
-        """Fetch the ID from the CALIB_ID header
-
+        """Fetch the ID from the CALIB_ID header.
         Calibration products made with constructCalibs have some metadata
         saved in its FITS header CALIB_ID.
         """
@@ -105,3 +82,73 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         return md.get('EXTNAME')
+
+    def getDestination(self, butler, info, filename):
+        """Get destination for the file
+
+        @param butler      Data butler
+        @param info        File properties, used as dataId for the butler
+        @param filename    Input filename
+        @return Destination filename
+        """
+        # Arbitrarily set ccdnum = 1 to make the mapper template happy
+        info["ccdnum"] = 1
+        if "flat" in info.get("obstype").strip().lower():
+            raw = butler.get("cpFlat_filename", info)[0]
+        elif info.get("obstype").strip().lower() == "zero":
+            raw = butler.get("cpBias_filename", info)[0]
+        else:
+            assert False, "Invalid OBSTYPE '{:s}'".format(info.get("obstype"))
+        # Remove HDU extension (ccdnum) since we want to refer to the whole file
+        c = raw.find("[")
+        if c > 0:
+            raw = raw[:c]
+        return raw
+
+
+class DecamIngestCalibsArgumentParser(IngestCalibsArgumentParser):
+    """Argument parser to support ingesting calibration images into the repository"""
+    def __init__(self, *args, **kwargs):
+        IngestCalibsArgumentParser.__init__(self, *args, **kwargs)
+        self.add_argument("--mode", choices=["move", "copy", "link", "skip"], default="link",
+                          help="Mode of delivering the files to their destination")
+
+
+class DecamIngestCalibsConfig(IngestCalibsConfig):
+    """Configuration for DecamIngestCalibsTask"""
+    allowError = Field(dtype=bool, default=False, doc="Allow error in ingestion?")
+    clobber = Field(dtype=bool, default=False, doc="Clobber existing file?")
+
+
+class DecamIngestCalibsTask(IngestCalibsTask):
+    """Task that generates registry for decam calibration images"""
+    ConfigClass = DecamIngestCalibsConfig
+    ArgumentParser = DecamIngestCalibsArgumentParser
+    _DefaultName = "decamIngestCalibs"
+
+    def run(self, args):
+        """Ingest all specified files and add them to the registry"""
+        calibRoot = args.calib if args.calib is not None else "."
+        filenameList = sum([glob(filename) for filename in args.files], [])
+        with self.register.openRegistry(calibRoot, create=args.create, dryrun=args.dryrun) as registry:
+            for infile in filenameList:
+                fileInfo, hduInfoList = self.parse.getInfo(infile)
+                if args.calibType is None:
+                    calibType = self.parse.getCalibType(infile)
+                else:
+                    calibType = args.calibType
+                if calibType not in self.register.config.tables:
+                    self.log.warn(str("Skipped adding %s of observation type '%s' to registry" %
+                                      (infile, calibType)))
+                    continue
+                outfile = self.parse.getDestination(args.butler, fileInfo, infile)
+                ingested = self.ingest(infile, outfile, mode=args.mode, dryrun=args.dryrun)
+                if not ingested:
+                    continue
+                for info in hduInfoList:
+                    self.register.addRow(registry, info, dryrun=args.dryrun,
+                                         create=args.create, table=calibType)
+            if not args.dryrun:
+                self.register.updateValidityRanges(registry, args.validity)
+            else:
+                self.log.info("Would update validity ranges here, but dryrun")
