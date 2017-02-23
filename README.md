@@ -61,7 +61,13 @@ Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
 4. Alternatively, import raw and calibration data into the data repository, for example:
 
         $ ingestImagesDecam.py /path/to/repo --filetype raw /path/to/raw/*.fits.fz
-        $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ --calibType defect /path/to/calib/*fits --validity 999
+        $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ --calibType defect /path/to/calib/*fits --validity 0
+        $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ /path/to/bias-and-flat-files/*fits --validity 999
+        $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ /path/to/fringe-files/*fits --validity 999
+
+   By default, ingesting calibration data only creates a repository database.
+   When ingesting biases and flats, if you would like to also link these files (in the same way as images are ingested), use `--mode=link`.
+   This functionality is not currently supported for other calibTypes (i.e., defect or fringe).
 
 5. Process data:
 
