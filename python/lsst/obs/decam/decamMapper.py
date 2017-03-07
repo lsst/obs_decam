@@ -30,7 +30,7 @@ import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation
-from lsst.ip.isr import isr
+import lsst.ip.isr as isr
 import lsst.pex.policy as pexPolicy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
