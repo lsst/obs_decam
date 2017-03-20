@@ -63,6 +63,8 @@ Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
         $ ingestImagesDecam.py /path/to/repo --filetype raw /path/to/raw/*.fits.fz
         $ ingestCalibs.py /path/to/repo/  --calib /path/to/calib/repo/ --calibType defect /path/to/calib/*fits --validity 999
 
+   By default, ingesting calibration data only creates a repository database. If you would like to also link the calibration files (in the same way as images are ingested), use --mode=link.
+
 5. Process data:
 
         $ processCcd.py /path/to/repo/ --id visit=283453 ccdnum=10 --output /path/to/your/output/repo/ -C /path/to/your/config/override/file --config calibrate.doAstrometry=False calibrate.doPhotoCal=False
