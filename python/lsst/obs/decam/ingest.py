@@ -200,3 +200,13 @@ class DecamParseTask(ParseTask):
         if c > 0:
             raw = raw[:c]
         return raw
+
+    def translate_object(self, md):
+        obj = None
+        if md.exists("OBJECT"):
+            obj = md.get("OBJECT").strip()
+        if obj is None or len(obj) == 0 and md.exists("OBSTYPE"):
+            obj = md.get("OBSTYPE").strip()
+        if obj is None or len(obj) == 0:
+            return "unknown"
+        return obj
