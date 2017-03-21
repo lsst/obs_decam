@@ -10,6 +10,31 @@ from lsst.pex.config import Field
 
 
 class DecamCalibsParseTask(CalibsParseTask):
+
+    def getInfo(self, filename):
+        """Get information about the image from the filename and/or its contents
+
+        @param filename: Name of file to inspect
+        @return File properties; list of file properties for each extension
+        """
+        phuInfo, infoList = CalibsParseTask.getInfo(self, filename)
+        # Single-extension fits without EXTNAME can be a valid CP calibration product
+        # Use info of primary header unit
+        if not infoList:
+            infoList.append(phuInfo)
+        for info in infoList:
+            info['path'] = filename
+        # Try to fetch a date from filename
+        # and use as the calibration dates if not already set
+        found = re.search('(\d\d\d\d-\d\d-\d\d)', filename)
+        if not found:
+            return phuInfo, infoList
+        date = found.group(1)
+        for info in infoList:
+            if 'calibDate' not in info or info['calibDate'] == "unknown":
+                info['calibDate'] = date
+        return phuInfo, infoList
+
     def _translateFromCalibId(self, field, md):
         """Fetch the ID from the CALIB_ID header.
         Calibration products made with constructCalibs have some metadata
