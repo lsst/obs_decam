@@ -6,6 +6,8 @@ config.parse.translation = {'visit': 'EXPNUM',
                             'expTime': 'EXPTIME',
                             'ccdnum': 'CCDNUM', # MEF header layer
                             'ccd': 'CCDNUM',
+                            'proposal': 'PROPID',
+                            'object': 'OBJECT',
                             }
 config.parse.translators = {'date': 'translate_date',
                             'filter': 'translate_filter',
@@ -27,7 +29,9 @@ config.register.columns = {'visit': 'int',
                            'hdu': 'int',
                            'instcal': 'text',
                            'dqmask': 'text',
-                           'wtmap': 'text'
+                           'wtmap': 'text',
+                           'proposal': 'text',
+                           'object': 'text',
                            }
-config.register.visit = ['visit', 'date', 'filter']
+config.register.visit = ['visit', 'date', 'filter', 'proposal', 'object']
 config.register.unique = ['visit', 'ccdnum']
