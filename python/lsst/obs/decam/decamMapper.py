@@ -183,9 +183,9 @@ class DecamMapper(CameraMapper):
         instcalType = getattr(afwImage, instcalMap.getPythonType().split(".")[-1])
         dqmaskType = getattr(afwImage, dqmaskMap.getPythonType().split(".")[-1])
         wtmapType = getattr(afwImage, wtmapMap.getPythonType().split(".")[-1])
-        instcal = instcalType(instcalMap.getLocationsWithRoot()[0])
-        dqmask = dqmaskType(dqmaskMap.getLocationsWithRoot()[0])
-        wtmap = wtmapType(wtmapMap.getLocationsWithRoot()[0])
+        instcal = instcalType(instcalMap.getLocations()[0])
+        dqmask = dqmaskType(dqmaskMap.getLocations()[0])
+        wtmap = wtmapType(wtmapMap.getLocations()[0])
 
         mask = self.translate_dqmask(dqmask)
         variance = self.translate_wtmap(wtmap)
@@ -196,7 +196,7 @@ class DecamMapper(CameraMapper):
         exp = afwImage.ExposureF(mi, wcs)
 
         # Set the calib by hand; need to grab the zeroth extension
-        header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocationsWithRoot()[0])
+        header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocations()[0])
         md0 = afwImage.readMetadata(header)
         calib = afwImage.Calib()
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
@@ -230,7 +230,7 @@ class DecamMapper(CameraMapper):
         # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
         exp = exposureFromImage(item)
         md = exp.getMetadata()
-        rawPath = self.map_raw(dataId).getLocationsWithRoot()[0]
+        rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = afwImage.readMetadata(headerPath)
         # extra keywords to copy to the exposure
@@ -292,7 +292,7 @@ class DecamMapper(CameraMapper):
         mi = afwImage.makeMaskedImage(item.getImage())
         md = item.getMetadata()
         masterCalMap = getattr(self, "map_" + datasetType)
-        masterCalPath = masterCalMap(dataId).getLocationsWithRoot()[0]
+        masterCalPath = masterCalMap(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
         md0 = afwImage.readMetadata(headerPath)
         for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
@@ -335,7 +335,7 @@ class DecamMapper(CameraMapper):
         @param[in] dataId: data identifier
         @return meas.algorithms.DefectListT
         """
-        bpmFitsPath = butlerLocation.getLocationsWithRoot()[0]
+        bpmFitsPath = butlerLocation.locationList[0]
         bpmImg = afwImage.ImageU(bpmFitsPath)
         idxBad = np.nonzero(bpmImg.getArray())
         mim = afwImage.MaskedImageU(bpmImg.getDimensions())
