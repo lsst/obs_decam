@@ -7,10 +7,11 @@ config.parse.translation = {'visit': 'EXPNUM',
                             'ccdnum': 'CCDNUM', # MEF header layer
                             'ccd': 'CCDNUM',
                             'proposal': 'PROPID',
+                            'object': 'OBJECT',
                             }
 config.parse.translators = {'date': 'translate_date',
                             'filter': 'translate_filter',
-                            'object': 'translate_object',
+#                            'object': 'translate_object',
                             }
 # Note that N30 may not be included, and if it is, is bad.  Remove from list for now.
 config.parse.extnames = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12', 'S13',
@@ -33,5 +34,5 @@ config.register.columns = {'visit': 'int',
                            'proposal': 'text',
                            'object': 'text',
                            }
-config.register.visit = ['visit', 'date', 'filter']
+config.register.visit = ['visit', 'date', 'filter', 'proposal', 'object']
 config.register.unique = ['visit', 'ccdnum']
