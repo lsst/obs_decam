@@ -11,7 +11,6 @@ config.parse.translation = {'visit': 'EXPNUM',
                             }
 config.parse.translators = {'date': 'translate_date',
                             'filter': 'translate_filter',
-#                            'object': 'translate_object',
                             }
 # Note that N30 may not be included, and if it is, is bad.  Remove from list for now.
 config.parse.extnames = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12', 'S13',

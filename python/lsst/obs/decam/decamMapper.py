@@ -74,7 +74,7 @@ class DecamMapper(CameraMapper):
         # ccdnum.
         for datasetType in ("raw", "instcal", "dqmask", "wtmap"):
             self.mappings[datasetType].keyDict.update({'ccdnum': int})
-            self.mappings[datasetType].keyDict.update({'object': str})
+        self.mappings["raw"].keyDict.update({'object': str})
 
         # The number of bits allocated for fields in object IDs
         # TODO: This needs to be updated; also see Trac #2797
