@@ -29,7 +29,7 @@ from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.obs.base import CameraMapper, exposureFromImage
-from lsst.daf.persistence import ButlerLocation, Storage
+from lsst.daf.persistence import ButlerLocation
 import lsst.ip.isr as isr
 import lsst.pex.policy as pexPolicy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
@@ -359,7 +359,7 @@ class DecamMapper(CameraMapper):
     def map_linearizer(self, dataId, write=False):
         """Map a linearizer"""
         actualId = self._transformId(dataId)
-        location = "%02d.fits" % (dataId["ccdnum"])
+        location = os.path.join(self.getLinearizerDir(), "%02d.fits" % (dataId["ccdnum"]),)
         return ButlerLocation(
             pythonType="lsst.ip.isr.LinearizeSquared",
             cppType="Config",
@@ -367,5 +367,4 @@ class DecamMapper(CameraMapper):
             locationList=[location],
             dataId=actualId,
             mapper=self,
-            storage=Storage.makeFromURI(self.getLinearizerDir())
         )
