@@ -28,9 +28,6 @@ exposures: {
         template:    "%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
-        columns:     "visit"
-        columns:     "ccdnum"
-        columns:     "ccd"
     }
     postISRCCD: {
         template:    "%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits"

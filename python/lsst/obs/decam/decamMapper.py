@@ -72,9 +72,6 @@ class DecamMapper(CameraMapper):
         # template of the raw and instcal et al. datasets, so is not in its
         # keyDict automatically. Add it so the butler know about the data ID key
         # ccdnum.
-        for datasetType in ("raw", "instcal", "dqmask", "wtmap"):
-            self.mappings[datasetType].keyDict.update({'ccdnum': int})
-        self.mappings["raw"].keyDict.update({'object': str})
 
         # The number of bits allocated for fields in object IDs
         # TODO: This needs to be updated; also see Trac #2797
