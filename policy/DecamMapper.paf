@@ -215,6 +215,9 @@ datasets: {
     srcMatch: {
         template:      "%(visit)07d/srcMatch/srcMatch-%(visit)07d_%(ccdnum)02d.fits"
     }
+    srcMatchFull: {
+        template:      "%(visit)07d/srcMatch/srcMatchFull-%(visit)07d_%(ccdnum)02d.fits"
+    }
     icExpBackground: {
         template:      "%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits"
     }
@@ -245,8 +248,11 @@ datasets: {
     deep_safeClipAssembleCoadd_metadata: {
         template:      "deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost"
     }
-    deepCoadd_srcMatch: {
+    deepCoadd_measMatch: {
         template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits"
+    }
+    deepCoadd_measMatchFull: {
+        template:      "deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s-%(tract)d-%(patch)s.fits"
     }
     detectCoaddSources_config: {
         template:      "config/detectCoadd.py"
