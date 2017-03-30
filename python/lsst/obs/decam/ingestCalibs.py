@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 
 import collections
 import re
-
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
 
 
@@ -33,8 +32,8 @@ class DecamCalibsParseTask(CalibsParseTask):
         return phuInfo, infoList
 
     def _translateFromCalibId(self, field, md):
-        """Fetch the ID from the CALIB_ID header
-
+        """Fetch the ID from the CALIB_ID header.
+        
         Calibration products made with constructCalibs have some metadata
         saved in its FITS header CALIB_ID.
         """
@@ -105,3 +104,26 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         return md.get('EXTNAME')
+
+    def getDestination(self, butler, info, filename):
+        """Get destination for the file
+
+        @param butler      Data butler
+        @param info        File properties, used as dataId for the butler
+        @param filename    Input filename
+        @return Destination filename
+        """
+        # Arbitrarily set ccdnum = 1 to make the mapper template happy
+        info["ccdnum"] = 1
+        calibType = self.getCalibType(filename)
+        if "flat" in calibType.lower():
+            raw = butler.get("cpFlat_filename", info)[0]
+        elif ("bias" or "zero") in calibType.lower():
+            raw = butler.get("cpBias_filename", info)[0]
+        else:
+            assert False, "Invalid calibType '{:s}'".format(calibType)
+        # Remove HDU extension (ccdnum) since we want to refer to the whole file
+        c = raw.find("[")
+        if c > 0:
+            raw = raw[:c]
+        return raw
