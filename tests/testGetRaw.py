@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2012, 2015 LSST Corporation.
