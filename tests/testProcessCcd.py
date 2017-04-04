@@ -96,7 +96,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
         # Shift WCS for trimming the prescan and overscan region
         # ccdnum 1 is S29, with overscan in the bottom
         wcsRaw.shiftReferencePixel(-56, -50)
-        self.assertWcsNearlyEqualOverBBox(wcsRaw, wcsPost, expPost.getBBox())
+        self.assertWcsAlmostEqualOverBBox(wcsRaw, wcsPost, expPost.getBBox())
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
