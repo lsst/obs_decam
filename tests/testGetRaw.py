@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # LSST Data Management System
 # Copyright 2012, 2015 LSST Corporation.
@@ -112,15 +111,15 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
-        self.assertAnglesNearlyEqual(visitInfo.getEra(), visit229388_info['era'])
-        self.assertCoordsNearlyEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
-        self.assertCoordsNearlyEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
+        self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'])
+        self.assertCoordsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
+        self.assertCoordsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
         self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
         self.assertEqual(visitInfo.getRotType(), visit229388_info['rotType'])
         observatory = visitInfo.getObservatory()
-        self.assertAnglesNearlyEqual(observatory.getLongitude(), visit229388_info['obs_longitude'])
-        self.assertAnglesNearlyEqual(observatory.getLatitude(), visit229388_info['obs_latitude'])
+        self.assertAnglesAlmostEqual(observatory.getLongitude(), visit229388_info['obs_longitude'])
+        self.assertAnglesAlmostEqual(observatory.getLatitude(), visit229388_info['obs_latitude'])
         self.assertAlmostEqual(observatory.getElevation(), visit229388_info['obs_elevation'])
         weather = visitInfo.getWeather()
         self.assertAlmostEqual(weather.getAirTemperature(), visit229388_info['weath_airTemperature'])
