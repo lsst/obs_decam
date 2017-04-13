@@ -1,6 +1,5 @@
 from lsst.obs.decam.ingestCalibs import DecamCalibsParseTask
 config.parse.retarget(DecamCalibsParseTask)
-config.parse.hdu = 1
 
 # N30 is not included becasue it is not functional.
 config.parse.extnames = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12', 'S13',
