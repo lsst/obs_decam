@@ -1,6 +1,5 @@
 from lsst.obs.decam.ingest import DecamParseTask
 config.parse.retarget(DecamParseTask)
-config.parse.hdu = 1
 config.parse.translation = {'visit': 'EXPNUM',
                             'taiObs': 'DATE-OBS',
                             'expTime': 'EXPTIME',
