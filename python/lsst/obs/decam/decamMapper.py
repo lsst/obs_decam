@@ -145,6 +145,18 @@ class DecamMapper(CameraMapper):
     def bypass_deepMergedCoaddId_bits(self, *args, **kwargs):
         return 64 - DecamMapper._nbit_id
 
+    def bypass_dcrCoaddId(self, datasetType, pythonType, location, dataId):
+        return self._computeCoaddExposureId(dataId, True)
+
+    def bypass_dcrCoaddId_bits(self, *args, **kwargs):
+        return 64 - DecamMapper._nbit_id
+
+    def bypass_dcrMergedCoaddId(self, datasetType, pythonType, location, dataId):
+        return self._computeCoaddExposureId(dataId, False)
+
+    def bypass_dcrMergedCoaddId_bits(self, *args, **kwargs):
+        return 64 - DecamMapper._nbit_id
+
     def translate_dqmask(self, dqmask):
         # TODO: make a class member variable that knows the mappings
         # below instead of hard-coding them
