@@ -38,33 +38,35 @@ OutputName = None  # Specify a name (as a string) to save the output repository
 
 class ProcessCcdTestCase(lsst.utils.tests.TestCase):
     """Tests to run processCcd or tests with processed data"""
-
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        """Runs ProcessCcdTask so the test* methods can inspect the results."""
         try:
-            self.datadir = getPackageDir("testdata_decam")
+            cls.datadir = getPackageDir("testdata_decam")
         except pexExcept.NotFoundError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
 
-        self.outPath = tempfile.mkdtemp() if OutputName is None else OutputName
-        self.dataId = {'visit': 229388, 'ccdnum': 1}
+        cls.outPath = tempfile.mkdtemp() if OutputName is None else OutputName
+        cls.dataId = {'visit': 229388, 'ccdnum': 1}
         configPath = os.path.join(getPackageDir("obs_decam"), "config")
-        argsList = [os.path.join(self.datadir, "rawData"), "--output", self.outPath, "--id"]
-        argsList += ["%s=%s" % (key, val) for key, val in self.dataId.items()]
-        argsList += ["--calib", os.path.join(self.datadir, "rawData/cpCalib")]
+        argsList = [os.path.join(cls.datadir, "rawData"), "--output", cls.outPath, "--id"]
+        argsList += ["%s=%s" % (key, val) for key, val in cls.dataId.items()]
+        argsList += ["--calib", os.path.join(cls.datadir, "rawData/cpCalib")]
         argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
                      # This test uses CP-MasterCal calibration products
                      "-C", "%s/processCcdCpIsr.py" % configPath]
         argsList.append('--doraise')
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
-        self.butler = fullResult.parsedCmd.butler
-        self.config = fullResult.parsedCmd.config
+        cls.butler = fullResult.parsedCmd.butler
+        cls.config = fullResult.parsedCmd.config
 
-    def tearDown(self):
-        del self.butler
+    @classmethod
+    def tearDownClass(cls):
+        del cls.butler
         if OutputName is None:
-            shutil.rmtree(self.outPath)
+            shutil.rmtree(cls.outPath)
         else:
             print("testProcessCcd.py's output data saved to %r" % (OutputName,))
 
