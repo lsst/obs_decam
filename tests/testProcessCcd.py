@@ -32,6 +32,7 @@ import lsst.afw.image as afwImage
 import lsst.pex.exceptions as pexExcept
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
 from lsst.utils import getPackageDir
+from lsst.base import disableImplicitThreading
 
 OutputName = None  # Specify a name (as a string) to save the output repository
 
@@ -58,6 +59,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
                      # This test uses CP-MasterCal calibration products
                      "-C", "%s/processCcdCpIsr.py" % configPath]
         argsList.append('--doraise')
+        disableImplicitThreading()  # avoid contention with other processes
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
         cls.butler = fullResult.parsedCmd.butler
         cls.config = fullResult.parsedCmd.config
