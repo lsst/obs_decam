@@ -29,9 +29,8 @@ from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.obs.base import CameraMapper, exposureFromImage
-from lsst.daf.persistence import ButlerLocation, Storage
+from lsst.daf.persistence import ButlerLocation, Storage, Policy
 import lsst.ip.isr as isr
-import lsst.pex.policy as pexPolicy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
 np.seterr(divide="ignore")
@@ -53,10 +52,10 @@ class DecamMapper(CameraMapper):
         62: 'N31'}
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "DecamMapper.paf", "policy")
-        policy = pexPolicy.Policy(policyFile)
+        policyFile = Policy.defaultPolicyFile(self.packageName, "DecamMapper.yaml", "policy")
+        policy = Policy(policyFile)
 
-        super(DecamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(DecamMapper, self).__init__(policy, os.path.dirname(policyFile), **kwargs)
 
         afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
         afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
