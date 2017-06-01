@@ -1,0 +1,261 @@
+needCalibRegistry: true
+
+levels:
+  # Keys that are NOT relevant for a particular level
+  skyTile:
+  - visit
+  - ccdnum
+  - hdu
+  - ccd
+  tract: patch
+  visit:
+  - ccdnum
+  - hdu
+  - ccd
+  sensor: none
+
+defaultLevel: sensor
+
+defaultSubLevels:
+  skyTile: sensor
+  visit: sensor
+
+camera: ../decam/camGeom
+
+# exposures and datasets which are needed for all of the mappers are defined
+# in the obs_base package (in either exposures.yaml or datasets.yaml).
+# Where a modification to such a dataset is required for a particular camera,
+# (e.g., for a template or specialized python type), the modification will
+# appear in the definition below as a partial dataset definition.
+
+exposures:
+  raw:
+    persistable: DecoratedImageF
+    python: lsst.afw.image.DecoratedImageF
+    template: '%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]'
+  postISRCCD:
+    template: '%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits'
+  instcal:
+    level: ccd
+    persistable: DecoratedImageF
+    python: lsst.afw.image.DecoratedImageF
+    storage: FitsStorage
+    tables: raw
+    template: '%(visit)07d/instcal%(visit)07d.fits.fz[%(hdu)d]'
+  dqmask:
+    level: ccd
+    persistable: ImageU
+    python: lsst.afw.image.ImageU
+    storage: FitsStorage
+    tables: raw
+    template: '%(visit)07d/dqmask%(visit)07d.fits.fz[%(hdu)d]'
+  wtmap:
+    level: ccd
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    storage: FitsStorage
+    tables: raw
+    template: '%(visit)07d/wtmap%(visit)07d.fits.fz[%(hdu)d]'
+  icExp:
+    template: '%(visit)07d/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits'
+  calexp:
+    template: '%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits'
+  wcs:
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
+    template: '%(visit)07d/calexp/wcs-%(visit)07d_%(ccdnum)02d.fits'
+  deepCoadd_directWarp:
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits
+  deepCoadd_psfMatchedWarp:
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/psfMatched-v%(visit)d-f%(filter)s.fits
+  dcrCoadd_directWarp:
+    template: dcrCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s%(subfilter)s.fits
+  deepDiff_differenceExp:
+    template: deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
+  deepDiff_matchedExp:
+    template: deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits
+
+
+calibrations:
+  bias:
+    columns: date
+    filter: false
+    level: ccd
+    obsTimeName: date
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: bias
+    template: BIAS/%(calibDate)s/BIAS-%(calibDate)s-%(ccdnum)02d.fits
+    validRange: true
+  dark:
+    columns: date
+    filter: false
+    level: ccd
+    obsTimeName: date
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: dark
+    template: DARK/%(calibDate)s/DARK-%(calibDate)s-%(ccdnum)02d.fits
+    validRange: true
+  flat:
+    columns:
+    - filter
+    - date
+    filter: true
+    level: ccd
+    obsTimeName: date
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: flat
+    template: FLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s-%(ccdnum)02d.fits
+    validRange: true
+  fringe:
+    columns:
+    - filter
+    - ccdnum
+    filter: true
+    level: ccd
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: fringe
+    template: FRINGE/%(calibDate)s/%(filter)s/FRINGE-%(calibDate)s-%(ccdnum)02d.fits
+    validRange: false
+  cpBias:
+    columns: date
+    filter: false
+    level: ccd
+    obsTimeName: date
+    persistable: DecoratedImageF
+    python: lsst.afw.image.DecoratedImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: bias
+    template: cpBIAS/%(calibDate)s/BIAS-%(calibDate)s.fits[%(ccdnum)d]
+    validRange: true
+  cpFlat:
+    columns:
+    - filter
+    - date
+    filter: true
+    level: ccd
+    obsTimeName: date
+    persistable: DecoratedImageF
+    python: lsst.afw.image.DecoratedImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: flat
+    template: cpFLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s.fits[%(ccdnum)d]
+    validRange: true
+  defects:
+    columns:
+    - date
+    - ccdnum
+    filter: false
+    level: ccd
+    obsTimeName: date
+    persistable: ImageU
+    python: lsst.afw.image.ImageU
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: defect
+    template: '%(path)s'
+    validRange: true
+
+datasets:
+  icSrc:
+    template: '%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccdnum)02d.fits'
+  src:
+    template: '%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits'
+  icMatch:
+    persistable: BaseCatalog
+    python: lsst.afw.table.BaseCatalog
+    storage: FitsCatalogStorage
+    tables:
+    - raw
+    - raw_skyTile
+    template: '%(visit)07d/icMatch/icMatch-%(visit)07d_%(ccdnum)02d.fits'
+  srcMatch:
+    template: '%(visit)07d/srcMatch/srcMatch-%(visit)07d_%(ccdnum)02d.fits'
+  srcMatchFull:
+    template: '%(visit)07d/srcMatch/srcMatchFull-%(visit)07d_%(ccdnum)02d.fits'
+  icExpBackground:
+    template: '%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits'
+  calexpBackground:
+    template: '%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits'
+  processCcd_metadata:
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+  isr_config:
+    python: lsst.obs.decam.isr.DecamIsrConfig
+  isr_metadata:
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+  characterizeImage_metadata:
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+  calibrate_metadata:
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+  deep_makeCoaddTempExp_metadata:
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost
+  deep_safeClipAssembleCoadd_config:
+    template: config/deep_assembleCoadd.py
+  deep_safeClipAssembleCoadd_metadata:
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost
+  deepCoadd_measMatch:
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits
+  dcrCoadd_measMatchFull:
+    template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
+  detectCoaddSources_config:
+    template: config/detectCoadd.py
+  detectCoaddSources_metadata:
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.boost
+  measureCoaddSources_config:
+    template: config/measureMergedCoadd.py
+  measureCoaddSources_metadata:
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.boost
+  mergeCoaddMeasurements_metadata:
+    template: deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.boost
+  forcedPhotCcd_metadata:
+    template: forced/%(filter)s/%(tract)d/forcedPhotCcd_metadata/%(visit)07d-%(ccdnum)03d.boost
+  forced_src:
+    template: forced/%(filter)s/%(tract)d/forcedSrc-%(visit)07d-%(ccdnum)03d.fits
+  deepCoadd_forced_metadata:
+    template: deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.boost
+  deepCoadd_forced_src:
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits
+  deepDiff_metadata:
+    template: deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost
+  deepDiff_diaSrc:
+    template: deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits
+  deepDiff_kernelSrc:
+    template: deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
+  singleFrameDriver_metadata:
+    persistable: PropertySet
+    python: lsst.daf.base.PropertySet
+    storage: BoostStorage
+    tables:
+    - raw
+    - raw_visit
+    template: '%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.boost'
+  dcrCoadd_measMatch:
+    template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
+  deepCoadd_measMatchFull:
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s-%(tract)d-%(patch)s.fits
+  dcrCoadd_forced_src:
+    template: dcrCoadd-results/%(filter)s/%(tract)d/%(patch)s/forced-%(filter)s-%(tract)d-%(patch)s.fits
+  dcrCoadd_forced_config:
+    template: config/dcrCoadd_forced.py
+  dcrCoadd_forced_metadata:
+    template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.boost
