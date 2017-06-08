@@ -239,7 +239,7 @@ class DecamMapper(CameraMapper):
         @return (lsst.afw.image.Exposure) the standardized Exposure
         """
         # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
-        exp = exposureFromImage(item)
+        exp = exposureFromImage(item, logger=self.log)
         md = exp.getMetadata()
         rawPath = self.map_raw(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
