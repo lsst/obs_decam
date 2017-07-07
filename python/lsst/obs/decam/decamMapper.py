@@ -124,7 +124,7 @@ class DecamMapper(CameraMapper):
         tract = int(dataId['tract'])
         if tract < 0 or tract >= 2**DecamMapper._nbit_tract:
             raise RuntimeError('tract not in range [0,%d)' % (2**DecamMapper._nbit_tract))
-        patchX, patchY = [int(x) for x in dataId['patch'].split(',')]
+        patchX, patchY = [int(x) for x in dataId['patch'].split('x')]
         for p in (patchX, patchY):
             if p < 0 or p >= 2**DecamMapper._nbit_patch:
                 raise RuntimeError('patch component not in range [0, %d)' % 2**DecamMapper._nbit_patch)
