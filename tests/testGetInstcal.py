@@ -85,9 +85,6 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertAlmostEqual(weather.getAirPressure(), visit229388_info['weath_airPressure'])
         self.assertAlmostEqual(weather.getHumidity(), visit229388_info['weath_humidity'])
 
-        # Example of metadata which should *not* have been copied from zeroth extension.
-        self.assertNotIn("PROPOSER", exp.getMetadata().paramNames())
-
         # Metadata should not contain WCS or TPV headers.
         # This is not an exhaustive list.
         wcs_keywords = ("PV1_1", "PV2_1", "CRPIX1", "CD2_1", "CRVAL2", "LTV1")

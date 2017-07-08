@@ -126,9 +126,6 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertAlmostEqual(weather.getAirPressure(), visit229388_info['weath_airPressure'])
         self.assertAlmostEqual(weather.getHumidity(), visit229388_info['weath_humidity'])
 
-        # Example of metadata which should *not* have been copied from zeroth extension.
-        self.assertNotIn("PROPOSER", exp.getMetadata().paramNames())
-
     def testRawMetadata(self):
         """Test retrieval of metadata"""
         md = self.butler.get("raw_md", self.dataId)
