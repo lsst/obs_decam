@@ -161,7 +161,7 @@ class DecamMapper(CameraMapper):
         # TODO: make a class member variable that knows the mappings
         # below instead of hard-coding them
         dqmArr = dqmask.getArray()
-        mask = afwImage.MaskU(dqmask.getDimensions())
+        mask = afwImage.Mask(dqmask.getDimensions())
         mArr = mask.getArray()
         idxBad = np.where(dqmArr & 1)
         idxSat = np.where(dqmArr & 2)
