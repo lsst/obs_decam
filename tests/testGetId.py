@@ -21,23 +21,24 @@
 #
 from __future__ import absolute_import, division, print_function
 
+import os
 import unittest
 
 import lsst.utils.tests
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam import DecamMapper
+
+
+ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
 class GetIdTestCase(lsst.utils.tests.TestCase):
     """Testing butler exposure id retrieval"""
 
     def setUp(self):
-        self.bf = dafPersist.ButlerFactory(mapper=DecamMapper(root="."))
-        self.butler = self.bf.create()
+        self.butler = dafPersist.Butler(inputs=os.path.join(ROOT, 'getIdRepo'))
 
     def tearDown(self):
         del self.butler
-        del self.bf
 
     def testId(self):
         """Test retrieval of exposure ids"""
