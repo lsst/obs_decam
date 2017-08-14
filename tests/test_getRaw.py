@@ -39,8 +39,8 @@ from lsst.afw.coord import IcrsCoord, Coord
 from lsst.afw.geom import degrees
 
 
-# Desired VisitInfo values for visit 229388, shared between testGetRaw.py and
-# testGetInstcal.py
+# Desired VisitInfo values for visit 229388, shared between test_getRaw.py and
+# test_getInstcal.py
 
 boresightRaDec = IcrsCoord('02:51:16.790', '-00:00:05.699')
 # NOTE: if we deal with DM-8053 and implement UT1, ERA will not come from HA, so this will change.
