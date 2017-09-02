@@ -5,6 +5,8 @@ _build.*
 config.log
 tests/.tests
 ups/*.cfgc
+.cache
+pytest_session.txt
 decam/linearizer
 python/lsst/obs/sst/version.py
 python/lsst/obs/decam/version.py
