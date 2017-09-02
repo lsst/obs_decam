@@ -8,20 +8,20 @@ config.plateScale = 17.575
 config.transformDict.nativeSys = 'FocalPlane'
 
 config.transformDict.transforms = {}
-config.transformDict.transforms['Pupil'] = lsst.afw.geom.transformConfig.TransformConfig()
-config.transformDict.transforms['Pupil'].transform['multi'].transformDict = None
+config.transformDict.transforms['FieldAngle'] = lsst.afw.geom.transformConfig.TransformConfig()
+config.transformDict.transforms['FieldAngle'].transform['multi'].transformDict = None
 # x, y translation vector
-config.transformDict.transforms['Pupil'].transform['affine'].translation = [0.0, 0.0]
+config.transformDict.transforms['FieldAngle'].transform['affine'].translation = [0.0, 0.0]
 
 # 2x2 linear matrix in the usual numpy order;
 #             to rotate a vector by theta use: cos(theta), sin(theta), -sin(theta), cos(theta)
-config.transformDict.transforms['Pupil'].transform['affine'].linear = [1.0, 0.0, 0.0, 1.0]
+config.transformDict.transforms['FieldAngle'].transform['affine'].linear = [1.0, 0.0, 0.0, 1.0]
 
 # Coefficients for the radial polynomial; coeff[0] must be 0
-config.transformDict.transforms['Pupil'].transform['radial'].coeffs = [
+config.transformDict.transforms['FieldAngle'].transform['radial'].coeffs = [
     0.0, 8.516497674138379e-05, 0.0, -4.501399132955917e-12]
 
-config.transformDict.transforms['Pupil'].transform.name = 'radial'
+config.transformDict.transforms['FieldAngle'].transform.name = 'radial'
 config.detectorList = {}
 config.detectorList[0] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 # y0 of pixel bounding box

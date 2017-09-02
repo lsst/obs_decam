@@ -32,7 +32,7 @@ from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 
-from testGetRaw import visit229388_info
+from test_getRaw import visit229388_info
 
 
 class GetInstcalTestCase(lsst.utils.tests.TestCase):
