@@ -24,3 +24,5 @@ for refObjLoader in (config.calibrate.astromRefObjLoader,
 
 
 config.calibrate.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
+# this was the default prior to DM-11521.  New default is 2000.
+config.calibrate.deblend.maxFootprintSize=0
