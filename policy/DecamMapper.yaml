@@ -197,6 +197,8 @@ datasets:
     template: '%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits'
   calexpBackground:
     template: '%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits'
+  photoCalib:
+    template: 'jointcal-results/%(tract)04d/%(visit)07d/photoCalib-%(visit)07d_%(ccdnum)02d.fits'
   processCcd_metadata:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
   isr_config:
