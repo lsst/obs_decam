@@ -351,7 +351,7 @@ class DecamMapper(CameraMapper):
         idxBad = np.nonzero(bpmImg.getArray())
         mim = afwImage.MaskedImageU(bpmImg.getDimensions())
         mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
-        return isr.getDefectListFromMask(mim, "BAD", growFootprints=0)
+        return isr.getDefectListFromMask(mim, "BAD")
 
     def std_defects(self, item, dataId):
         """Return the defect list as it is.
