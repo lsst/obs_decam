@@ -63,11 +63,12 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
             self.popAngle(md, "OBS-LAT"),
             self.popFloat(md, "OBS-ELEV"),
         )
-        argDict["weather"] = Weather(
-            self.popFloat(md, "OUTTEMP"),
-            self.pascalFromMmHg(self.popFloat(md, "PRESSURE")),
-            self.popFloat(md, "HUMIDITY")
-        )
+        # Default weather is based on typical conditions at an altitude of 2215 meters.
+        temperature = self.defaultMetadata(self.popFloat(md, "OUTTEMP"), 10., minimum=-10., maximum=40.)
+        pressure = self.defaultMetadata(self.pascalFromMmHg(self.popFloat(md, "PRESSURE")), 77161.1,
+                                        minimum=70000., maximum=85000.)
+        humidity = self.defaultMetadata(self.popFloat(md, "HUMIDITY"), 40., minimum=0., maximum=100.)
+        argDict["weather"] = Weather(temperature, pressure, humidity)
         longitude = argDict["observatory"].getLongitude()
         argDict['era'] = self.decamGetEra(md, argDict["boresightRaDec"][0], longitude)
 
