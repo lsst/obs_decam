@@ -60,7 +60,7 @@ visit229388_info = {
     "obs_latitude": -30.16606*degrees,
     "obs_elevation": 2215.0,
     "weath_airTemperature": 11.9,
-    "weath_airPressure": MakeRawVisitInfo.pascalFromMmHg(779.0),
+    "weath_airPressure": 77161.1,
     "weath_humidity": 23.0}
 
 
