@@ -28,6 +28,7 @@ import numpy as np
 from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
+from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
 from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
@@ -209,7 +210,7 @@ class DecamMapper(CameraMapper):
 
         # Set the calib by hand; need to grab the zeroth extension
         header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocationsWithRoot()[0])
-        md0 = afwImage.readMetadata(header)
+        md0 = readMetadata(header)
         calib = afwImage.Calib()
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
@@ -239,7 +240,7 @@ class DecamMapper(CameraMapper):
         md = exp.getMetadata()
         rawPath = self.map_raw(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         # extra keywords to copy to the exposure
         for kw in ('DARKTIME', ):
             if kw in md0.paramNames() and kw not in md.paramNames():
@@ -256,7 +257,7 @@ class DecamMapper(CameraMapper):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         visitInfo = self.makeRawVisitInfo(md0)
         exp.getInfo().setVisitInfo(visitInfo)
         return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
@@ -287,7 +288,7 @@ class DecamMapper(CameraMapper):
         masterCalMap = getattr(self, "map_" + datasetType)
         masterCalPath = masterCalMap(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
                    'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
             if kw in md0.paramNames() and kw not in md.paramNames():
