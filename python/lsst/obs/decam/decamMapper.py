@@ -28,6 +28,7 @@ import numpy as np
 from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
+from lsst.afw.geom import makeSkyWcs
 from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 import lsst.ip.isr as isr
@@ -203,7 +204,7 @@ class DecamMapper(CameraMapper):
 
         mi = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
         md = instcal.getMetadata()
-        wcs = afwImage.makeWcs(md, True)
+        wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.ExposureF(mi, wcs)
 
         # Set the calib by hand; need to grab the zeroth extension
@@ -310,7 +311,7 @@ class DecamMapper(CameraMapper):
                    'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
-        wcs = afwImage.makeWcs(md, True)
+        wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.makeExposure(mi, wcs)
         exp.setMetadata(md)
         return self._standardizeExposure(self.calibrations[datasetType], exp, dataId, filter=setFilter)

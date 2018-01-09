@@ -3,6 +3,7 @@ from lsst.obs.decam.decamCpIsr import DecamCpIsrTask
 config.isr.retarget(DecamCpIsrTask)
 
 config.isr.doDark = False
+config.isr.doAddDistortionModel = False  # rely on the TPV terms instead
 config.isr.fringe.filters = ['z', 'y']
 config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
                                        'TRIMSECA', 'TRIMSECB',
