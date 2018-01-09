@@ -220,11 +220,6 @@ class DecamMapper(CameraMapper):
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
 
-        # Remove TPV keywords from the metadata
-        for kw in md.paramNames():
-            if re.match(r'PV\d_\d', kw):
-                md.remove(kw)
-
         exp.setMetadata(md)
         return exp
 
