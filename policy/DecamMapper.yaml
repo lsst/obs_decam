@@ -63,7 +63,7 @@ exposures:
   wcs:
     persistable: ExposureF
     python: lsst.afw.image.ExposureF
-    template: '%(visit)07d/calexp/wcs-%(visit)07d_%(ccdnum)02d.fits'
+    template: joincal-results/%(tract)d/%(filter)s/wcs-%(visit)07d_%(ccdnum)02d.fits'
   deepCoadd_directWarp:
     template: deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s.fits
   deepCoadd_psfMatchedWarp:
@@ -198,7 +198,7 @@ datasets:
   calexpBackground:
     template: '%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits'
   photoCalib:
-    template: 'jointcal-results/%(tract)04d/%(visit)07d/photoCalib-%(visit)07d_%(ccdnum)02d.fits'
+    template: 'jointcal-results/%(tract)d/%(filter)s/photoCalib-%(visit)07d_%(ccdnum)02d.fits'
   processCcd_metadata:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
   isr_config:
