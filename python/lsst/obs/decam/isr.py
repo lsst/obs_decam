@@ -21,11 +21,14 @@
 #
 from __future__ import absolute_import, division, print_function
 
+import datetime as dt
+
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
 import lsst.pex.config as pexConfig
 from lsst.ip.isr import IsrTask, overscanCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
+from .crosstalk import DecamCrosstalkTask
 
 
 class DecamIsrConfig(IsrTask.ConfigClass):
@@ -47,13 +50,23 @@ class DecamIsrConfig(IsrTask.ConfigClass):
         doc="Number of edge pixels to be flagged as untrustworthy.",
         default=35,
     )
+    doCrosstalk = pexConfig.Field(
+        dtype=bool,
+        doc="Apply crosstalk correction?",
+        default=True,
+    )
+    crosstalk = pexConfig.ConfigurableField(
+        target=DecamCrosstalkTask,
+        doc="DECam specific crosstalk correction",
+    )
 
 
 class DecamIsrTask(IsrTask):
     ConfigClass = DecamIsrConfig
 
     def convertIntToFloat(self, exp):
-        """No conversion necessary."""
+        """No conversion necessary.
+        """
         return exp
 
     def maskAndInterpDefect(self, ccdExposure, defectBaseList):
@@ -62,8 +75,17 @@ class DecamIsrTask(IsrTask):
         Mask defect pixels using mask plane BAD and interpolate over them.
         Mask the potentially problematic glowing edges as SUSPECT.
 
-        @param[in,out] ccdExposure: exposure to process
-        @param[in] defectBaseList: a list of defects to mask and interpolate
+        Parameters
+        ----------
+        ccdExposure: `lsst.afw.image.Exposure`
+            exposure to process
+        defectBaseList: `list`
+            a list of defects to mask and interpolate
+        
+        Returns
+        -------
+        ccdExposure: `lsst.afw.image.Exposure`
+            exposure corrected in place
         """
         IsrTask.maskAndInterpDefect(self, ccdExposure, defectBaseList)
         maskedImage = ccdExposure.getMaskedImage()
@@ -84,9 +106,17 @@ class DecamIsrTask(IsrTask):
         config.overscanBiasJumpBKP, cut the amplifier in two vertically
         and correct each piece separately.
 
-        @param[in,out] exposure: exposure to process; must include both
-                                 DataSec and BiasSec pixels
-        @param[in] amp: amplifier device data
+        Parameters
+        ----------
+        exposure: `lsst.afw.image.Exposure`
+            exposure to process; must include both DataSec and BiasSec pixels
+        amp: `lsst.afw.table.AmpInfoRecord`
+            amplifier device data
+        
+        Returns
+        -------
+        exposure: `lsst.afw.image.Exposure`
+            exposure corrected in place with updated metadata
         """
         if not (exposure.getMetadata().exists('FPA') and
                 exposure.getMetadata().get('FPA') in self.config.overscanBiasJumpBKP):
@@ -140,4 +170,3 @@ class DecamIsrTask(IsrTask):
         metadata.set('OVERSCAN', 'Overscan corrected on {0}'.format(
                            dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")))
         exposure.setMetadata(metadata)
-

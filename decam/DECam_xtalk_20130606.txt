@@ -1,6 +1,11 @@
 # This file was originally named 'xtalk_20130606.txt' and was retrieved via ftp
 # from the link at http://www.ctio.noao.edu/noao/content/DECam-Calibration-Files
 #
+# The columns are: victim amplifier, source amplifier,
+# linear crosstalk coefficient x, uncertainty of linear crosstalk coefficient,
+# source count of onset of non-linearities src_nl,
+# and p_1 to p_n coefficients for the polynomial.
+#
 # victim source  x   x_err    src_nl      poly_coeff
 ccd25B   ccd25A      1.34e-04   1.13e-05    4.078154e+04  1.537540e-04  -6.980507e-08  5.963848e-12  
 ccd25A   ccd25B      3.16e-04   9.32e-06    4.038128e+04  8.826313e-04  -1.619436e-07  9.457412e-12  
