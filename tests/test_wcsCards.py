@@ -54,7 +54,6 @@ class WcsCardsTestCase(lsst.utils.tests.TestCase):
         self.assertFalse(exp.getMetadata().exists('CTYPE1'))
         self.assertFalse(exp.getMetadata().exists('CD1_2'))
         self.assertFalse(exp.getMetadata().exists('CRPIX2'))
-        self.assertFalse(exp.getMetadata().exists('LTV1'))
         self.assertFalse(exp.getMetadata().exists('PV1_4'))
         self.assertFalse(exp.getMetadata().exists('PV2_10'))
 

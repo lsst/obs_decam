@@ -28,6 +28,8 @@ import numpy as np
 from lsst.utils import getPackageDir
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
+from lsst.afw.fits import readMetadata
+from lsst.afw.geom import makeSkyWcs
 from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 import lsst.ip.isr as isr
@@ -203,12 +205,12 @@ class DecamMapper(CameraMapper):
 
         mi = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
         md = instcal.getMetadata()
-        wcs = afwImage.makeWcs(md, True)
+        wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.ExposureF(mi, wcs)
 
         # Set the calib by hand; need to grab the zeroth extension
         header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocationsWithRoot()[0])
-        md0 = afwImage.readMetadata(header)
+        md0 = readMetadata(header)
         calib = afwImage.Calib()
         calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
         exp.setCalib(calib)
@@ -218,11 +220,6 @@ class DecamMapper(CameraMapper):
 
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
-
-        # Remove TPV keywords from the metadata
-        for kw in md.paramNames():
-            if re.match(r'PV\d_\d', kw):
-                md.remove(kw)
 
         exp.setMetadata(md)
         return exp
@@ -243,7 +240,7 @@ class DecamMapper(CameraMapper):
         md = exp.getMetadata()
         rawPath = self.map_raw(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         # extra keywords to copy to the exposure
         for kw in ('DARKTIME', ):
             if kw in md0.paramNames() and kw not in md.paramNames():
@@ -251,21 +248,7 @@ class DecamMapper(CameraMapper):
         exposureId = self._computeCcdExposureId(dataId)
         visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
         exp.getInfo().setVisitInfo(visitInfo)
-        # As TPV is not supported yet, the wcs keywords are not pruned
-        # from the metadata. Once TPV is supported, the following keyword
-        # removal may not be necessary here and would probably be done at
-        # makeWcs() when the raw image is converted to an Exposure.
-        for kw in ('LTV1', 'LTV2'):
-            md.remove(kw)
 
-        # Currently the existence of some PV cards in the metadata combined
-        # with a CTYPE of TAN is interpreted as TPV (DM-2883).
-        # However, `lsst.afw.image.makeWcs` (which is called by `exposureFromImage`,
-        # and strips most WCS keywords from the metadata) does not strip the PVn_n keywords
-        # (except on an internal deep copy), so do that here.
-        for kw in md.paramNames():
-            if re.match(r'PV\d_\d', kw):
-                md.remove(kw)
         # Standardize an Exposure, including setting the calib object
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
@@ -274,7 +257,7 @@ class DecamMapper(CameraMapper):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         visitInfo = self.makeRawVisitInfo(md0)
         exp.getInfo().setVisitInfo(visitInfo)
         return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
@@ -305,12 +288,12 @@ class DecamMapper(CameraMapper):
         masterCalMap = getattr(self, "map_" + datasetType)
         masterCalPath = masterCalMap(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
-        md0 = afwImage.readMetadata(headerPath)
+        md0 = readMetadata(headerPath)
         for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
                    'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
             if kw in md0.paramNames() and kw not in md.paramNames():
                 md.add(kw, md0.get(kw))
-        wcs = afwImage.makeWcs(md, True)
+        wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.makeExposure(mi, wcs)
         exp.setMetadata(md)
         return self._standardizeExposure(self.calibrations[datasetType], exp, dataId, filter=setFilter)

@@ -25,7 +25,7 @@ import re
 
 from builtins import zip
 
-import lsst.afw.image as afwImage
+from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
 
@@ -102,7 +102,7 @@ class DecamParseTask(ParseTask):
     def _listdir(self, path, prefix):
         for file in os.listdir(path):
             fileName = os.path.join(path, file)
-            md = afwImage.readMetadata(fileName)
+            md = readMetadata(fileName)
             if "EXPNUM" not in md.names():
                 return
             expnum = md.get("EXPNUM")
