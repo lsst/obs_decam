@@ -1,9 +1,10 @@
 #
-# LSST Data Management System
-# Copyright 2018 LSST Corporation.
+# This file is part of obs_decam.
 #
-# This product includes software developed by the
-# LSST Project (http://www.lsst.org/).
+# Developed for the LSST Data Management System.
+# This product includes software developed by the LSST Project
+# (http://www.lsst.org).
+# Copyright 2018 LSST Corporation.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,9 +16,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the LSST License Statement and
-# the GNU General Public License along with this program.  If not,
-# see <http://www.lsstcorp.org/LegalNotices/>.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 """Apply crosstalk corrections to raw DECam images.
@@ -38,13 +38,10 @@ import numpy as np
 
 import lsst.log
 import lsst.pipe.base as pipeBase
-import lsst.pex.config as pexConfig
 from lsst.ip.isr import CrosstalkConfig, CrosstalkTask
 from lsst.obs.decam import DecamMapper
 from lsst.utils import getPackageDir
 import lsst.afw.math as afwMath
-from lsst.obs.base import exposureFromImage
-#from .isr import DecamIsrTask
 
 __all__ = ["DecamCrosstalkTask", "runCrosstalkAlone"]
 
@@ -52,21 +49,6 @@ __all__ = ["DecamCrosstalkTask", "runCrosstalkAlone"]
 class DecamCrosstalkConfig(CrosstalkConfig):
     """Configuration for DECam crosstalk removal
     """
-    extensions = pexConfig.DictField(
-        keytype=str, itemtype=int,
-        doc="FITS extension of given chip position from CCDNUM header",
-        default={'25': 1, '26': 2, '27': 3, '32': 4, '33': 5, '34': 6, '19': 7,
-                 '20': 8, '13': 9, '14': 10, '08': 11, '04': 12, '39': 13,
-                 '40': 14, '45': 15, '46': 16, '51': 17, '56': 18, '21': 19,
-                 '22': 20, '23': 21, '24': 22, '17': 23, '18': 24, '15': 25,
-                 '16': 26, '09': 27, '10': 28, '11': 29, '12': 30, '05': 31,
-                 '06': 32, '07': 33, '01': 34, '02': 35, '03': 36, '35': 37,
-                 '36': 38, '37': 39, '38': 40, '28': 41, '29': 42, '30': 43,
-                 '31': 44, '41': 45, '42': 46, '43': 47, '44': 48, '49': 49,
-                 '50': 50, '47': 51, '48': 52, '52': 53, '53': 54, '54': 55,
-                 '55': 56, '57': 57, '58': 58, '59': 59, '60': 60, '61': 61,
-                 '62': 62},
-    )
 
     def getSourcesAndCoeffsFile(self, filename='DECam_xtalk_20130606.txt'):
         """Return directory containing the DECam_xtalk_20130606.txt file.
@@ -124,30 +106,19 @@ class DecamCrosstalkTask(CrosstalkTask):
 
         Returns
         -------
-        `pipeBase.Struct`
-            Struct contains field "exposure," which is the exposure after
-            crosstalk correction has been applied
+        `lsst.pipe.base.Struct`
+        Struct with components:
+        - ``exposure``: The exposure after crosstalk correction has been 
+                        applied (`lsst.afw.image.Exposure`).
         """
         self.log.info('Applying crosstalk correction')
         sources, coeffs = self.config.getSourcesAndCoeffs()
-        corrected = self.subtractCrosstalk(dataRef, sources, coeffs, self.config.extensions)
-        corrected = exposureFromImage(corrected)
-        metadata = corrected.getMetadata()
-        metadata.set('CROSSTALK', 'Crosstalk corrected on {0}'.format(
-                        dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")))
-        corrected.setMetadata(metadata)
+        self.subtractCrosstalk(exposure, dataRef, sources, coeffs)
         return pipeBase.Struct(
-            exposure=corrected,
+            exposure=exposure,
         )
 
-        # TODO: decide what needs returning where
-        #       ensure crosstalk is actually being corrected
-        #       write some tests
-        #       plug this into the DECam ISR workflow and try it out
-        #       -> there is dataRef vs. exposure problem in isr.py
-        #       -> apparently I'm not using the Butler "properly"
-
-    def subtractCrosstalk(self, dataRef, sources, coeffs, extensions):
+    def subtractCrosstalk(self, exposure, dataRef, sources, coeffs):
         """Remove crosstalk from an overscan-corrected raw DECam image.
 
         Parameters
@@ -168,47 +139,67 @@ class DecamCrosstalkTask(CrosstalkTask):
             Exposure containing image data that has been crosstalk corrected
         """
         log = lsst.log.Log.getLogger('obs.decam.subtractCrosstalk')
-        #import ipdb; ipdb.set_trace()
-        butler = dataRef.getButler()  # needed to load a different exposure later
-        dataId = dataRef.dataId
-        image = exposure.getMaskedImage().getImage()
-        ccdnum = int(dataId['ccdnum'])
-        visit = dataId['visit']
+
+        # Define a butler to prepare for accessing crosstalk 'source' image data
+        try:
+            butler = dataRef.getButler()
+        except RuntimeError:
+            log.fatal('Cannot get a Butler from the dataRef provided')
+
+        # Retrieve visit and ccdnum from 'victim' so we can look up 'sources'
+        visit = dataRef.dataId['visit']
+        ccdnum = int(dataRef.dataId['ccdnum'])
         ccdnum_str = '%02d' % ccdnum
 
+        # Load data from crosstalk 'victim' exposure we want to correct
         for amp in exposure.getDetector():
+            victim = ccdnum_str + amp.getName()
+            dataBBox = amp.getRawDataBBox()
+            # Check to see if victim overscan has been corrected, and if not, correct it first
             if not exposure.getMetadata().exists('OVERSCAN'):
-                # Check to see if overscan has been corrected, and if not, correct it
                 from .isr import DecamIsrTask
                 decamisr = DecamIsrTask()
                 decamisr.overscanCorrection(exposure, amp)
-                log.info('Correcting overscan before crosstalk')
-            section = amp.getName()
-            victim = ccdnum_str + section
-
-        for amp in exposure.getDetector():
-            section = amp.getName()
-            victim = ccdnum_str + section
-            dataBBox = amp.getRawDataBBox()
+                victim = ccdnum_str + amp.getName()
+                log.warn('Overscan correction did not happen prior to crosstalk correction')
+                log.info('Correcting victim %s overscan before crosstalk' % victim)
+            image = exposure.getMaskedImage().getImage()
             victim_data = image.Factory(image, dataBBox)
+            # Load data from crosstalk 'source' exposures
             for source in sources[victim]:
-                source_ccdnum = extensions[source[:2]]
-                source_exposure = butler.get('raw', dataId={'visit': visit, 'ccdnum': source_ccdnum})
-                source_image = source_exposure.getMaskedImage().getImage()
-                if 'A' in source:
-                    source_dataBBox = source_exposure.getDetector()[0].getRawDataBBox()
-                elif 'B' in source:
-                    source_dataBBox = source_exposure.getDetector()[1].getRawDataBBox()
-                source_data = source_image.Factory(source_image, source_dataBBox)
-                if victim_data.getX0() != source_data.getX0():
-                    # Occurs with amp A and B mismatch; need to flip horizontally
-                    source_data = afwMath.flipImage(source_data, flipLR=True, flipTB=False)
-                # Perform linear crosstalk correction
-                source_data *= coeffs[(victim, source)]
-                victim_data -= source_data
-                log.info('Correcting victim %s from crosstalk source %s for CCDNUM %s' %
-                         (victim, source, ccdnum))
-        return image
+                source_ccdnum = int(source[:2])
+                try:
+                    source_exposure = butler.get('raw', dataId={'visit': visit, 'ccdnum': source_ccdnum})
+                except RuntimeError:
+                    log.warn('Cannot access source %d, SKIPPING IT' % source_ccdnum)
+                else:
+                    log.info('Correcting victim %s from crosstalk source %s' % (victim, source))
+                    if 'A' in source:
+                        amp_idx = 0
+                    elif 'B' in source:
+                        amp_idx = 1
+                    else:
+                        log.fatal('DECam source amp name does not contain A or B, cannot proceed')
+                    source_amp = source_exposure.getDetector()[amp_idx]
+                    source_dataBBox = source_amp.getRawDataBBox()
+                    # Check to see if source overscan has been corrected, and if not, correct it first
+                    if not source_exposure.getMetadata().exists('OVERSCAN'):
+                        from .isr import DecamIsrTask
+                        decamisr = DecamIsrTask()
+                        decamisr.overscanCorrection(source_exposure, source_amp)
+                        log.info('Correcting source %s overscan before using to correct crosstalk' % source)
+                    source_image = source_exposure.getMaskedImage().getImage()
+                    source_data = source_image.Factory(source_image, source_dataBBox)
+                    if victim_data.getX0() != source_data.getX0():
+                        # Occurs with amp A and B mismatch; need to flip horizontally
+                        source_data = afwMath.flipImage(source_data, flipLR=True, flipTB=False)
+                    # Perform the linear crosstalk correction
+                    try:
+                        source_data *= coeffs[(victim, source)]
+                        victim_data -= source_data
+                    except RuntimeError:
+                        log.fatal('Crosstalk correction failed for victim %s from source %s'
+                                  % (victim, source))
 
 
 class DecamCrosstalkIO(pipeBase.Task):
