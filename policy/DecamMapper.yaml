@@ -265,3 +265,5 @@ datasets:
     template: config/dcrCoadd_forced.py
   dcrCoadd_forced_metadata:
     template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.boost
+  apPipe_metadata:
+    template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
