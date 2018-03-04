@@ -60,7 +60,7 @@ exposures:
     template: '%(visit)07d/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits'
   calexp:
     template: '%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits'
-  wcs:
+  wcs:  # deprecated in favor of jointcal_wcs; retained for reading old outputs
     persistable: ExposureF
     python: lsst.afw.image.ExposureF
     template: '%(visit)07d/calexp/wcs-%(visit)07d_%(ccdnum)02d.fits'
@@ -197,8 +197,12 @@ datasets:
     template: '%(visit)07d/icExp/icExpBackground-%(visit)07d_%(ccdnum)02d.fits'
   calexpBackground:
     template: '%(visit)07d/bkgd/bkgd-%(visit)07d_%(ccdnum)02d.fits'
-  photoCalib:
+  photoCalib:  # deprecated in favor of jointcal_wcs; retained for reading old outputs
     template: 'jointcal-results/%(tract)04d/%(visit)07d/photoCalib-%(visit)07d_%(ccdnum)02d.fits'
+  jointcal_wcs:  # astrometric calibration produced by jointcal
+    template: 'jointcal-results/%(filter)s/%(tract)04d/jointcal_wcs-%(visit)07d_%(ccdnum)02d.fits'
+  jointcal_photoCalib:  # photometric calibration produced by jointcal
+    template: 'jointcal-results/%(filter)s/%(tract)04d/jointcal_photoCalib-%(visit)07d_%(ccdnum)02d.fits'
   processCcd_metadata:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
   isr_config:
