@@ -23,7 +23,6 @@
 from __future__ import absolute_import, division, print_function
 
 import os
-import tempfile
 import warnings
 import unittest
 import lsst.utils.tests
@@ -33,15 +32,14 @@ import lsst.pex.exceptions as pexExcept
 import lsst.afw.geom as afwGeom
 import lsst.daf.persistence as dafPersist
 from lsst.obs.decam.decamCpIsr import DecamCpIsrTask
-from lsst.obs.decam.isr import DecamIsrConfig
-from lsst.pipe.tasks.processCcd import ProcessCcdTask, ProcessCcdConfig
 
 obsDecamDir = getPackageDir('obs_decam')
 displayDiffs = False
 
+
 def getObsDecamConfig(TaskClass):
     """Helper function to get a command-line task config customized by obs_decam.
-    
+
     Borrowed from test_processCcd.py.
     """
     config = TaskClass.ConfigClass()
@@ -74,10 +72,10 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         self.xtalkX = 1810
         self.xtalkY = 2970
         self.xtalkRad = 100
-    
+
     def tearDown(self):
         del self.butler
-    
+
     def runIsr(self, doCrosstalk):
         """Run DecamCpIsrTask with or without crosstalk correction
         """
@@ -92,10 +90,10 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         config.doAddDistortionModel = False
         config.fringe.filters = ['z', 'y']
         config.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
-                                       'TRIMSECA', 'TRIMSECB',
-                                       'BIASSECA', 'BIASSECB',
-                                       'PRESECA', 'PRESECB',
-                                       'POSTSECA', 'POSTSECB']
+                                           'TRIMSECA', 'TRIMSECB',
+                                           'BIASSECA', 'BIASSECB',
+                                           'PRESECA', 'PRESECB',
+                                           'POSTSECA', 'POSTSECB']
 
         decamCpIsrTask = DecamCpIsrTask(config=config)
         isrData = decamCpIsrTask.readIsrData(dataRef, rawExposure)
@@ -111,15 +109,15 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
             otherDataRef=dataRef,
         )
         return isrResult
-    
+
     def testCrosstalk(self):
         """Compare DECam postISR images with and without crosstalk removal.
-        
+
         A region with known crosstalk from the neighbor amp is inspected to
         verify the crosstalk is removed, and we also test to see that the
         image statistics are altered as expected by crosstalk removal.
         This test requires running DecamCpIsrTask twice.
-        """        
+        """
         # Run ISR with and without crosstalk correction
         expWithoutCrosstalkCorr = self.runIsr(doCrosstalk=False).exposure
         expWithCrosstalkCorr = self.runIsr(doCrosstalk=True).exposure
@@ -142,7 +140,7 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         all_zeros = not chunkDiff.getArray().any()
         self.assertFalse(all_zeros)
 
-        # Check that the standard deviation with crosstalk signatures still 
+        # Check that the standard deviation with crosstalk signatures still
         # present is larger than when it has been removed
         self.assertGreater(chunk1.getArray().std(), chunk2.getArray().std())
 

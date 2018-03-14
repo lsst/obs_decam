@@ -43,11 +43,11 @@ from lsst.obs.decam import DecamMapper
 from lsst.utils import getPackageDir
 import lsst.afw.math as afwMath
 
-__all__ = ["DecamCrosstalkTask", "runCrosstalkAlone"]
+__all__ = ["DecamCrosstalkTask"]
 
 
 class DecamCrosstalkConfig(CrosstalkConfig):
-    """Configuration for DECam crosstalk removal
+    """Configuration for DECam crosstalk removal.
     """
 
     def getSourcesAndCoeffsFile(self, filename='DECam_xtalk_20130606.txt'):
@@ -71,14 +71,15 @@ class DecamCrosstalkConfig(CrosstalkConfig):
         coeffs = {}
         log = lsst.log.Log.getLogger('obs.decam.DecamCrosstalkConfig')
         log.info('Reading crosstalk coefficient data')
-        for line in open(crosstalk_file):
-            li = line.strip()
-            if not li.startswith('#'):
-                elem = li.split()
-                # The xtalk file has image areas like 'ccd01A'; preserve only '01A'
-                sources[elem[0][3:]].append(elem[1][3:])
-                # The linear crosstalk coefficients
-                coeffs[(elem[0][3:], elem[1][3:])] = float(elem[2])
+        with open(crosstalk_file) as f:
+            for line in f:
+                li = line.strip()
+                if not li.startswith('#'):
+                    elem = li.split()
+                    # The xtalk file has image areas like 'ccd01A'; preserve only '01A'
+                    sources[elem[0][3:]].append(elem[1][3:])
+                    # The linear crosstalk coefficients
+                    coeffs[(elem[0][3:], elem[1][3:])] = float(elem[2])
         return sources, coeffs
 
 
@@ -94,7 +95,7 @@ class DecamCrosstalkTask(CrosstalkTask):
 
     @pipeBase.timeMethod
     def run(self, exposure, dataRef):
-        """Perform crosstalk correction on a DECam exposure and a corresponding dataRef
+        """Perform crosstalk correction on a DECam exposure and its corresponding dataRef.
 
         Parameters
         ----------
@@ -108,7 +109,7 @@ class DecamCrosstalkTask(CrosstalkTask):
         -------
         `lsst.pipe.base.Struct`
         Struct with components:
-        - ``exposure``: The exposure after crosstalk correction has been 
+        - ``exposure``: The exposure after crosstalk correction has been
                         applied (`lsst.afw.image.Exposure`).
         """
         self.log.info('Applying crosstalk correction')
@@ -132,11 +133,6 @@ class DecamCrosstalkTask(CrosstalkTask):
             Crosstalk source areas affecting flux in a certain victim area
         coeffs : `list`
             Linear crosstalk coefficients
-
-        Returns
-        -------
-        `lsst.afw.image.Exposure`
-            Exposure containing image data that has been crosstalk corrected
         """
         log = lsst.log.Log.getLogger('obs.decam.subtractCrosstalk')
 
