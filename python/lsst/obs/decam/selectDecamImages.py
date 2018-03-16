@@ -209,6 +209,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
             filter=dataId["filter"],
         )
 
+
 if __name__ == "__main__":
     # example of use
     selectTask = SelectDecamImagesTask()

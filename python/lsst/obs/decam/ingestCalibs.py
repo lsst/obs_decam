@@ -33,7 +33,7 @@ class DecamCalibsParseTask(CalibsParseTask):
 
     def _translateFromCalibId(self, field, md):
         """Fetch the ID from the CALIB_ID header.
-        
+
         Calibration products made with constructCalibs have some metadata
         saved in its FITS header CALIB_ID.
         """

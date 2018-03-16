@@ -33,7 +33,6 @@ from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
-from lsst.obs.base import MakeRawVisitInfo
 from lsst.afw.image import RotType
 from lsst.afw.geom import degrees, SpherePoint
 
