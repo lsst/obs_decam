@@ -95,7 +95,7 @@ class DecamNullIsrTask(pipeBase.Task):
 
         exposure = sensorRef.get("instcal", immediate=True)
         if self.config.doWrite:
-            sensorRef.put("postISRCCD", exposure)
+            sensorRef.put(exposure, "postISRCCD")
 
         return pipeBase.Struct(
             exposure=exposure,
