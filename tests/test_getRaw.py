@@ -33,16 +33,14 @@ from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
-from lsst.obs.base import MakeRawVisitInfo
 from lsst.afw.image import RotType
-from lsst.afw.coord import IcrsCoord, Coord
-from lsst.afw.geom import degrees
+from lsst.afw.geom import degrees, SpherePoint
 
 
 # Desired VisitInfo values for visit 229388, shared between test_getRaw.py and
 # test_getInstcal.py
 
-boresightRaDec = IcrsCoord('02:51:16.790', '-00:00:05.699')
+boresightRaDec = SpherePoint(42.81995833, -0.00158305, degrees)
 # NOTE: if we deal with DM-8053 and implement UT1, ERA will not come from HA, so this will change.
 HA = -42.505291666666665*degrees
 era = HA + boresightRaDec[0] - 70.81489000000001*degrees
@@ -52,7 +50,7 @@ visit229388_info = {
     "darkTime": 201.15662,
     "era": era,
     "boresightRaDec": boresightRaDec,
-    "boresightAzAlt": Coord(61.24*degrees, (90-50.46)*degrees),
+    "boresightAzAlt": SpherePoint(61.24, 90 - 50.46, degrees),
     "boresightAirmass": 1.57,
     "boresightRotAngle": float("nan")*degrees,
     "rotType": RotType.UNKNOWN,
@@ -112,8 +110,8 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
         self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'])
-        self.assertCoordsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
-        self.assertCoordsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
+        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
+        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
         self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
         self.assertEqual(visitInfo.getRotType(), visit229388_info['rotType'])

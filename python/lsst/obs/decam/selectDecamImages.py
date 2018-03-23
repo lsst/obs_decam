@@ -27,7 +27,6 @@ import os
 import re
 
 import lsst.pex.config as pexConfig
-from lsst.afw.coord import IcrsCoord
 import lsst.afw.geom as afwGeom
 from lsst.daf.persistence import DbAuth
 import lsst.pipe.base as pipeBase
@@ -62,7 +61,8 @@ class ExposureInfo(BaseExposureInfo):
 
     Data includes:
     - dataId: data ID of exposure (a dict)
-    - coordList: a list of corner coordinates of the exposure (list of IcrsCoord)
+    - coordList: a list of ICRS coordinates of the corners of the exposure
+      (each an lsst.afw.geom.SpherePoint)
     - fwhm: mean FWHM of exposure
     - airmass: mean airmass of exposure
     - filename: original filename of exposure
@@ -81,10 +81,7 @@ class ExposureInfo(BaseExposureInfo):
         coordList = []
         for i in range(4):
             coordList.append(
-                IcrsCoord(
-                    afwGeom.Angle(result[self._nextInd], afwGeom.degrees),
-                    afwGeom.Angle(result[self._nextInd], afwGeom.degrees),
-                )
+                afwGeom.SpherePoint(result[self._nextInd], result[self._nextInd], afwGeom.degrees)
             )
         BaseExposureInfo.__init__(self, dataId, coordList)
 
@@ -212,6 +209,7 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
             filter=dataId["filter"],
         )
 
+
 if __name__ == "__main__":
     # example of use
     selectTask = SelectDecamImagesTask()
@@ -220,10 +218,10 @@ if __name__ == "__main__":
     minDec = afwGeom.Angle(-1, afwGeom.degrees)
     maxDec = afwGeom.Angle(1, afwGeom.degrees)
     coordList = [
-        IcrsCoord(minRa, minDec),
-        IcrsCoord(maxRa, minDec),
-        IcrsCoord(maxRa, maxDec),
-        IcrsCoord(minRa, maxDec),
+        afwGeom.SpherePoint(minRa, minDec),
+        afwGeom.SpherePoint(maxRa, minDec),
+        afwGeom.SpherePoint(maxRa, maxDec),
+        afwGeom.SpherePoint(minRa, maxDec),
     ]
     results = selectTask.run(coordList=coordList, filter='r')
     filenames = set()

@@ -25,7 +25,8 @@ from __future__ import print_function
 
 import astropy.units
 
-from lsst.afw.coord import Coord, IcrsCoord, Observatory, Weather
+from lsst.afw.coord import Observatory, Weather
+from lsst.afw.geom import SpherePoint
 from lsst.obs.base import MakeRawVisitInfo
 
 __all__ = ["MakeDecamRawVisitInfo"]
@@ -49,11 +50,11 @@ class MakeDecamRawVisitInfo(MakeRawVisitInfo):
         """
         MakeRawVisitInfo.setArgDict(self, md, argDict)
         argDict["darkTime"] = self.popFloat(md, "DARKTIME")
-        argDict["boresightAzAlt"] = Coord(
+        argDict["boresightAzAlt"] = SpherePoint(
             self.popAngle(md, "AZ"),
             self.altitudeFromZenithDistance(self.popAngle(md, "ZD")),
         )
-        argDict["boresightRaDec"] = IcrsCoord(
+        argDict["boresightRaDec"] = SpherePoint(
             self.popAngle(md, "TELRA", units=astropy.units.h),
             self.popAngle(md, "TELDEC"),
         )
