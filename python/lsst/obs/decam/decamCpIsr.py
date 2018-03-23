@@ -24,8 +24,7 @@ from __future__ import absolute_import, division, print_function
 
 from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
-import lsst.pipe.base as pipeBase
-from .isr import DecamIsrTask
+from .isr import DecamIsrTask, DecamIsrConfig
 
 
 def _computeEdgeSize(rawExposure, calibExposure):
@@ -41,7 +40,7 @@ def _computeEdgeSize(rawExposure, calibExposure):
     """
     nx, ny = rawExposure.getBBox().getDimensions() - calibExposure.getBBox().getDimensions()
     assert nx == ny, "Exposure is trimmed differently in X and Y"
-    assert nx%2 == 0, "Exposure is trimmed unevenly in X"
+    assert nx % 2 == 0, "Exposure is trimmed unevenly in X"
     assert nx >= 0, "Calibration image is larger than raw data"
     return nx//2
 
@@ -59,6 +58,7 @@ class DecamCpIsrTask(DecamIsrTask):
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
     different from the LSST-generated calibration products (bias/flat).
     """
+    ConfigClass = DecamCpIsrConfig
 
     def biasCorrection(self, exposure, biasExposure):
         """Apply bias correction in place

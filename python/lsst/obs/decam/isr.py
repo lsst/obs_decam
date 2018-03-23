@@ -28,7 +28,6 @@ import lsst.afw.table as afwTable
 import lsst.pex.config as pexConfig
 from lsst.ip.isr import IsrTask, overscanCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
-from .crosstalk import DecamCrosstalkTask
 
 
 class DecamIsrConfig(IsrTask.ConfigClass):
@@ -50,15 +49,6 @@ class DecamIsrConfig(IsrTask.ConfigClass):
         doc="Number of edge pixels to be flagged as untrustworthy.",
         default=35,
     )
-    doCrosstalk = pexConfig.Field(
-        dtype=bool,
-        doc="Apply crosstalk correction?",
-        default=True,
-    )
-    crosstalk = pexConfig.ConfigurableField(
-        target=DecamCrosstalkTask,
-        doc="DECam specific crosstalk correction",
-    )
 
 
 class DecamIsrTask(IsrTask):
@@ -77,14 +67,14 @@ class DecamIsrTask(IsrTask):
 
         Parameters
         ----------
-        ccdExposure: `lsst.afw.image.Exposure`
+        ccdExposure : `lsst.afw.image.Exposure`
             exposure to process
-        defectBaseList: `list`
+        defectBaseList : `list`
             a list of defects to mask and interpolate
-        
+
         Returns
         -------
-        ccdExposure: `lsst.afw.image.Exposure`
+        ccdExposure : `lsst.afw.image.Exposure`
             exposure corrected in place
         """
         IsrTask.maskAndInterpDefect(self, ccdExposure, defectBaseList)
@@ -112,7 +102,7 @@ class DecamIsrTask(IsrTask):
             exposure to process; must include both DataSec and BiasSec pixels
         amp: `lsst.afw.table.AmpInfoRecord`
             amplifier device data
-        
+
         Returns
         -------
         exposure: `lsst.afw.image.Exposure`
@@ -164,7 +154,7 @@ class DecamIsrTask(IsrTask):
             order=self.config.overscanOrder,
             collapseRej=self.config.overscanRej,
         )
-        
+
         # Note that overscan correction has been done in exposure metadata
         metadata = exposure.getMetadata()
         metadata.set('OVERSCAN', 'Overscan corrected on {0}'.format(

@@ -84,30 +84,9 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         camera = dataRef.get('camera')
         config = getObsDecamConfig(DecamCpIsrTask)
         config.doCrosstalk = doCrosstalk
-
-        # Special DECam ISR config settings from config/processCcdCpIsr.py
-        config.doDark = False
-        config.doAddDistortionModel = False
-        config.fringe.filters = ['z', 'y']
-        config.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
-                                           'TRIMSECA', 'TRIMSECB',
-                                           'BIASSECA', 'BIASSECB',
-                                           'PRESECA', 'PRESECB',
-                                           'POSTSECA', 'POSTSECB']
-
         decamCpIsrTask = DecamCpIsrTask(config=config)
         isrData = decamCpIsrTask.readIsrData(dataRef, rawExposure)
-        isrResult = decamCpIsrTask.run(
-            rawExposure,
-            bias=isrData.bias,
-            linearizer=isrData.linearizer,
-            flat=isrData.flat,
-            defects=isrData.defects,
-            fringes=isrData.fringes,
-            bfKernel=isrData.bfKernel,
-            camera=camera,
-            otherDataRef=dataRef,
-        )
+        isrResult = decamCpIsrTask.run(rawExposure, camera=camera, **isrData.getDict())
         return isrResult
 
     def testCrosstalk(self):
@@ -124,9 +103,6 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         image1 = expWithoutCrosstalkCorr.getMaskedImage().getImage()
         image2 = expWithCrosstalkCorr.getMaskedImage().getImage()
 
-        # Check that the image data is different with crosstalk on vs. off
-        assert (image1.getArray() != image2.getArray()).all()
-
         # Work with a small image chunk only
         pmin = afwGeom.Point2I(self.xtalkX - self.xtalkRad, self.xtalkY - self.xtalkRad)
         pmax = afwGeom.Point2I(self.xtalkX + self.xtalkRad, self.xtalkY + self.xtalkRad)
@@ -137,6 +113,7 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         chunkDiff -= chunk2
 
         # Check that the difference of the two image chunks is nonzero
+        # (the non-crosstalk-corrected and crosstalk-corrected images should differ)
         all_zeros = not chunkDiff.getArray().any()
         self.assertFalse(all_zeros)
 
@@ -145,12 +122,12 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         self.assertGreater(chunk1.getArray().std(), chunk2.getArray().std())
 
         # More specific tests for the exact image statistics expected
-        self.assertAlmostEqual(chunk1.getArray().mean(), 3731.2451, places=3)
-        self.assertAlmostEqual(chunk2.getArray().mean(), 3727.834, places=3)
-        self.assertAlmostEqual(chunkDiff.getArray().mean(), 3.4109073, places=3)
-        self.assertAlmostEqual(chunk1.getArray().std(), 33.811527, places=5)
-        self.assertAlmostEqual(chunk2.getArray().std(), 33.319572, places=5)
-        self.assertAlmostEqual(chunkDiff.getArray().std(), 5.8550658, places=5)
+        self.assertAlmostEqual(chunk1.getArray().mean(), 3731.25, places=2)
+        self.assertAlmostEqual(chunk2.getArray().mean(), 3727.83, places=2)
+        self.assertAlmostEqual(chunkDiff.getArray().mean(), 3.41, places=2)
+        self.assertAlmostEqual(chunk1.getArray().std(), 33.81, places=2)
+        self.assertAlmostEqual(chunk2.getArray().std(), 33.32, places=2)
+        self.assertAlmostEqual(chunkDiff.getArray().std(), 5.86, places=2)
 
         # Option to display the portions of the image with/without crosstalk
         if displayDiffs:
