@@ -24,8 +24,7 @@ from __future__ import absolute_import, division, print_function
 
 from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
-import lsst.pipe.base as pipeBase
-from .isr import DecamIsrTask
+from .isr import DecamIsrTask, DecamIsrConfig
 
 
 def _computeEdgeSize(rawExposure, calibExposure):
@@ -41,9 +40,16 @@ def _computeEdgeSize(rawExposure, calibExposure):
     """
     nx, ny = rawExposure.getBBox().getDimensions() - calibExposure.getBBox().getDimensions()
     assert nx == ny, "Exposure is trimmed differently in X and Y"
-    assert nx%2 == 0, "Exposure is trimmed unevenly in X"
+    assert nx % 2 == 0, "Exposure is trimmed unevenly in X"
     assert nx >= 0, "Calibration image is larger than raw data"
     return nx//2
+
+
+class DecamCpIsrConfig(DecamIsrConfig):
+
+    def setDefaults(self):
+        self.biasDataProductName = "cpBias"
+        self.flatDataProductName = "cpFlat"
 
 
 class DecamCpIsrTask(DecamIsrTask):
@@ -52,51 +58,7 @@ class DecamCpIsrTask(DecamIsrTask):
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
     different from the LSST-generated calibration products (bias/flat).
     """
-
-    def readIsrData(self, dataRef, rawExposure):
-        """Retrieve necessary frames for instrument signature removal
-
-        This is identical to IsrTask.readIsrData except the names of the
-        bias/flat dataset types are cpBias/cpFlat instead.
-
-        \param[in] dataRef -- a daf.persistence.butlerSubset.ButlerDataRef
-                              of the detector data to be processed
-        \param[in] rawExposure -- a reference raw exposure that will later be
-                                  corrected with the retrieved calibration data;
-                                  should not be modified in this method.
-        \return a pipeBase.Struct with fields containing kwargs expected by run()
-         - bias: exposure of bias frame
-         - dark: exposure of dark frame
-         - flat: exposure of flat field
-         - defects: list of detects
-         - fringeStruct: a pipeBase.Struct with field fringes containing
-                         exposure of fringe frame or list of fringe exposure
-        """
-        ccd = rawExposure.getDetector()
-
-        biasExposure = self.getIsrExposure(dataRef, "cpBias") if self.config.doBias else None
-        # immediate=True required for functors and linearizers are functors; see ticket DM-6515
-        linearizer = dataRef.get("linearizer", immediate=True) if self.doLinearize(ccd) else None
-        darkExposure = self.getIsrExposure(dataRef, "dark") if self.config.doDark else None
-        flatExposure = self.getIsrExposure(dataRef, "cpFlat") if self.config.doFlat else None
-        brighterFatterKernel = dataRef.get("brighterFatterKernel") if self.config.doBrighterFatter else None
-
-        defectList = dataRef.get("defects")
-
-        if self.config.doFringe and self.fringe.checkFilter(rawExposure):
-            fringeStruct = self.fringe.readFringes(dataRef, assembler=self.assembleCcd
-                                                   if self.config.doAssembleIsrExposures else None)
-        else:
-            fringeStruct = pipeBase.Struct(fringes=None)
-
-        return pipeBase.Struct(bias=biasExposure,
-                               linearizer=linearizer,
-                               dark=darkExposure,
-                               flat=flatExposure,
-                               defects=defectList,
-                               fringes=fringeStruct,
-                               bfKernel=brighterFatterKernel
-                               )
+    ConfigClass = DecamCpIsrConfig
 
     def biasCorrection(self, exposure, biasExposure):
         """Apply bias correction in place

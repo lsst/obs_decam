@@ -1,15 +1,12 @@
+import os.path
+
+from lsst.utils import getPackageDir
 from lsst.meas.algorithms import LoadIndexedReferenceObjectsTask
 from lsst.obs.decam.isr import DecamIsrTask
 config.isr.retarget(DecamIsrTask)
 
-config.isr.doDark = False
-config.isr.doAddDistortionModel = False  # rely on the TPV terms instead
-config.isr.fringe.filters = ['z', 'y']
-config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
-                                       'TRIMSECA', 'TRIMSECB',
-                                       'BIASSECA', 'BIASSECB',
-                                       'PRESECA', 'PRESECB',
-                                       'POSTSECA', 'POSTSECB']
+decamConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
+config.isr.load(os.path.join(decamConfigDir, 'isr.py'))
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
 
@@ -26,4 +23,4 @@ for refObjLoader in (config.calibrate.astromRefObjLoader,
 
 config.calibrate.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
 # this was the default prior to DM-11521.  New default is 2000.
-config.calibrate.deblend.maxFootprintSize=0
+config.calibrate.deblend.maxFootprintSize = 0

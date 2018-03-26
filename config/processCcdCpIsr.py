@@ -1,15 +1,12 @@
+import os.path
+
+from lsst.utils import getPackageDir
 from lsst.meas.algorithms import LoadIndexedReferenceObjectsTask
 from lsst.obs.decam.decamCpIsr import DecamCpIsrTask
 config.isr.retarget(DecamCpIsrTask)
 
-config.isr.doDark = False
-config.isr.doAddDistortionModel = False  # rely on the TPV terms instead
-config.isr.fringe.filters = ['z', 'y']
-config.isr.assembleCcd.keysToRemove = ['DATASECA', 'DATASECB',
-                                       'TRIMSECA', 'TRIMSECB',
-                                       'BIASSECA', 'BIASSECB',
-                                       'PRESECA', 'PRESECB',
-                                       'POSTSECA', 'POSTSECB']
+decamConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
+config.isr.load(os.path.join(decamConfigDir, 'isr.py'))
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
 
