@@ -59,13 +59,22 @@ class DecamMapper(CameraMapper):
 
         super(DecamMapper, self).__init__(policy, os.path.dirname(policyFile), **kwargs)
 
-        afwImageUtils.defineFilter('u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0'])
-        afwImageUtils.defineFilter('g', lambdaEff=450, alias=['g DECam SDSS c0001 4720.0 1520.0'])
-        afwImageUtils.defineFilter('r', lambdaEff=600, alias=['r DECam SDSS c0002 6415.0 1480.0'])
-        afwImageUtils.defineFilter('i', lambdaEff=750, alias=['i DECam SDSS c0003 7835.0 1470.0'])
-        afwImageUtils.defineFilter('z', lambdaEff=900, alias=['z DECam SDSS c0004 9260.0 1520.0'])
-        afwImageUtils.defineFilter('y', lambdaEff=1000, alias=['Y DECam c0005 10095.0 1130.0', 'Y'])
-        afwImageUtils.defineFilter('VR', lambdaEff=630, alias=['VR DECam c0007 6300.0 2600.0'])
+        # lambdaMin and lambda max are chosen to be where the filter rises above 1%
+        # from http://www.ctio.noao.edu/noao/sites/default/files/DECam/DECam_filters_transmission.txt
+        afwImageUtils.defineFilter('u', lambdaEff=350, lambdaMin=305, lambdaMax=403,
+                                   alias=['u DECam c0006 3500.0 1000.0'])
+        afwImageUtils.defineFilter('g', lambdaEff=450, lambdaMin=394, lambdaMax=555,
+                                   alias=['g DECam SDSS c0001 4720.0 1520.0'])
+        afwImageUtils.defineFilter('r', lambdaEff=600, lambdaMin=562, lambdaMax=725,
+                                   alias=['r DECam SDSS c0002 6415.0 1480.0'])
+        afwImageUtils.defineFilter('i', lambdaEff=750, lambdaMin=699, lambdaMax=870,
+                                   alias=['i DECam SDSS c0003 7835.0 1470.0'])
+        afwImageUtils.defineFilter('z', lambdaEff=900, lambdaMin=837, lambdaMax=1016,
+                                   alias=['z DECam SDSS c0004 9260.0 1520.0'])
+        afwImageUtils.defineFilter('y', lambdaEff=1000, lambdaMin=941, lambdaMax=1080,
+                                   alias=['Y DECam c0005 10095.0 1130.0', 'Y'])
+        afwImageUtils.defineFilter('VR', lambdaEff=630, lambdaMin=490, lambdaMax=765,
+                                   alias=['VR DECam c0007 6300.0 2600.0'])
         afwImageUtils.defineFilter('N964', lambdaEff=964, alias=['N964 DECam c0008 9645.0 94.0'])
         afwImageUtils.defineFilter('SOLID', lambdaEff=0, alias=['solid'])
 
