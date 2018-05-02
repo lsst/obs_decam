@@ -56,7 +56,7 @@ Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
 
 3. Import instcal/dqmask/wtmap data into the data repository:
 
-        $ ingestImagesDecam.py /path/to/repo --mode=link instcal/*.fits.fz
+        $ ingestImagesDecam.py /path/to/repo --filetype instcal --mode=link instcal/*.fits.fz
 
 4. Alternatively, import raw and calibration data into the data repository, for example:
 
