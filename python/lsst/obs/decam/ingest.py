@@ -33,7 +33,7 @@ class DecamIngestArgumentParser(IngestArgumentParser):
 
     def __init__(self, *args, **kwargs):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
-        self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"],
+        self.add_argument("--filetype", default="raw", choices=["instcal", "raw"],
                           help="Data processing level of the files to be ingested")
         self.description = "To ingest instcal data, the following directory structure is expected:"\
             "\n    dqmask/ instcal/ wtmap/"\
