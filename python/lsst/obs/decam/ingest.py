@@ -33,7 +33,7 @@ class DecamIngestArgumentParser(IngestArgumentParser):
 
     def __init__(self, *args, **kwargs):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
-        self.add_argument("--filetype", default="instcal", choices=["instcal", "raw"],
+        self.add_argument("--filetype", default="raw", choices=["instcal", "raw"],
                           help="Data processing level of the files to be ingested")
         self.description = "To ingest instcal data, the following directory structure is expected:"\
             "\n    dqmask/ instcal/ wtmap/"\
@@ -41,7 +41,7 @@ class DecamIngestArgumentParser(IngestArgumentParser):
             "\nseparate files each with a unique name but with a common unique identifier"\
             "\nEXPNUM in the FITS header. The 3 files of the same EXPNUM will be aggregated."\
             "\nFor example, the user creates the registry by running"\
-            "\n    ingestImagesDecam.py outputRepository --mode=link instcal/*fits"
+            "\n    ingestImagesDecam.py outputRepository --filetype=instcal --mode=link instcal/*fits"
 
 
 class DecamIngestTask(IngestTask):
