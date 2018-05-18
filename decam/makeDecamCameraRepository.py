@@ -26,9 +26,6 @@ Example of use (if decam/camGeom already exists, move it aside first):
 
     python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
 """
-from __future__ import absolute_import
-from __future__ import print_function
-from builtins import range
 import argparse
 import os
 import shutil

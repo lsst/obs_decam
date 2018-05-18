@@ -26,7 +26,6 @@ Some of this code is based on DECam_crosstalk.py, used for the THELI pipeline
 and written by Thomas Erben (private communication, 2018)
 """
 
-from __future__ import absolute_import, division, print_function
 
 from collections import defaultdict
 from astropy.io import fits

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import absolute_import, division, print_function
 """Convert a DECam official linearity FITS table into LSST linearizers
 """
 import argparse
