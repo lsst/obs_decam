@@ -9,10 +9,12 @@ pixelSize = 24e-3                   # pixel size in mm
 
 
 def makeAmp(i):
-    height = 2048
-    width = 4096
-    allPixels = afwGeom.BoxI(afwGeom.PointI(0, 0), afwGeom.ExtentI(width + nExtended + nOverclock, height))
-    return cameraGeom.Amp(cameraGeom.Id(i), allPixels, None, None, None)
+    # TODO DM-9294: remove this exception and uncomment the rest of the code after fixing it
+    raise RuntimeError("this routine is broken because nExtended and nOverclock are not defined")
+    # height = 2048
+    # width = 4096
+    # allPixels = afwGeom.BoxI(afwGeom.PointI(0, 0), afwGeom.ExtentI(width + nExtended + nOverclock, height))
+    # return cameraGeom.Amp(cameraGeom.Id(i), allPixels, None, None, None)
 
 
 def makeCcd(ccdName):

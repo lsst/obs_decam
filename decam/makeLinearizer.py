@@ -42,7 +42,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
         os.makedirs(linearizerDir)
 
     camera = DecamMapper().camera
-    fromHDUs = fits.open(fromFile)[1:] # HDU 0 has no data
+    fromHDUs = fits.open(fromFile)[1:]  # HDU 0 has no data
     assert len(fromHDUs) == len(camera)
     for ccdind, (detector, hdu) in enumerate(zip(camera, fromHDUs)):
         ccdnum = ccdind + 1
@@ -64,6 +64,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
         linearizer = LinearizeLookupTable(table=lsstTable, detector=detector)
         butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
     print("Wrote %s linearizers" % (ccdind+1,))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert a DECam linearity FITS file into LSST linearizers")

@@ -1,7 +1,5 @@
 from __future__ import print_function
 import sys
-import re
-import os
 import numpy as np
 
 # python $OBS_DECAM_DIR/examples/cfhtls_wide_to_astrometry_net.py CFHT.txt CFHTLS_W_ugriz_090*cat
@@ -45,32 +43,34 @@ for file in infiles:
 
 header = "id,ra,dec,u,g,r,i,z,u_err,g_err,r_err,i_err,z_err,starnotgal,variable"
 np.savetxt(outfile, vstack, header=header, delimiter=",",
-           fmt=["%d", "%.7f", "%.7f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.1d", "%.1d"])
+           fmt=["%d", "%.7f", "%.7f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f", "%.3f",
+                "%.3f", "%.3f", "%.3f", "%.1d", "%.1d"])
 
 print("""
 Next you need to grab a new-ish version of astrometry.net
 
  cd $OBS_DECAM_DIR/../astrometry_net
  wget http://astrometry.net/downloads/astrometry.net-0.50.tar.gz
- tar -xzvf astrometry.net-0.50.tar.gz 
+ tar -xzvf astrometry.net-0.50.tar.gz
  cd astrometry.net-0.50
- ./configure 
+ ./configure
  make
  make install INSTALL_DIR=$PWD/../0.50
  cd ../0.50
  setup -k -r .
  rehash
- 
+
 And run the commands to make index files from the outfile defined in sys.argv[1].  If you
 have trouble, reference http://astrometry.net/doc/build-index.html
 
  cd ../astrometry_net_data_decam
  text2fits.py -s "," -f "jddffffffffffjj" outfile.txt outfile.fits
  setenv P 1234567
- build-astrometry-index -i outfile.fits -o index-${P}00.fits -I ${P}00 -P 0 -S r -n 100 -L 20 -E -j 0.4 -r 1 -A ra -d dec
+ build-astrometry-index -i outfile.fits -o index-${P}00.fits -I ${P}00 \\
+    -P 0 -S r -n 100 -L 20 -E -j 0.4 -r 1 -A ra -d dec
 
  # DEBUGGED UP TO HERE
- 
+
  build-astrometry-index -1 index-${P}00.fits -o index-${P}01.fits -I ${P}01 -P 1 -S r -L 20 -E -M -j 0.4
  build-astrometry-index -1 index-${P}00.fits -o index-${P}02.fits -I ${P}02 -P 2 -S r -L 20 -E -M -j 0.4
  build-astrometry-index -1 index-${P}00.fits -o index-${P}03.fits -I ${P}03 -P 3 -S r -L 20 -E -M -j 0.4

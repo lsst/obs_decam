@@ -158,5 +158,5 @@ class DecamIsrTask(IsrTask):
         # Note that overscan correction has been done in exposure metadata
         metadata = exposure.getMetadata()
         metadata.set('OVERSCAN', 'Overscan corrected on {0}'.format(
-                           dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")))
+            dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")))
         exposure.setMetadata(metadata)
