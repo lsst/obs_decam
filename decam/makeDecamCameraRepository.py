@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
 # LSST Data Management System
 # Copyright 2014 LSST Corporation.
@@ -26,9 +26,6 @@ Example of use (if decam/camGeom already exists, move it aside first):
 
     python decam/makeDecamCameraRepository.py decam/chipcenters.txt decam/segmentfile.txt decam/camGeom
 """
-from __future__ import absolute_import
-from __future__ import print_function
-from builtins import range
 import argparse
 import os
 import shutil
@@ -48,13 +45,13 @@ def makeAmpTables(segmentsFile):
     """
     returnDict = {}
     readoutMap = {'LL': afwTable.LL, 'LR': afwTable.LR, 'UR': afwTable.UR, 'UL': afwTable.UL}
-    detectorName = [] # set to a value that is an invalid dict key, to catch bugs
+    detectorName = []  # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
         fh.readline()
         for l in fh:
             els = l.rstrip().split()
             detectorName = els[1]
-            #skip focus and guiding for now:
+            # skip focus and guiding for now:
             if detectorName[0] in ('F', 'G'):
                 continue
             if detectorName not in returnDict:
@@ -96,25 +93,21 @@ def makeAmpTables(segmentsFile):
                 originData = afwGeom.Point2I(0, 0)
                 originHOverscan = afwGeom.Point2I(xoff + prescan, yoff)
                 originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + ndatay)
-                originPrescan = afwGeom.Point2I(xoff, yoff)
             elif readCorner is afwTable.LR:
                 originRawData = afwGeom.Point2I(xoff, yoff)
                 originData = afwGeom.Point2I(ndatax, 0)
                 originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff)
                 originVOverscan = afwGeom.Point2I(xoff, yoff + ndatay)
-                originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan, yoff)
             elif readCorner is afwTable.UL:
                 originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
                 originData = afwGeom.Point2I(0, 0)
                 originHOverscan = afwGeom.Point2I(xoff + prescan, yoff + voverscan)
                 originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
-                originPrescan = afwGeom.Point2I(xoff, yoff + voverscan)
             elif readCorner is afwTable.UR:
                 originRawData = afwGeom.Point2I(xoff, yoff + voverscan)
                 originData = afwGeom.Point2I(ndatax, 0)
                 originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff + voverscan)
                 originVOverscan = afwGeom.Point2I(xoff, yoff)
-                originPrescan = afwGeom.Point2I(xoff + ndatax + hoverscan, yoff + voverscan)
             else:
                 raise RuntimeError("Expected readout corner to be LL, LR, UL, or UR")
 
@@ -122,15 +115,14 @@ def makeAmpTables(segmentsFile):
             dataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay))
             rawHorizontalOverscanBBox = afwGeom.Box2I(originHOverscan, afwGeom.Extent2I(hoverscan, ndatay))
             rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
-            rawPrescanBBox = afwGeom.Box2I(originPrescan, afwGeom.Extent2I(prescan, ndatay))
 
             print("\nDetector=%s; Amp=%s" % (detectorName, name))
             print(rawHorizontalOverscanBBox)
             print(rawVerticalOverscanBBox)
             print(dataBBox)
             print(rawBBox)
-            #Set the elements of the record for this amp
-            record.setBBox(dataBBox) # This is the box for the amp in the assembled frame
+            # Set the elements of the record for this amp
+            record.setBBox(dataBBox)  # This is the box for the amp in the assembled frame
             record.setName(name)
             record.setReadoutCorner(readCorner)
             record.setGain(gain)
@@ -175,14 +167,14 @@ def makeDetectorConfigs(detectorLayoutFile):
     detectorConfigs = []
     xsize = 2048
     ysize = 4096
-    #Only do Science detectors right now.
-    #There is an overall 0.05 deg rotation to the entire focal plane that I'm ignoring here.
+    # Only do Science detectors right now.
+    # There is an overall 0.05 deg rotation to the entire focal plane that I'm ignoring here.
     with open(detectorLayoutFile) as fh:
         fh.readline()
         for l in fh:
             els = l.rstrip().split()
             detectorName = els[1]
-            #skip focus and guiding for now:
+            # skip focus and guiding for now:
             if detectorName[0] in ('F', 'G'):
                 continue
 
@@ -217,6 +209,7 @@ def makeDetectorConfigs(detectorLayoutFile):
             detectorConfigs.append(detConfig)
     return detectorConfigs
 
+
 if __name__ == "__main__":
     """
     Create the configs for building a camera.
@@ -238,16 +231,16 @@ if __name__ == "__main__":
     ampTableDict = makeAmpTables(args.SegmentsFile)
     detectorConfigList = makeDetectorConfigs(args.DetectorLayoutFile)
 
-    #Build the camera config.
+    # Build the camera config.
     camConfig = CameraConfig()
     camConfig.detectorList = dict([(i, detectorConfigList[i]) for i in range(len(detectorConfigList))])
     camConfig.name = 'DECAM'
-    #From DECam calibration doc
+    # From DECam calibration doc
     camConfig.plateScale = 17.575
     pScaleRad = afwGeom.arcsecToRad(camConfig.plateScale)
     tConfig = afwGeom.TransformConfig()
     tConfig.transform.name = 'radial'
-    nomWavelen = 0.625 #nominal wavelen in microns
+    nomWavelen = 0.625  # nominal wavelen in microns
     coeff0 = 0
     coeff1 = 1 - 2.178e-4 - 2.329e-4/nomWavelen + 4.255e-5/nomWavelen**2
     coeff2 = 0

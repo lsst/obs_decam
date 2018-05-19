@@ -26,7 +26,6 @@ Some of this code is based on DECam_crosstalk.py, used for the THELI pipeline
 and written by Thomas Erben (private communication, 2018)
 """
 
-from __future__ import absolute_import, division, print_function
 
 from collections import defaultdict
 from astropy.io import fits
@@ -315,7 +314,7 @@ def subtractCrosstalkIO(mef, sources, coeffs):
 
     for i in range(1, 63):
         mef[i].header['HISTORY'] = 'Crosstalk corrected on {0}'.format(
-                           dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
+            dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
         mef[i] = fits.ImageHDU(header=mef[i].header, data=corrected[i])
 
     return mef
