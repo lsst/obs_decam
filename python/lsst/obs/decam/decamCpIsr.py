@@ -21,6 +21,7 @@
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
 
+from lsst.afw.image import LOCAL
 from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 from .isr import DecamIsrTask, DecamIsrConfig
@@ -72,8 +73,7 @@ class DecamCpIsrTask(DecamIsrTask):
         """
         nEdge = _computeEdgeSize(exposure, biasExposure)
         if nEdge > 0:
-            rawMaskedImage = exposure.getMaskedImage()[nEdge:-nEdge,
-                                                       nEdge:-nEdge]
+            rawMaskedImage = exposure.maskedImage[nEdge:-nEdge, nEdge:-nEdge, LOCAL]
         else:
             rawMaskedImage = exposure.getMaskedImage()
         biasCorrection(rawMaskedImage, biasExposure.getMaskedImage())
@@ -97,8 +97,7 @@ class DecamCpIsrTask(DecamIsrTask):
         """
         nEdge = _computeEdgeSize(exposure, flatExposure)
         if nEdge > 0:
-            rawMaskedImage = exposure.getMaskedImage()[nEdge:-nEdge,
-                                                       nEdge:-nEdge]
+            rawMaskedImage = exposure.maskedImage[nEdge:-nEdge, nEdge:-nEdge, LOCAL]
         else:
             rawMaskedImage = exposure.getMaskedImage()
         flatCorrection(
