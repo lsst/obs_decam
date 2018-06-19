@@ -108,7 +108,7 @@ class DecamIsrTask(IsrTask):
             exposure corrected in place with updated metadata
         """
         if not (exposure.getMetadata().exists('FPA') and
-                exposure.getMetadata().get('FPA') in self.config.overscanBiasJumpBKP):
+                exposure.getMetadata().getScalar('FPA') in self.config.overscanBiasJumpBKP):
             IsrTask.overscanCorrection(self, exposure, amp)
             return
 

@@ -220,7 +220,7 @@ class DecamMapper(CameraMapper):
         header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocationsWithRoot()[0])
         md0 = readMetadata(header)
         calib = afwImage.Calib()
-        calib.setFluxMag0(10**(0.4 * md0.get("MAGZERO")))
+        calib.setFluxMag0(10**(0.4 * md0.getScalar("MAGZERO")))
         exp.setCalib(calib)
         exposureId = self._computeCcdExposureId(dataId)
         visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
@@ -252,7 +252,7 @@ class DecamMapper(CameraMapper):
         # extra keywords to copy to the exposure
         for kw in ('DARKTIME', ):
             if kw in md0.paramNames() and kw not in md.paramNames():
-                md.add(kw, md0.get(kw))
+                md.add(kw, md0.getScalar(kw))
         exposureId = self._computeCcdExposureId(dataId)
         visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
         exp.getInfo().setVisitInfo(visitInfo)
@@ -300,7 +300,7 @@ class DecamMapper(CameraMapper):
         for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
                    'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
             if kw in md0.paramNames() and kw not in md.paramNames():
-                md.add(kw, md0.get(kw))
+                md.add(kw, md0.getScalar(kw))
         wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.makeExposure(mi, wcs)
         exp.setMetadata(md)

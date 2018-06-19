@@ -36,7 +36,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         Calibration products made with constructCalibs have some metadata
         saved in its FITS header CALIB_ID.
         """
-        data = md.get("CALIB_ID")
+        data = md.getScalar("CALIB_ID")
         match = re.search(".*%s=(\S+)" % field, data)
         return match.groups()[0]
 
@@ -46,7 +46,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         if md.exists("CCDNUM"):
-            ccdnum = md.get("CCDNUM")
+            ccdnum = md.getScalar("CCDNUM")
         else:
             return self._translateFromCalibId("ccdnum", md)
         # Some MasterCal from NOAO Archive has 2 CCDNUM keys in each HDU
@@ -65,7 +65,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         if md.exists("DATE-OBS"):
-            date = md.get("DATE-OBS")
+            date = md.getScalar("DATE-OBS")
             found = re.search('(\d\d\d\d-\d\d-\d\d)', date)
             if found:
                 date = found.group(1)
@@ -88,7 +88,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         @param md (PropertySet) FITS header metadata
         """
         if md.exists("FILTER"):
-            if md.exists("OBSTYPE") and "zero" in md.get("OBSTYPE").strip().lower():
+            if md.exists("OBSTYPE") and "zero" in md.getScalar("OBSTYPE").strip().lower():
                 return "NONE"
             return CalibsParseTask.translate_filter(self, md)
         elif md.exists("CALIB_ID"):
@@ -102,7 +102,7 @@ class DecamCalibsParseTask(CalibsParseTask):
 
         @param md (PropertySet) FITS header metadata
         """
-        return md.get('EXTNAME')
+        return md.getScalar('EXTNAME')
 
     def getDestination(self, butler, info, filename):
         """Get destination for the file

@@ -103,7 +103,7 @@ class DecamParseTask(ParseTask):
             md = readMetadata(fileName)
             if "EXPNUM" not in md.names():
                 return
-            expnum = md.get("EXPNUM")
+            expnum = md.getScalar("EXPNUM")
             if expnum not in self.expnumMapper:
                 self.expnumMapper[expnum] = {self.instcalPrefix: None,
                                              self.wtmapPrefix: None,
@@ -182,7 +182,7 @@ class DecamParseTask(ParseTask):
 
     @staticmethod
     def getExtensionName(md):
-        return md.get('EXTNAME')
+        return md.getScalar('EXTNAME')
 
     def getDestination(self, butler, info, filename, filetype="raw"):
         """Get destination for the file
