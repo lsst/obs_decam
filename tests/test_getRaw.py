@@ -126,10 +126,10 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
     def testRawMetadata(self):
         """Test retrieval of metadata"""
         md = self.butler.get("raw_md", self.dataId)
-        print("EXPNUM(visit): %s" % md.get('EXPNUM'))
-        print("ccdnum: %s" % md.get('CCDNUM'))
-        self.assertEqual(md.get('EXPNUM'), self.dataId["visit"])
-        self.assertEqual(md.get('CCDNUM'), self.dataId["ccdnum"])
+        print("EXPNUM(visit): %s" % md.getScalar('EXPNUM'))
+        print("ccdnum: %s" % md.getScalar('CCDNUM'))
+        self.assertEqual(md.getScalar('EXPNUM'), self.dataId["visit"])
+        self.assertEqual(md.getScalar('CCDNUM'), self.dataId["ccdnum"])
 
     def testBias(self):
         """Test retrieval of bias image"""

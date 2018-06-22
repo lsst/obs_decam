@@ -95,7 +95,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         dataId = {'visit': 229388, 'ccdnum': 62}
         exp = self.butler.get("instcal", dataId, immediate=True)
         md = exp.getMetadata()
-        self.assertEqual(md.get("DETPOS"), "N31")
+        self.assertEqual(md.getScalar("DETPOS"), "N31")
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):

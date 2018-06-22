@@ -8,6 +8,7 @@ ups/*.cfgc
 .cache
 .pytest_cache
 pytest_session.txt
+.coverage
 decam/linearizer
 python/lsst/obs/sst/version.py
 python/lsst/obs/decam/version.py
