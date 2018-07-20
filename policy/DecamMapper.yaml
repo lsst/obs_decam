@@ -74,6 +74,10 @@ exposures:
     template: deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
   deepDiff_matchedExp:
     template: deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits
+  dcrDiff_differenceExp:
+    template: dcrDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
+  dcrDiff_matchedExp:
+    template: dcrDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits
 
 
 calibrations:
@@ -265,5 +269,11 @@ datasets:
     template: config/dcrCoadd_forced.py
   dcrCoadd_forced_metadata:
     template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.boost
+  dcrDiff_metadata:
+    template: dcrDiff/v%(visit)d/metadata-%(ccdnum)02d.boost
+  dcrDiff_diaSrc:
+    template: dcrDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits
+  dcrDiff_kernelSrc:
+    template: dcrDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   apPipe_metadata:
     template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
