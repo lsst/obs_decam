@@ -85,7 +85,8 @@ def makeAmpTables(segmentsFile):
             hoverscan = 50
             voverscan = 50
             rawBBox = afwGeom.Box2I(afwGeom.Point2I(xoff, yoff),
-                                    afwGeom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan))
+                                    afwGeom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan),
+                                    invert=False)
             # Note: I'm not particularry happy with how the data origin is derived (it neglects [xy]off),
             # but I don't see a better way.
             if readCorner is afwTable.LL:
@@ -111,10 +112,12 @@ def makeAmpTables(segmentsFile):
             else:
                 raise RuntimeError("Expected readout corner to be LL, LR, UL, or UR")
 
-            rawDataBBox = afwGeom.Box2I(originRawData, afwGeom.Extent2I(ndatax, ndatay))
-            dataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay))
-            rawHorizontalOverscanBBox = afwGeom.Box2I(originHOverscan, afwGeom.Extent2I(hoverscan, ndatay))
-            rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
+            rawDataBBox = afwGeom.Box2I(originRawData, afwGeom.Extent2I(ndatax, ndatay), invert=False)
+            dataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay), invert=False)
+            rawHorizontalOverscanBBox = afwGeom.Box2I(originHOverscan, afwGeom.Extent2I(hoverscan, ndatay),
+                                                      invert=False)
+            rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan),
+                                                    invert=False)
 
             print("\nDetector=%s; Amp=%s" % (detectorName, name))
             print(rawHorizontalOverscanBBox)

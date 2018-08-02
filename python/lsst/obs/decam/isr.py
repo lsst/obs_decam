@@ -123,13 +123,13 @@ class DecamIsrTask(IsrTask):
             yLower = dataBox.getHeight() - yUpper
 
         lowerDataBBox = afwGeom.Box2I(dataBox.getBegin(),
-                                      afwGeom.Extent2I(dataBox.getWidth(), yLower))
+                                      afwGeom.Extent2I(dataBox.getWidth(), yLower), invert=False)
         upperDataBBox = afwGeom.Box2I(dataBox.getBegin() + afwGeom.Extent2I(0, yLower),
-                                      afwGeom.Extent2I(dataBox.getWidth(), yUpper))
+                                      afwGeom.Extent2I(dataBox.getWidth(), yUpper), invert=False)
         lowerOverscanBBox = afwGeom.Box2I(overscanBox.getBegin(),
-                                          afwGeom.Extent2I(overscanBox.getWidth(), yLower))
+                                          afwGeom.Extent2I(overscanBox.getWidth(), yLower), invert=False)
         upperOverscanBBox = afwGeom.Box2I(overscanBox.getBegin() + afwGeom.Extent2I(0, yLower),
-                                          afwGeom.Extent2I(overscanBox.getWidth(), yUpper))
+                                          afwGeom.Extent2I(overscanBox.getWidth(), yUpper), invert=False)
 
         maskedImage = exposure.getMaskedImage()
         lowerDataView = maskedImage.Factory(maskedImage, lowerDataBBox)

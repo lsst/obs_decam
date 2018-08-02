@@ -105,7 +105,7 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         # Work with a small image chunk only
         pmin = afwGeom.Point2I(self.xtalkX - self.xtalkRad, self.xtalkY - self.xtalkRad)
         pmax = afwGeom.Point2I(self.xtalkX + self.xtalkRad, self.xtalkY + self.xtalkRad)
-        box = afwGeom.Box2I(pmin, pmax)
+        box = afwGeom.Box2I(pmin, pmax, invert=False)
         chunk1 = image1.Factory(image1, box)
         chunk2 = image2.Factory(image2, box)
         chunkDiff = chunk1.clone()
