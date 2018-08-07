@@ -10,4 +10,5 @@ config.dataIngester.retarget(DecamIngestTask)
 config.dataIngester.load(os.path.join(decamConfigDir, 'ingest.py'))
 config.calibIngester.load(os.path.join(decamConfigDir, 'ingestCalibs.py'))
 config.defectIngester.load(os.path.join(decamConfigDir, 'ingestCalibs.py'))
+config.defectIngester.parse.extnames = []
 
