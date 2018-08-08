@@ -1,3 +1,6 @@
+"""
+DECam-specific overrides of IsrTask
+"""
 from lsst.obs.decam.crosstalk import DecamCrosstalkTask
 config.crosstalk.retarget(DecamCrosstalkTask)
 
