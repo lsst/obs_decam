@@ -208,21 +208,21 @@ datasets:
   jointcal_photoCalib:  # photometric calibration produced by jointcal
     template: 'jointcal-results/%(filter)s/%(tract)04d/jointcal_photoCalib-%(visit)07d_%(ccdnum)02d.fits'
   processCcd_metadata:
-    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   isr_config:
     python: lsst.obs.decam.isr.DecamIsrConfig
   isr_metadata:
-    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   characterizeImage_metadata:
-    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   calibrate_metadata:
-    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+    template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   deep_makeCoaddTempExp_metadata:
-    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.boost
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/makeCoaddTempExpMD.yaml
   deep_safeClipAssembleCoadd_config:
     template: config/deep_assembleCoadd.py
   deep_safeClipAssembleCoadd_metadata:
-    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.boost
+    template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.yaml
   deepCoadd_measMatch:
     template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits
   dcrCoadd_measMatchFull:
@@ -230,23 +230,23 @@ datasets:
   detectCoaddSources_config:
     template: config/detectCoadd.py
   detectCoaddSources_metadata:
-    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.boost
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/detectCoaddMD.yaml
   measureCoaddSources_config:
     template: config/measureMergedCoadd.py
   measureCoaddSources_metadata:
-    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.boost
+    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/measMD.yaml
   mergeCoaddMeasurements_metadata:
-    template: deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.boost
+    template: deepCoadd-results/merged/%(tract)d/%(patch)s/mergeMeasMD.yaml
   forcedPhotCcd_metadata:
-    template: forced/%(filter)s/%(tract)d/forcedPhotCcd_metadata/%(visit)07d-%(ccdnum)03d.boost
+    template: forced/%(filter)s/%(tract)d/forcedPhotCcd_metadata/%(visit)07d-%(ccdnum)03d.yaml
   forced_src:
     template: forced/%(filter)s/%(tract)d/forcedSrc-%(visit)07d-%(ccdnum)03d.fits
   deepCoadd_forced_metadata:
-    template: deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.boost
+    template: deepCoadd-results/forcedPhotCoadd_metadata/%(filter)s/%(tract)d/%(patch)s.yaml
   deepCoadd_forced_src:
     template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/forcedSrc-%(filter)s-%(tract)d-%(patch)s.fits
   deepDiff_metadata:
-    template: deepDiff/v%(visit)d/metadata-%(ccdnum)02d.boost
+    template: deepDiff/v%(visit)d/metadata-%(ccdnum)02d.yaml
   deepDiff_diaSrc:
     template: deepDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits
   deepDiff_kernelSrc:
@@ -254,11 +254,11 @@ datasets:
   singleFrameDriver_metadata:
     persistable: PropertySet
     python: lsst.daf.base.PropertySet
-    storage: BoostStorage
+    storage: YamlStorage
     tables:
     - raw
     - raw_visit
-    template: '%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.boost'
+    template: '%(pointing)05d/%(filter)s/singleFrameDriver_metadata/%(visit)07d.yaml'
   dcrCoadd_measMatch:
     template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
   deepCoadd_measMatchFull:
@@ -268,12 +268,12 @@ datasets:
   dcrCoadd_forced_config:
     template: config/dcrCoadd_forced.py
   dcrCoadd_forced_metadata:
-    template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.boost
+    template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.yaml
   dcrDiff_metadata:
-    template: dcrDiff/v%(visit)d/metadata-%(ccdnum)02d.boost
+    template: dcrDiff/v%(visit)d/metadata-%(ccdnum)02d.yaml
   dcrDiff_diaSrc:
     template: dcrDiff/v%(visit)d/diaSrc-%(ccdnum)02d.fits
   dcrDiff_kernelSrc:
     template: dcrDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   apPipe_metadata:
-    template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.boost'
+    template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
