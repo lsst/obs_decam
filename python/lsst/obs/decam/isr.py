@@ -23,6 +23,7 @@
 import datetime as dt
 
 import lsst.afw.geom as afwGeom
+import lsst.afw.math as afwMath
 import lsst.afw.table as afwTable
 import lsst.pex.config as pexConfig
 from lsst.ip.isr import IsrTask, overscanCorrection
@@ -139,19 +140,22 @@ class DecamIsrTask(IsrTask):
         lowerOverscanImage = expImage.Factory(expImage, lowerOverscanBBox)
         upperOverscanImage = expImage.Factory(expImage, upperOverscanBBox)
 
+        sctrl = afwMath.StatisticsControl()
+        sctrl.setNumSigmaClip(self.config.overscanNumSigmaClip)
+
         overscanCorrection(
             ampMaskedImage=lowerDataView,
             overscanImage=lowerOverscanImage,
             fitType=self.config.overscanFitType,
             order=self.config.overscanOrder,
-            collapseRej=self.config.overscanRej,
+            statControl=sctrl,
         )
         overscanCorrection(
             ampMaskedImage=upperDataView,
             overscanImage=upperOverscanImage,
             fitType=self.config.overscanFitType,
             order=self.config.overscanOrder,
-            collapseRej=self.config.overscanRej,
+            statControl=sctrl,
         )
 
         # Note that overscan correction has been done in exposure metadata
