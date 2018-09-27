@@ -44,8 +44,8 @@ exposures:
     template: '%(visit)07d/instcal%(visit)07d.fits.fz[%(hdu)d]'
   dqmask:
     level: ccd
-    persistable: ImageU
-    python: lsst.afw.image.ImageU
+    persistable: ImageI
+    python: lsst.afw.image.ImageI
     storage: FitsStorage
     tables: raw
     template: '%(visit)07d/dqmask%(visit)07d.fits.fz[%(hdu)d]'
