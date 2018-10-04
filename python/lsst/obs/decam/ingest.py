@@ -26,6 +26,8 @@ import re
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
+__all__ = ("DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask", )
+
 
 class DecamIngestArgumentParser(IngestArgumentParser):
 
@@ -141,11 +143,11 @@ class DecamParseTask(ParseTask):
 
         We expect a directory structure that looks like the following:
 
-          dqmask/ instcal/ wtmap/
+        dqmask/ instcal/ wtmap/
 
         The user creates the registry by running
 
-          ingestImagesDecam.py outputRepository --mode=link instcal/*fits
+        ingestImagesDecam.py outputRepository --mode=link instcal/\*fits
         """
         if filetype == "instcal":
             if self.expnumMapper is None:
@@ -187,10 +189,19 @@ class DecamParseTask(ParseTask):
     def getDestination(self, butler, info, filename, filetype="raw"):
         """Get destination for the file
 
-        @param butler      Data butler
-        @param info        File properties, used as dataId for the butler
-        @param filename    Input filename
-        @return Destination filename
+        Parameters
+        ----------
+        butler :
+            Data butler
+        info :
+            File properties, used as dataId for the butler
+        filename :
+            Input filename
+
+        Returns
+        -------
+        raw :
+            Destination filename
         """
         raw = butler.get("%s_filename"%(filetype), info)[0]
         # Ensure filename is devoid of cfitsio directions about HDUs

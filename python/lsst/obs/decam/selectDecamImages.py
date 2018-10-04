@@ -30,7 +30,7 @@ from lsst.daf.persistence import DbAuth
 import lsst.pipe.base as pipeBase
 from lsst.pipe.tasks.selectImages import DatabaseSelectImagesConfig, BaseSelectImagesTask, BaseExposureInfo
 
-__all__ = ["SelectDecamImagesTask"]
+__all__ = ["SelectDecamImagesTask", "ExposureInfo", "SelectDecamImagesTask"]
 
 
 class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
@@ -57,13 +57,17 @@ class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
 class ExposureInfo(BaseExposureInfo):
     """Data about a selected exposure
 
+    Notes
+    -----
     Data includes:
+
     - dataId: data ID of exposure (a dict)
     - coordList: a list of ICRS coordinates of the corners of the exposure
-      (each an lsst.afw.geom.SpherePoint)
+        (each an lsst.afw.geom.SpherePoint)
     - fwhm: mean FWHM of exposure
     - airmass: mean airmass of exposure
     - filename: original filename of exposure
+
     """
 
     def __init__(self, result):
@@ -106,7 +110,10 @@ class ExposureInfo(BaseExposureInfo):
     def getColumnNames():
         """Get database columns to retrieve, in a format useful to the database interface
 
-        @return database column names as list of strings
+        Returns
+        -------
+        result :
+            database column names as list of strings
         """
         return (
             "visit ccdNum filter ra1 dec1 ra2 dec2 ra3 dec3 ra4 dec4".split() +
@@ -124,11 +131,19 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
     def run(self, coordList, filter):
         """Select Decam images suitable for coaddition in a particular region
 
-        @param[in] filter: filter for images (one of g", "r", "i", "z", Y")
-        @param[in] coordList: list of coordinates defining region of interest
+        Parameters
+        ----------
+        filter :
+            filter for images (one of g", "r", "i", "z", Y")
+        coordList :
+            list of coordinates defining region of interest
 
-        @return a pipeBase Struct containing:
-        - exposureInfoList: a list of ExposureInfo objects
+        Returns
+        -------
+        result : `struct`
+            return a pipeBase Struct containing:
+
+            - ``exposureInfoList`` : a list of ExposureInfo objects
         """
         if filter not in set(("g", "r", "i", "z", "Y")):
             raise RuntimeError("filter=%r is an invalid name" % (filter,))
@@ -201,7 +216,11 @@ class SelectDecamImagesTask(BaseSelectImagesTask):
 
     def _runArgDictFromDataId(self, dataId):
         """Extract keyword arguments for run (other than coordList) from a data ID
-        @return keyword arguments for run (other than coordList), as a dict
+
+        Returns
+        -------
+        result : callable
+            return keyword arguments for run (other than coordList), as a dict
         """
         return dict(
             filter=dataId["filter"],

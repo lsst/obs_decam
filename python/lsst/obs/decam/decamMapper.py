@@ -36,6 +36,8 @@ from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
 np.seterr(divide="ignore")
 
+__all__ = ("DecamMapper",)
+
 
 class DecamMapper(CameraMapper):
     packageName = 'obs_decam'
@@ -271,11 +273,21 @@ class DecamMapper(CameraMapper):
         Some WCS header, eg CTYPE1, exists only in the zeroth extensionr,
         so info in the zeroth header need to be copied over to metadata.
 
-        @param datasetType: Dataset type ("bias" or "flat")
-        @param item: The image read by the butler
-        @param dataId: Data identifier
-        @param setFilter: Whether to set the filter in the Exposure
-        @return (lsst.afw.image.Exposure) the standardized Exposure
+        Parameters
+        ----------
+        datasetType :
+            Dataset type ("bias" or "flat")
+        item :
+            The image read by the butler
+        dataId :
+            Data identifier
+        setFilter :
+            Whether to set the filter in the Exposure
+
+        Returns
+        -------
+        result : callable
+            sst.afw.image.Exposure the standardized Exposure
         """
         mi = afwImage.makeMaskedImage(item.getImage())
         md = item.getMetadata()
@@ -309,8 +321,14 @@ class DecamMapper(CameraMapper):
         instead of looking up the path in defectRegistry as currently
         implemented in CameraMapper.
 
-        @param dataId (dict) Dataset identifier
-        @return daf.persistence.ButlerLocation
+        Parameters
+        ----------
+        dataId : `dict`
+            Dataset identifier
+
+        Returns
+        -------
+        result : `daf.persistence.ButlerLocation`
         """
         return self.mappings["defects"].map(self, dataId=dataId, write=write)
 
@@ -319,9 +337,16 @@ class DecamMapper(CameraMapper):
 
         Use all nonzero pixels in the Community Pipeline Bad Pixel Masks.
 
-        @param[in] butlerLocation: Butler Location with path to defects FITS
-        @param[in] dataId: data identifier
-        @return meas.algorithms.DefectListT
+        Parameters
+        ----------
+        butlerLocation :
+            Butler Location with path to defects FITS
+        dataId :
+            data identifier
+
+        Returns
+        -------
+        result : `meas.algorithms.DefectListT`
         """
         bpmFitsPath = butlerLocation.getLocationsWithRoot()[0]
         bpmImg = afwImage.ImageU(bpmFitsPath, allowUnsafe=True)
