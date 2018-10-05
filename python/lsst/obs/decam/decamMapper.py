@@ -338,7 +338,7 @@ class DecamMapper(CameraMapper):
         @return meas.algorithms.DefectListT
         """
         bpmFitsPath = butlerLocation.getLocationsWithRoot()[0]
-        bpmImg = afwImage.ImageU(bpmFitsPath)
+        bpmImg = afwImage.ImageU(bpmFitsPath, allowUnsafe=True)
         idxBad = np.nonzero(bpmImg.getArray())
         mim = afwImage.MaskedImageU(bpmImg.getDimensions())
         mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
