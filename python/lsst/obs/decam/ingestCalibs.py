@@ -21,7 +21,7 @@ class DecamCalibsParseTask(CalibsParseTask):
             info['path'] = filename
         # Try to fetch a date from filename
         # and use as the calibration dates if not already set
-        found = re.search('(\d\d\d\d-\d\d-\d\d)', filename)
+        found = re.search(r'(\d\d\d\d-\d\d-\d\d)', filename)
         if not found:
             return phuInfo, infoList
         date = found.group(1)
@@ -37,7 +37,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         saved in its FITS header CALIB_ID.
         """
         data = md.getScalar("CALIB_ID")
-        match = re.search(".*%s=(\S+)" % field, data)
+        match = re.search(r".*%s=(\S+)" % field, data)
         return match.groups()[0]
 
     def translate_ccdnum(self, md):
@@ -66,7 +66,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         """
         if md.exists("DATE-OBS"):
             date = md.getScalar("DATE-OBS")
-            found = re.search('(\d\d\d\d-\d\d-\d\d)', date)
+            found = re.search(r'(\d\d\d\d-\d\d-\d\d)', date)
             if found:
                 date = found.group(1)
             else:
