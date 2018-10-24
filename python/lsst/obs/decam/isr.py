@@ -33,14 +33,14 @@ from lsst.meas.algorithms.detection import SourceDetectionTask
 class DecamIsrConfig(IsrTask.ConfigClass):
     overscanBiasJumpBKP = pexConfig.ListField(
         dtype=str,
-        doc="Names of the backplanes for CCDs showing bias jump due to " +
+        doc="Names of the backplanes for CCDs showing bias jump due to "
         "the simultaneous readout of the smaller ancillary CCDs.",
         default=['DECAM_BKP3', 'DECAM_BKP5', 'DECAM_BKP1', 'DECAM_BKP4'],
     )
     overscanBiasJumpLocation = pexConfig.Field(
         dtype=int,
-        doc="The y distance of the bias jump location measured in units " +
-        "of pixels from the readout corner; this should be the y " +
+        doc="The y distance of the bias jump location measured in units "
+        "of pixels from the readout corner; this should be the y "
         "dimension of the smaller ancillary CCDs.",
         default=2098,
     )
