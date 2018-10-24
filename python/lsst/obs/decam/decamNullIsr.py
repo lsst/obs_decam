@@ -46,7 +46,7 @@ class DecamNullIsrConfig(pexConfig.Config):
 
 
 class DecamNullIsrTask(pipeBase.Task):
-    """!Load an "instcal" exposure as a post-ISR CCD exposure
+    r"""!Load an "instcal" exposure as a post-ISR CCD exposure
 
     @anchor DecamNullIsrTask_
 
