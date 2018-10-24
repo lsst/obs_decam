@@ -225,8 +225,6 @@ datasets:
     template: config/deep_assembleCoadd.py
   deep_safeClipAssembleCoadd_metadata:
     template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.yaml
-  deepCoadd_measMatch:
-    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits
   dcrCoadd_measMatchFull:
     template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
   detectCoaddSources_config:
@@ -255,12 +253,8 @@ datasets:
     template: deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   dcrCoadd_measMatch:
     template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
-  deepCoadd_measMatchFull:
-    template: deepCoadd-results/%(filter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s-%(tract)d-%(patch)s.fits
   dcrCoadd_forced_src:
     template: dcrCoadd-results/%(filter)s/%(tract)d/%(patch)s/forced-%(filter)s-%(tract)d-%(patch)s.fits
-  dcrCoadd_forced_config:
-    template: config/dcrCoadd_forced.py
   dcrCoadd_forced_metadata:
     template: dcrCoadd_forced_metadata/%(filter)s/%(tract)d/%(patch)s.yaml
   dcrDiff_metadata:
