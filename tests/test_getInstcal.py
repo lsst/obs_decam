@@ -30,6 +30,7 @@ from lsst.utils import getPackageDir
 
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
+from lsst.geom import arcseconds, radians
 
 from test_getRaw import visit229388_info
 
@@ -69,8 +70,10 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
-        self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'])
-        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
+        self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'],
+                                     maxDiff=0.0001*radians)
+        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'],
+                                           maxSep=0.1*arcseconds)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
         self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
