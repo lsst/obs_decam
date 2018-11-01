@@ -33,31 +33,27 @@ from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.afw.image import RotType
-from lsst.afw.geom import degrees, SpherePoint
+from lsst.afw.geom import degrees, radians, arcseconds, SpherePoint
 
 
 # Desired VisitInfo values for visit 229388, shared between test_getRaw.py and
 # test_getInstcal.py
 
-boresightRaDec = SpherePoint(42.81995833, -0.00158305, degrees)
-# NOTE: if we deal with DM-8053 and implement UT1, ERA will not come from HA, so this will change.
-HA = -42.505291666666665*degrees
-era = HA + boresightRaDec[0] - 70.81489000000001*degrees
 visit229388_info = {
-    "dateAvg": DateTime("2013-09-01T06:05:10.753848", DateTime.TAI),
+    "dateAvg": DateTime("2013-09-01T06:06:00.876924000", DateTime.TAI),
     "exposureTime": 200.0,
     "darkTime": 201.15662,
-    "era": era,
-    "boresightRaDec": boresightRaDec,
+    "era": 1.25232*radians,
+    "boresightRaDec": SpherePoint(42.81995833, -0.00158305, degrees),
     "boresightAzAlt": SpherePoint(61.24, 90 - 50.46, degrees),
     "boresightAirmass": 1.57,
     "boresightRotAngle": float("nan")*degrees,
     "rotType": RotType.UNKNOWN,
-    "obs_longitude": 70.81489000000001*degrees,
+    "obs_longitude": -70.81489000000001*degrees,
     "obs_latitude": -30.16606*degrees,
     "obs_elevation": 2215.0,
     "weath_airTemperature": 11.9,
-    "weath_airPressure": 77161.1,
+    "weath_airPressure": 77900.,
     "weath_humidity": 23.0}
 
 
@@ -108,8 +104,10 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
-        self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'])
-        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'])
+        self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'],
+                                     maxDiff=0.0001*radians)
+        self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'],
+                                           maxSep=0.1*arcseconds)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
         self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
