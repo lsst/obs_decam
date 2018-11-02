@@ -213,7 +213,7 @@ datasets:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   isr_config:
     python: lsst.obs.decam.isr.DecamIsrConfig
-  isr_metadata:
+  runIsr_metadata:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
   characterizeImage_metadata:
     template: '%(visit)07d/metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
@@ -265,3 +265,7 @@ datasets:
     template: dcrDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   apPipe_metadata:
     template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
+  ossThumb:
+    template: '%(visit)07d/thumbs/oss-%(visit)07d-%(ccdnum)03d.png'
+  flattenedThumb:
+    template: '%(visit)07d/thumbs/flattened-%(visit)07d-%(ccdnum)03d.png'

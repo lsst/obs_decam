@@ -30,7 +30,7 @@ from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
 import lsst.afw.geom as afwGeom
 import lsst.daf.persistence as dafPersist
-from lsst.obs.decam.decamCpIsr import DecamCpIsrTask
+from lsst.ip.isr.isrTask import IsrTask
 
 obsDecamDir = getPackageDir('obs_decam')
 displayDiffs = False
@@ -81,9 +81,9 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         dataRef = self.butler.dataRef('raw', dataId=self.dataId)
         rawExposure = self.butler.get('raw', dataId=self.dataId)
         camera = dataRef.get('camera')
-        config = getObsDecamConfig(DecamCpIsrTask)
+        config = getObsDecamConfig(IsrTask)
         config.doCrosstalk = doCrosstalk
-        decamCpIsrTask = DecamCpIsrTask(config=config)
+        decamCpIsrTask = IsrTask(config=config)
         isrData = decamCpIsrTask.readIsrData(dataRef, rawExposure)
         isrResult = decamCpIsrTask.run(rawExposure, camera=camera, **isrData.getDict())
         return isrResult

@@ -37,11 +37,11 @@ import numpy as np
 
 import lsst.log
 import lsst.pipe.base as pipeBase
-from lsst.ip.isr import CrosstalkConfig, CrosstalkTask
+from lsst.ip.isr import CrosstalkConfig, CrosstalkTask, IsrTask
 from lsst.obs.decam import DecamMapper
 from lsst.utils import getPackageDir
 import lsst.afw.math as afwMath
-from .isr import DecamIsrTask
+
 
 __all__ = ["DecamCrosstalkTask"]
 
@@ -142,7 +142,7 @@ class DecamCrosstalkTask(CrosstalkTask):
         ccdnum = det.getId()
         ccdnum_str = '%02d' % ccdnum
         crosstalkSources = defaultdict(list)
-        decamisr = DecamIsrTask()  # needed for source_exposure overscan correction
+        decamisr = IsrTask()  # needed for source_exposure overscan correction
         for amp in det:
             victim = ccdnum_str + amp.getName()
             for source in sources[victim]:
@@ -160,15 +160,17 @@ class DecamCrosstalkTask(CrosstalkTask):
                     else:
                         self.log.fatal('DECam source amp name does not contain A or B, cannot proceed')
                     source_amp = source_exposure.getDetector()[amp_idx]
-                    source_dataBBox = source_amp.getRawDataBBox()
+                    # If doCrosstalkBeforeAssemble=True, then use getRawBBox().  Otherwise, getRawDataBBox().
+                    source_dataBBox = source_amp.getRawBBox()
                     # Check to see if source overscan has been corrected, and if not, correct it first
                     if not source_exposure.getMetadata().exists('OVERSCAN'):
                         decamisr.overscanCorrection(source_exposure, source_amp)
                         self.log.info('Correcting source %s overscan before using to correct crosstalk'
                                       % source)
                     source_image = source_exposure.getMaskedImage().getImage()
+
                     source_data = source_image.Factory(source_image, source_dataBBox, deep=True)
-                    crosstalkSources[victim].append((source_data, coeffs[(victim, source)]))
+                    crosstalkSources[victim].append((source_data, coeffs[(victim, source)], amp_idx))
         return crosstalkSources
 
     @pipeBase.timeMethod
@@ -204,10 +206,11 @@ class DecamCrosstalkTask(CrosstalkTask):
             ccdnum = det.getId()
             ccdnum_str = '%02d' % ccdnum
             victim = ccdnum_str + amp.getName()
-            dataBBox = amp.getRawDataBBox()
+            # If doCrosstalkBeforeAssemble=True, then use getRawBBox().  Otherwise, getBBox().
+            dataBBox = amp.getRawBBox()
             # Check to see if victim overscan has been corrected, and if not, correct it first
             if not exposure.getMetadata().exists('OVERSCAN'):
-                decamisr = DecamIsrTask()
+                decamisr = IsrTask()
                 decamisr.overscanCorrection(exposure, amp)
                 self.log.warn('Overscan correction did not happen prior to crosstalk correction')
                 self.log.info('Correcting victim %s overscan before crosstalk' % victim)
@@ -215,8 +218,16 @@ class DecamCrosstalkTask(CrosstalkTask):
             victim_data = image.Factory(image, dataBBox)
             # Load data from crosstalk 'source' exposures
             for source in crosstalkSources[victim]:
-                source_data, source_coeff = source
-                if victim_data.getX0() != source_data.getX0():
+                source_data, source_coeff, source_idx = source
+                victim_idx = 0
+                if 'A' in victim:
+                    victim_idx = 0
+                elif 'B' in victim:
+                    victim_idx = 1
+                else:
+                    self.log.fatal('DECam victim amp name does not contain A or B, cannot proceed')
+
+                if source_idx != victim_idx:
                     # Occurs with amp A and B mismatch; need to flip horizontally
                     source_data = afwMath.flipImage(source_data, flipLR=True, flipTB=False)
                 # Perform the linear crosstalk correction
