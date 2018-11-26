@@ -212,18 +212,14 @@ class DecamMapper(CameraMapper):
         variance = self.translate_wtmap(wtmap)
 
         mi = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
-        md = instcal.getMetadata()
+        md = readMetadata(instcalMap.getLocationsWithRoot()[0])
         wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.ExposureF(mi, wcs)
 
-        # Set the calib by hand; need to grab the zeroth extension
-        header = re.sub(r'[\[](\d+)[\]]$', "[0]", instcalMap.getLocationsWithRoot()[0])
-        md0 = readMetadata(header)
         calib = afwImage.Calib()
-        calib.setFluxMag0(10**(0.4 * md0.getScalar("MAGZERO")))
+        calib.setFluxMag0(10**(0.4 * md.getScalar("MAGZERO")))
         exp.setCalib(calib)
-        exposureId = self._computeCcdExposureId(dataId)
-        visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
+        visitInfo = self.makeRawVisitInfo(md=md)
         exp.getInfo().setVisitInfo(visitInfo)
 
         for kw in ('LTV1', 'LTV2'):
@@ -236,8 +232,6 @@ class DecamMapper(CameraMapper):
         """Standardize a raw dataset by converting it to an Exposure.
 
         Raw images are MEF files with one HDU for each detector.
-        Header keywords EXPTIME and MJD-OBS exist only in the zeroth
-        extension and are copied to metadata.
 
         @param item: The image read by the butler
         @param dataId: Data identifier
@@ -246,15 +240,7 @@ class DecamMapper(CameraMapper):
         # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
         exp = exposureFromImage(item, logger=self.log)
         md = exp.getMetadata()
-        rawPath = self.map_raw(dataId).getLocationsWithRoot()[0]
-        headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
-        md0 = readMetadata(headerPath)
-        # extra keywords to copy to the exposure
-        for kw in ('DARKTIME', ):
-            if kw in md0.paramNames() and kw not in md.paramNames():
-                md.add(kw, md0.getScalar(kw))
-        exposureId = self._computeCcdExposureId(dataId)
-        visitInfo = self.makeRawVisitInfo(md=md0, exposureId=exposureId)
+        visitInfo = self.makeRawVisitInfo(md=md)
         exp.getInfo().setVisitInfo(visitInfo)
 
         # Standardize an Exposure, including setting the calib object
