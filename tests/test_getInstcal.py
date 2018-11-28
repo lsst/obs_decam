@@ -63,13 +63,15 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
         self.assertTrue(exp.hasWcs())
+        fluxMag0, fluxMag0Err = exp.getCalib().getFluxMag0()
+        magZero = 2.5 * math.log10(fluxMag0)
+        self.assertAlmostEqual(magZero, 28.957)
 
         visitInfo = exp.getInfo().getVisitInfo()
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
         self.assertEqual(visitInfo.getExposureTime(), visit229388_info['exposureTime'])
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
-        visitInfo = exp.getInfo().getVisitInfo()
-        self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
+        self.assertEqual(visitInfo.getExposureId(), int("%07d%02d" % (229388, 1)))
         self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'],
                                      maxDiff=0.0001*radians)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'],
@@ -97,8 +99,9 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         """Verify that we get the proper CCD for a specified ccdnum."""
         dataId = {'visit': 229388, 'ccdnum': 62}
         exp = self.butler.get("instcal", dataId, immediate=True)
-        md = exp.getMetadata()
-        self.assertEqual(md.getScalar("DETPOS"), "N31")
+        self.assertEqual(exp.getDetector().getName(), "N31")
+        visitInfo = exp.getInfo().getVisitInfo()
+        self.assertEqual(visitInfo.getExposureId(), int("%07d%02d" % (229388, 62)))
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
