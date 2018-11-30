@@ -8,6 +8,3 @@ decamConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
 # DECam Community Pipeline (CP). The config file to use for stack-built
 # calibs is "processCcd.py" instead.
 config.ccdProcessor.load(os.path.join(decamConfigDir, "processCcdCpIsr.py"))
-
-config.associator.load(os.path.join(decamConfigDir, "association.py"))
-
