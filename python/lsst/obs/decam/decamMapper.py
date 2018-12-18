@@ -118,7 +118,15 @@ class DecamMapper(CameraMapper):
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
 
-        @param dataId (dict) Data identifier with visit, ccd
+        Parameters
+        ----------
+        dataId : `dict`
+            Data identifier with visit, ccd.
+
+        Returns
+        -------
+        result : `int`
+            Integer identifier for a CCD exposure.
         """
         copyId = self._transformId(dataId)
         visit = copyId['visit']
@@ -128,10 +136,18 @@ class DecamMapper(CameraMapper):
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.
 
-        @param dataId (dict)       Data identifier with tract and patch.
-        @param singleFilter (bool) True means the desired ID is for a single-
-                                   filter coadd, in which case dataId
-                                   must contain filter.
+        Parameters
+        ----------
+        dataId : `dict`
+            Data identifier with tract and patch.
+        singleFilter : `bool`
+            True means the desired ID is for a single-filter coadd,
+            in which case the dataId must contain filter.
+
+        Returns
+        -------
+        oid : `int`
+            Unique integer identifier.
         """
         tract = int(dataId['tract'])
         if tract < 0 or tract >= 2**DecamMapper._nbit_tract:
@@ -235,9 +251,17 @@ class DecamMapper(CameraMapper):
 
         Raw images are MEF files with one HDU for each detector.
 
-        @param item: The image read by the butler
-        @param dataId: Data identifier
-        @return (lsst.afw.image.Exposure) the standardized Exposure
+        Parameters
+        ----------
+        item : `lsst.afw.image.MaskedImage`
+            The image read by the butler.
+        dataId : data ID
+            Data identifier.
+
+        Returns
+        -------
+        result : `lsst.afw.image.Exposure`
+            The standardized Exposure.
         """
         # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
         exp = exposureFromImage(item, logger=self.log)
@@ -275,19 +299,19 @@ class DecamMapper(CameraMapper):
 
         Parameters
         ----------
-        datasetType :
-            Dataset type ("bias" or "flat")
-        item :
-            The image read by the butler
-        dataId :
-            Data identifier
-        setFilter :
-            Whether to set the filter in the Exposure
+        datasetType : `str`
+            Dataset type ("bias" or "flat").
+        item : `lsst.afw.image.MaskedImage`
+            The image read by the butler.
+        dataId : data ID
+            Data identifier.
+        setFilter : `bool`
+            Whether to set the filter in the Exposure.
 
         Returns
         -------
-        result : callable
-            sst.afw.image.Exposure the standardized Exposure
+        result : `lsst.afw.image.Exposure`
+            The standardized Exposure.
         """
         mi = afwImage.makeMaskedImage(item.getImage())
         md = item.getMetadata()
@@ -323,12 +347,12 @@ class DecamMapper(CameraMapper):
 
         Parameters
         ----------
-        dataId : `dict`
-            Dataset identifier
+        dataId : data ID
+            Dataset identifier.
 
         Returns
         -------
-        result : `daf.persistence.ButlerLocation`
+        result : `lsst.daf.persistence.ButlerLocation`
         """
         return self.mappings["defects"].map(self, dataId=dataId, write=write)
 
@@ -339,14 +363,14 @@ class DecamMapper(CameraMapper):
 
         Parameters
         ----------
-        butlerLocation :
-            Butler Location with path to defects FITS
-        dataId :
-            data identifier
+        butlerLocation : `lsst.daf.persistence.ButlerLocation`
+            Butler Location with path to defects FITS.
+        dataId : data ID
+            Data identifier.
 
         Returns
         -------
-        result : `meas.algorithms.DefectListT`
+        result : `lsst.meas.algorithms.DefectListT`
         """
         bpmFitsPath = butlerLocation.getLocationsWithRoot()[0]
         bpmImg = afwImage.ImageU(bpmFitsPath, allowUnsafe=True)
@@ -356,9 +380,7 @@ class DecamMapper(CameraMapper):
         return isr.getDefectListFromMask(mim, "BAD")
 
     def std_defects(self, item, dataId):
-        """Return the defect list as it is.
-
-        Do not standardize it to Exposure.
+        """Return the defect list as it is. Do not standardize it to Exposure.
         """
         return item
 

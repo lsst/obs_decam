@@ -9,18 +9,19 @@ __all__ = ("DecamCalibsParseTask", )
 class DecamCalibsParseTask(CalibsParseTask):
 
     def getInfo(self, filename):
-        """Get information about the image from the filename and/or its contents
+        """Get information about the image from the filename and/or its contents.
 
         Parameters
         ----------
         filename: `str`
-            Name of file to inspect
+            Name of file to inspect.
 
         Returns
         -------
-        phuInfo :
-        infoList :
-            File properties; list of file properties for each extension
+        phuInfo : `dict`
+            Primary header unit info.
+        infoList : `list` of `dict`
+            File properties; list of file properties for each extension.
         """
         phuInfo, infoList = CalibsParseTask.getInfo(self, filename)
         # Single-extension fits without EXTNAME can be a valid CP calibration product
@@ -51,12 +52,12 @@ class DecamCalibsParseTask(CalibsParseTask):
         return match.groups()[0]
 
     def translate_ccdnum(self, md):
-        """Return CCDNUM as a integer
+        """Return CCDNUM as a integer.
 
         Parameters
         ----------
-        md :
-            (PropertySet) FITS header metadata
+        md : `lsst.daf.base.PropertySet`
+            FITS header metadata.
         """
         if md.exists("CCDNUM"):
             ccdnum = md.getScalar("CCDNUM")
@@ -77,8 +78,8 @@ class DecamCalibsParseTask(CalibsParseTask):
 
         Parameters
         ----------
-        md :
-            (PropertySet) FITS header metadata
+        md : `lsst.daf.base.PropertySet`
+            FITS header metadata.
         """
         if md.exists("DATE-OBS"):
             date = md.getScalar("DATE-OBS")
@@ -95,7 +96,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         return date
 
     def translate_filter(self, md):
-        """Extract the filter name
+        """Extract the filter name.
 
         Translate a full filter description into a mere filter name.
         Return "unknown" if the keyword FILTER does not exist in the header,
@@ -103,8 +104,8 @@ class DecamCalibsParseTask(CalibsParseTask):
 
         Parameters
         ----------
-        md :
-            (PropertySet) FITS header metadata
+        md : `lsst.daf.base.PropertySet`
+            FITS header metadata.
         """
         if md.exists("FILTER"):
             if md.exists("OBSTYPE") and "zero" in md.getScalar("OBSTYPE").strip().lower():
@@ -117,31 +118,36 @@ class DecamCalibsParseTask(CalibsParseTask):
 
     @staticmethod
     def getExtensionName(md):
-        """ Get the name of the extension
+        """Get the name of the extension.
 
         Parameters
         ----------
-        md :
-            (PropertySet) FITS header metadata
+        md : `lsst.daf.base.PropertySet`
+            FITS header metadata.
+
+        Returns
+        -------
+        result : `str`
+            The string from the EXTNAME header card.
         """
         return md.getScalar('EXTNAME')
 
     def getDestination(self, butler, info, filename):
-        """Get destination for the file
+        """Get destination for the file.
 
         Parameters
         ----------
-        butler :
-            Data butler
-        info :
-            File properties, used as dataId for the butler
-        filename :
-            Input filename
+        butler : `lsst.daf.persistence.Butler`
+            Data butler.
+        info : data ID
+            File properties, used as dataId for the butler.
+        filename : `str`
+            Input filename.
 
         Returns
         -------
-        raw :
-            Destination filename
+        raw : `str`
+            Destination filename.
         """
         # Arbitrarily set ccdnum = 1 to make the mapper template happy
         info["ccdnum"] = 1

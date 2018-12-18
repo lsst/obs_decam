@@ -57,6 +57,8 @@ class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
 class ExposureInfo(BaseExposureInfo):
     """Data about a selected exposure
 
+    Set exposure information based on a query result from a db connection
+
     Notes
     -----
     Data includes:
@@ -71,8 +73,6 @@ class ExposureInfo(BaseExposureInfo):
     """
 
     def __init__(self, result):
-        """Set exposure information based on a query result from a db connection
-        """
         self._ind = -1
 
         dataId = dict(

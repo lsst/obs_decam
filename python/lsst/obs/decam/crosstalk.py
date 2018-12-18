@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-"""Apply crosstalk corrections to raw DECam images.
+"""Apply crosstalk corrections to DECam images.
 
 Some of this code is based on DECam_crosstalk.py, used for the THELI pipeline
 and written by Thomas Erben (private communication, 2018)
@@ -51,12 +51,21 @@ class DecamCrosstalkConfig(CrosstalkConfig):
     """
 
     def getSourcesAndCoeffsFile(self, filename='DECam_xtalk_20130606.txt'):
-        """Return directory containing the DECam_xtalk_20130606.txt file.
+        """File containing DECam crosstalk coefficients.
 
-        File containing DECam crosstalk coefficients. This text file is
-        provided by NOAO in a particular format with information
-        about the DECam crosstalk coefficients. It is available at
+        This text file is provided by NOAO in a particular format with
+        information about the DECam crosstalk coefficients. It is available at
         http://www.ctio.noao.edu/noao/content/DECam-Calibration-Files
+
+        Parameters
+        ----------
+        filename : `str`, optional
+            File containing the decam crosstalk coefficients, from NOAO.
+
+        Returns
+        -------
+        result : `str`
+            Full path to filename.
         """
         mapper = DecamMapper()
         packageName = mapper.getPackageName()
@@ -64,7 +73,14 @@ class DecamCrosstalkConfig(CrosstalkConfig):
         return os.path.join(packageDir, 'decam', filename)
 
     def getSourcesAndCoeffs(self):
-        """Read crosstalk sources and coefficients from DECam-specific file
+        """Read crosstalk sources and coefficients from DECam-specific file.
+
+        Returns
+        -------
+        sources : `defaultdict`
+            Sources of crosstalk read from crosstalk_file.
+        coeffs : `dict`
+            Linear crosstalk coefficients corresponding to sources.
         """
         crosstalk_file = self.getSourcesAndCoeffsFile()
         sources = defaultdict(list)
@@ -226,7 +242,7 @@ class DecamCrosstalkIO(pipeBase.Task):
     _DefaultName = 'decamCrosstalkIO'
 
     def parseCrosstalkIOArgs(self):
-        """Parse command-line arguments to run the crosstalk correction alone
+        """Parse command-line arguments to run the crosstalk correction alone.
 
         Examples
         --------
@@ -242,7 +258,7 @@ class DecamCrosstalkIO(pipeBase.Task):
         return parsed
 
     def runCrosstalkAlone(self):
-        """Utility for crosstalk correction directly on a DECam MEF file
+        """Utility for crosstalk correction directly on a DECam MEF file.
         """
         log = lsst.log.Log.getLogger('obs.decam.DecamCrosstalkIO')
         parsed = self.parseCrosstalkIOArgs()
@@ -272,16 +288,16 @@ def subtractCrosstalkIO(mef, sources, coeffs):
     Parameters
     ----------
     mef : `astropy.io.fits.hdu.hdulist.HDUList`
-        One DECam Multi-Extension FITS image
+        One DECam Multi-Extension FITS image.
     sources : `defaultdict`
-        Crosstalk source areas affecting flux in a certain victim area
+        Crosstalk source areas affecting flux in a certain victim area.
     coeffs : `list`
-        Linear crosstalk coefficients
+        Linear crosstalk coefficients.
 
     Returns
     -------
     mef : `astropy.io.fits.hdu.hdulist.HDUList`
-        New MEF image with crosstalk corrected data and updated header
+        New MEF image with crosstalk corrected data and updated header.
     """
     log = lsst.log.Log.getLogger('obs.decam.subtractCrosstalkIO')
     lowx = {}  # Lower x pixel index of given chip region

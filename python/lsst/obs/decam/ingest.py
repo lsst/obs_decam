@@ -35,13 +35,6 @@ class DecamIngestArgumentParser(IngestArgumentParser):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
         self.add_argument("--filetype", default="raw", choices=["instcal", "raw"],
                           help="Data processing level of the files to be ingested")
-        self.description = "To ingest instcal data, the following directory structure is expected:"\
-            "\n    dqmask/ instcal/ wtmap/"\
-            "\nThe science pixels, mask, and weight (inverse variance) are stored in"\
-            "\nseparate files each with a unique name but with a common unique identifier"\
-            "\nEXPNUM in the FITS header. The 3 files of the same EXPNUM will be aggregated."\
-            "\nFor example, the user creates the registry by running"\
-            "\n    ingestImagesDecam.py outputRepository --filetype=instcal --mode=link instcal/*fits"
 
 
 class DecamIngestTask(IngestTask):
@@ -51,7 +44,8 @@ class DecamIngestTask(IngestTask):
         super(DecamIngestTask, self).__init__(*args, **kwargs)
 
     def run(self, args):
-        """Ingest all specified files and add them to the registry"""
+        """Ingest all specified files and add them to the registry
+        """
         if args.filetype == "instcal":
             root = args.input
             with self.register.openRegistry(root, create=args.create, dryrun=args.dryrun) as registry:
@@ -87,6 +81,9 @@ class DecamIngestTask(IngestTask):
 
 
 class DecamParseTask(ParseTask):
+    """Parse an image filename to get the required information to
+    put the file in the correct location and populate the registry.
+    """
 
     def __init__(self, *args, **kwargs):
         super(ParseTask, self).__init__(*args, **kwargs)
@@ -113,6 +110,13 @@ class DecamParseTask(ParseTask):
             self.expnumMapper[expnum][prefix] = fileName
 
     def buildExpnumMapper(self, basepath):
+        """Extract exposure numbers from filenames to set self.expnumMapper
+
+        Parameters
+        ----------
+        basepath : `str`
+            Location on disk of instcal, dqmask, and wtmap subdirectories.
+        """
         self.expnumMapper = {}
 
         instcalPath = basepath
@@ -134,20 +138,44 @@ class DecamParseTask(ParseTask):
             self._listdir(path, prefix)
 
     def getInfo(self, filename, filetype="raw"):
-        """
+        """Get metadata header info from multi-extension FITS decam image file.
+
         The science pixels, mask, and weight (inverse variance) are
         stored in separate files each with a unique name but with a
         common unique identifier EXPNUM in the FITS header.  We have
         to aggregate the 3 filenames for a given EXPNUM and return
         this information along with that returned by the base class.
 
-        We expect a directory structure that looks like the following:
+        Parameters
+        ----------
+        filename : `str`
+            Image file to retrieve info from.
+        filetype : `str`
+            One of "raw" or "instcal".
 
-        dqmask/ instcal/ wtmap/
+        Returns
+        -------
+        phuInfo : `dict`
+            Primary header unit info.
+        infoList : `list` of `dict`
+            Info for the other HDUs.
 
-        The user creates the registry by running
+        Notes
+        -----
+        For filetype="instcal", we expect a directory structure that looks
+        like the following:
 
-        ingestImagesDecam.py outputRepository --mode=link instcal/\*fits
+        .. code-block:: none
+
+            dqmask/
+            instcal/
+            wtmap/
+
+        The user creates the registry by running:
+
+        .. code-block:: none
+
+            ingestImagesDecam.py outputRepository --filetype=instcal --mode=link instcal/*fits
         """
         if filetype == "instcal":
             if self.expnumMapper is None:
@@ -191,17 +219,17 @@ class DecamParseTask(ParseTask):
 
         Parameters
         ----------
-        butler :
-            Data butler
-        info :
-            File properties, used as dataId for the butler
-        filename :
-            Input filename
+        butler : `lsst.daf.persistence.Butler`
+            Data butler.
+        info : data ID
+            File properties, used as dataId for the butler.
+        filename : `str`
+            Input filename.
 
         Returns
         -------
-        raw :
-            Destination filename
+        raw : `str`
+            Destination filename.
         """
         raw = butler.get("%s_filename"%(filetype), info)[0]
         # Ensure filename is devoid of cfitsio directions about HDUs

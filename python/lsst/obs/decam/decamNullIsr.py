@@ -37,16 +37,9 @@ class DecamNullIsrConfig(pexConfig.Config):
         default="instcal",
     )
 
-## \addtogroup LSST_task_documentation
-## \{
-## \page DecamNullIsrTask
-## \ref DecamNullIsrTask_ "DecamNullIsrTask"
-## \copybrief DecamNullIsrTask
-## \}
-
 
 class DecamNullIsrTask(pipeBase.Task):
-    """Load an "instcal" exposure as a post-ISR CCD exposure
+    """Load an "instcal" exposure as a post-ISR CCD exposure.
 
     Load "instcal" exposures from the community pipeline as a post-ISR exposure,
     and optionally persist it as a `postISRCCD`.
@@ -63,15 +56,15 @@ class DecamNullIsrTask(pipeBase.Task):
 
         Parameters
         ----------
-        sensorRef : `daf.persistence.butlerSubset.ButlerDataRef`
-            butler data reference for post-ISR exposure
+        sensorRef : `lsst.daf.persistence.butlerSubset.ButlerDataRef`
+            Butler data reference for post-ISR exposure.
 
         Returns
         -------
         result : `struct`
-            a pipeBase.Struct with fields:
+            A pipeBase.Struct with fields:
 
-            - ``exposure`` : exposure after application of ISR: the "instcal" exposure, unchanged
+            - ``exposure`` : Exposure after application of ISR: the "instcal" exposure, unchanged.
 
         """
         self.log.info("Loading DECam community pipeline file %s" % (sensorRef.dataId))
