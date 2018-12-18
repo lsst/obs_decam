@@ -36,7 +36,7 @@ from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
 np.seterr(divide="ignore")
 
-__all__ = ("DecamMapper",)
+__all__ = ["DecamMapper"]
 
 
 class DecamMapper(CameraMapper):

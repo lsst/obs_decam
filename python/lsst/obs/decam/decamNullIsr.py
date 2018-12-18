@@ -24,6 +24,8 @@
 import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
+__all__ = ["DecamNullIsrConfig", "DecamNullIsrTask"]
+
 
 class DecamNullIsrConfig(pexConfig.Config):
     doWrite = pexConfig.Field(

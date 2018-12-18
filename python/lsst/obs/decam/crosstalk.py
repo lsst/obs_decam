@@ -43,7 +43,7 @@ from lsst.utils import getPackageDir
 import lsst.afw.math as afwMath
 from .isr import DecamIsrTask
 
-__all__ = ["DecamCrosstalkTask", ]
+__all__ = ["DecamCrosstalkTask"]
 
 
 class DecamCrosstalkConfig(CrosstalkConfig):

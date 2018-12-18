@@ -26,7 +26,7 @@ import re
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
-__all__ = ("DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask", )
+__all__ = ["DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask"]
 
 
 class DecamIngestArgumentParser(IngestArgumentParser):

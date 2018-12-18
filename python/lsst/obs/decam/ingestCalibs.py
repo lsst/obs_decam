@@ -3,7 +3,7 @@ import collections
 import re
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
 
-__all__ = ("DecamCalibsParseTask", )
+__all__ = ["DecamCalibsParseTask"]
 
 
 class DecamCalibsParseTask(CalibsParseTask):

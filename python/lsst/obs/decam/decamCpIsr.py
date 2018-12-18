@@ -26,7 +26,7 @@ from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 from .isr import DecamIsrTask, DecamIsrConfig
 
-__all__ = ("DecamCpIsrConfig", "DecamCpIsrTask")
+__all__ = ["DecamCpIsrConfig", "DecamCpIsrTask"]
 
 
 def _computeEdgeSize(rawExposure, calibExposure):

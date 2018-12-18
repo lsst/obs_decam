@@ -30,7 +30,7 @@ from lsst.daf.persistence import DbAuth
 import lsst.pipe.base as pipeBase
 from lsst.pipe.tasks.selectImages import DatabaseSelectImagesConfig, BaseSelectImagesTask, BaseExposureInfo
 
-__all__ = ["SelectDecamImagesTask", "ExposureInfo", "SelectDecamImagesTask"]
+__all__ = ["SelectDecamImagesConfig", "ExposureInfo", "SelectDecamImagesTask"]
 
 
 class SelectDecamImagesConfig(DatabaseSelectImagesConfig):
