@@ -24,6 +24,8 @@
 import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
+__all__ = ["DecamNullIsrConfig", "DecamNullIsrTask"]
+
 
 class DecamNullIsrConfig(pexConfig.Config):
     doWrite = pexConfig.Field(
@@ -37,58 +39,35 @@ class DecamNullIsrConfig(pexConfig.Config):
         default="instcal",
     )
 
-## \addtogroup LSST_task_documentation
-## \{
-## \page DecamNullIsrTask
-## \ref DecamNullIsrTask_ "DecamNullIsrTask"
-## \copybrief DecamNullIsrTask
-## \}
-
 
 class DecamNullIsrTask(pipeBase.Task):
-    r"""!Load an "instcal" exposure as a post-ISR CCD exposure
-
-    @anchor DecamNullIsrTask_
-
-    @section pipe_tasks_decamNullIsr_Contents  Contents
-
-     - @ref pipe_tasks_decamNullIsr_Purpose
-     - @ref pipe_tasks_decamNullIsr_Initialize
-     - @ref pipe_tasks_decamNullIsr_IO
-     - @ref pipe_tasks_decamNullIsr_Config
-
-    @section pipe_tasks_decamNullIsr_Purpose  Description
+    """Load an "instcal" exposure as a post-ISR CCD exposure.
 
     Load "instcal" exposures from the community pipeline as a post-ISR exposure,
     and optionally persist it as a `postISRCCD`.
 
     This is used to retarget the `isr` subtask in `ProcessCcdTask` when you prefer to use
     the community pipeline instead of the LSST software stack to perform ISR on DECam images.
-
-    @section pipe_tasks_decamNullIsr_Initialize  Task initialisation
-
-    @copydoc \_\_init\_\_
-
-    @section pipe_tasks_decamNullIsr_IO  Invoking the Task
-
-    The main method is `runDataRef`.
-
-    @section pipe_tasks_decamNullIsr_Config  Configuration parameters
-
-    See @ref DecamNullIsrConfig
     """
     ConfigClass = DecamNullIsrConfig
     _DefaultName = "isr"
 
     @pipeBase.timeMethod
     def runDataRef(self, sensorRef):
-        """!Load a DECam community pipeline "instcal" exposure as a post-ISR CCD exposure
+        """Load a DECam community pipeline "instcal" exposure as a post-ISR CCD exposure
 
-        @param[in] sensorRef  butler data reference for post-ISR exposure
-            (a daf.persistence.butlerSubset.ButlerDataRef)
+        Parameters
+        ----------
+        sensorRef : `lsst.daf.persistence.butlerSubset.ButlerDataRef`
+            Butler data reference for post-ISR exposure.
 
-        @return a pipeBase.Struct with fields:
-        - exposure: exposure after application of ISR: the "instcal" exposure, unchanged
+        Returns
+        -------
+        result : `struct`
+            A pipeBase.Struct with fields:
+
+            - ``exposure`` : Exposure after application of ISR: the "instcal" exposure, unchanged.
+
         """
         self.log.info("Loading DECam community pipeline file %s" % (sensorRef.dataId))
 

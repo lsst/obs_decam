@@ -26,6 +26,8 @@ from lsst.ip.isr import biasCorrection, flatCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 from .isr import DecamIsrTask, DecamIsrConfig
 
+__all__ = ["DecamCpIsrConfig", "DecamCpIsrTask"]
+
 
 def _computeEdgeSize(rawExposure, calibExposure):
     """Compute the number of edge trim pixels of the calibration product.
@@ -33,10 +35,18 @@ def _computeEdgeSize(rawExposure, calibExposure):
     Some Community Pipeline Calibration products are trimmed on their edges
     and are smaller than the raw data. Use the dimension difference between
     raw exposure and the calibration product to compute the edge trim pixels.
-    @param[in] rawExposure: the data section of a raw exposure
-    @param[in] calibExposure: calibration bias or flat exposure,
-                              known to be smaller than raw data
-    @return an integer as the number of trimmed pixels on each edge
+
+    Parameters
+    ----------
+    rawExposure : `lsst.afw.image.Exposure`
+        The input raw exposure.
+    calibExposure : `lsst.afw.image.Exposure`
+        Calibration bias or flat exposure, known to be smaller than raw data.
+
+    Returns
+    -------
+    result : `int`
+        An integer as the number of trimmed pixels on each edge.
     """
     nx, ny = rawExposure.getBBox().getDimensions() - calibExposure.getBBox().getDimensions()
     assert nx == ny, "Exposure is trimmed differently in X and Y"
@@ -53,7 +63,7 @@ class DecamCpIsrConfig(DecamIsrConfig):
 
 
 class DecamCpIsrTask(DecamIsrTask):
-    """Perform ISR task using Community Pipeline Calibration Products MasterCal
+    """Perform ISR task using Community Pipeline Calibration Products MasterCal.
 
     The CP MasterCal products have butler dataset types cpBias and cpFlat,
     different from the LSST-generated calibration products (bias/flat).
@@ -68,8 +78,12 @@ class DecamCpIsrTask(DecamIsrTask):
         on the dimensions of the input data.  Only process the inner
         part of the raw exposure, and mask the outer pixels as EDGE.
 
-        @param[in,out] exposure: exposure to process
-        @param[in] biasExposure: bias exposure
+        Parameters
+        ----------
+        exposure : `lsst.afw.image.Exposure`
+            Exposure to process.
+        biasExposure : `lsst.afw.image.Exposure`
+            Bias exposure.
         """
         nEdge = _computeEdgeSize(exposure, biasExposure)
         if nEdge > 0:
@@ -85,15 +99,19 @@ class DecamCpIsrTask(DecamIsrTask):
         )
 
     def flatCorrection(self, exposure, flatExposure):
-        """Apply flat correction in place
+        """Apply flat correction in place.
 
         DECam flat products have been trimmed and are smaller than
         the raw exposure.  The size of edge trim is computed based
         on the dimensions of the input data.  Only process the inner
         part of the raw exposure, and mask the outer pixels as EDGE.
 
-        @param[in,out] exposure: exposure to process
-        @param[in] flatExposure: flatfield exposure
+        Parameters
+        ----------
+        exposure : `lsst.afw.image.Exposure`
+            Exposure to process.
+        flatExposure : `lsst.afw.image.Exposure`
+            Flatfield exposure.
         """
         nEdge = _computeEdgeSize(exposure, flatExposure)
         if nEdge > 0:

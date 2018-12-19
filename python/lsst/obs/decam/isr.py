@@ -29,6 +29,8 @@ import lsst.pex.config as pexConfig
 from lsst.ip.isr import IsrTask, overscanCorrection
 from lsst.meas.algorithms.detection import SourceDetectionTask
 
+__all__ = ["DecamIsrConfig", "DecamIsrTask"]
+
 
 class DecamIsrConfig(IsrTask.ConfigClass):
     overscanBiasJumpBKP = pexConfig.ListField(
