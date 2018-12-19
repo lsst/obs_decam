@@ -9,5 +9,4 @@ obs_decam documentation preview
 .. toctree::
    :maxdepth: 1
 
-   obs_decam/index
    lsst.obs.decam/index
