@@ -5,11 +5,9 @@ import os.path
 
 from lsst.utils import getPackageDir
 from lsst.meas.algorithms import LoadIndexedReferenceObjectsTask
-from lsst.obs.decam.isr import DecamIsrTask
 
 obsConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
 
-config.isr.retarget(DecamIsrTask)
 config.isr.load(os.path.join(obsConfigDir, 'isr.py'))
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
