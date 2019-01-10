@@ -1,5 +1,5 @@
 
-import collections
+import collections.abc
 import re
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
 
@@ -65,7 +65,7 @@ class DecamCalibsParseTask(CalibsParseTask):
             return self._translateFromCalibId("ccdnum", md)
         # Some MasterCal from NOAO Archive has 2 CCDNUM keys in each HDU
         # Make sure only one integer is returned.
-        if isinstance(ccdnum, collections.Sequence):
+        if isinstance(ccdnum, collections.abc.Sequence):
             try:
                 ccdnum = ccdnum[0]
             except IndexError:
