@@ -156,6 +156,8 @@ class DecamCalibsParseTask(CalibsParseTask):
             raw = butler.get("cpFlat_filename", info)[0]
         elif ("bias" or "zero") in calibType.lower():
             raw = butler.get("cpBias_filename", info)[0]
+        elif ("fringe") in calibType.lower():
+            raw = butler.get("fringe_filename", info)[0]
         else:
             assert False, "Invalid calibType '{:s}'".format(calibType)
         # Remove HDU extension (ccdnum) since we want to refer to the whole file
