@@ -4,7 +4,6 @@ DECam-specific overrides for ProcessCcdTask
 import os.path
 
 from lsst.utils import getPackageDir
-from lsst.meas.algorithms import LoadIndexedReferenceObjectsTask
 
 obsConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
 
@@ -16,7 +15,6 @@ for refObjLoader in (config.calibrate.astromRefObjLoader,
                      config.calibrate.photoRefObjLoader,
                      config.charImage.refObjLoader,
                      ):
-    refObjLoader.retarget(LoadIndexedReferenceObjectsTask)
     refObjLoader.ref_dataset_name = "ps1_pv3_3pi_20170110"
     # Note the u-band results may not be useful without a color term
     refObjLoader.filterMap['u'] = 'g'
