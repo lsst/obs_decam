@@ -63,8 +63,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
         self.assertEqual(exp.getFilter().getFilterProperty().getName(), self.filter)
         self.assertTrue(exp.hasWcs())
-        fluxMag0, fluxMag0Err = exp.getCalib().getFluxMag0()
-        magZero = 2.5 * math.log10(fluxMag0)
+        magZero = 2.5 * math.log10(exp.getPhotoCalib().getInstFluxAtZeroMagnitude())
         self.assertAlmostEqual(magZero, 28.957)
 
         visitInfo = exp.getInfo().getVisitInfo()
