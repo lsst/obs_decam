@@ -234,9 +234,7 @@ class DecamMapper(CameraMapper):
         wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.ExposureF(mi, wcs)
 
-        calib = afwImage.Calib()
-        calib.setFluxMag0(10**(0.4 * md.getScalar("MAGZERO")))
-        exp.setCalib(calib)
+        exp.setPhotoCalib(afwImage.makePhotoCalibFromCalibZeroPoint(10**(0.4 * md.getScalar("MAGZERO")), 0))
         visitInfo = self.makeRawVisitInfo(md=md)
         exp.getInfo().setVisitInfo(visitInfo)
 
@@ -269,7 +267,7 @@ class DecamMapper(CameraMapper):
         visitInfo = self.makeRawVisitInfo(md=md)
         exp.getInfo().setVisitInfo(visitInfo)
 
-        # Standardize an Exposure, including setting the calib object
+        # Standardize an Exposure, including setting the photoCalib object
         return self._standardizeExposure(self.exposures['raw'], exp, dataId,
                                          trimmed=False)
 
