@@ -5,3 +5,6 @@ for refObjLoader in (config.astrometryRefObjLoader,
     # Note the u-band results may not be useful without a color term
     refObjLoader.filterMap['u'] = 'g'
     refObjLoader.filterMap['Y'] = 'y'
+
+# existing PS1 refcat does not have coordinate errors
+config.astrometryReferenceErr = 10
