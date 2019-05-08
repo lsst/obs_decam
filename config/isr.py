@@ -104,5 +104,3 @@ config.doUseOpticsTransmission = False
 config.doUseFilterTransmission = False
 config.doUseSensorTransmission = False
 config.doUseAtmosphereTransmission = False
-
-config.doWrite = True
