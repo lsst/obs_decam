@@ -167,19 +167,19 @@ calibrations:
     template: cpFLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s.fits[%(ccdnum)d]
     validRange: true
   defects:
-    columns:
-    - date
-    - ccdnum
-    filter: false
+    columns: date
     level: ccd
     obsTimeName: date
-    persistable: ImageU
-    python: lsst.afw.image.ImageU
-    refCols: visit
+    persistable: BaseCatalog
+    python: lsst.meas.algorithms.Defects
+    refCols:
+    - visit
     reference: raw_visit
     storage: FitsStorage
-    tables: defect
-    template: '%(path)s'
+    tables: defects
+    template: defects/%(calibDate)s/defects-%(calibDate)s-%(ccdnum)03d.fits
+    validStartName: validStart
+    validEndName: validEnd
     validRange: true
   illumcor:
     columns:
