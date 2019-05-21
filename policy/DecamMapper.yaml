@@ -181,6 +181,37 @@ calibrations:
     tables: defect
     template: '%(path)s'
     validRange: true
+  illumcor:
+    columns:
+    - filter
+    - date
+    filter: true
+    level: ccd
+    obsTimeName: date
+    persistable: ImageF
+    python: lsst.afw.image.ImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: illumcor
+    template: ILLUMCOR/%(calibDate)s/%(filter)s/ILLUMCOR-%(calibDate)s-%(ccdnum)02d.fits
+    validRange: true
+  cpIllumcor:
+    columns:
+    - filter
+    - date
+    - ccdnum
+    obsTimeName: date
+    filter: true
+    level: ccd
+    persistable: DecoratedImageF
+    python: lsst.afw.image.DecoratedImageF
+    refCols: visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: illumcor
+    template: cpILLUMCOR/%(calibDate)s/%(filter)s/ILLUMCOR-%(calibDate)s.fits[%(calib_hdu)d]
+    validRange: true
 
 datasets:
   icSrc:

@@ -104,3 +104,10 @@ config.doUseOpticsTransmission = False
 config.doUseFilterTransmission = False
 config.doUseSensorTransmission = False
 config.doUseAtmosphereTransmission = False
+
+# Illumination correction should almost certainly be done,
+# but not all decam datasets yet have the necessary calibration products.
+config.doIlluminationCorrection = False
+# config.doIlluminationCorrection = True
+config.illuminationCorrectionDataProductName = "cpIllumcor"
+config.illumFilters = ['g', 'r', 'i']

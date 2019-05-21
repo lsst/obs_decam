@@ -22,9 +22,9 @@
 #
 
 from lsst.afw.image import LOCAL
-from lsst.ip.isr import biasCorrection, flatCorrection
+from lsst.ip.isr import biasCorrection, flatCorrection, illuminationCorrection
+from lsst.ip.isr import IsrTask, IsrTaskConfig
 from lsst.meas.algorithms.detection import SourceDetectionTask
-from .isr import DecamIsrTask, DecamIsrConfig
 
 __all__ = ["DecamCpIsrConfig", "DecamCpIsrTask"]
 
@@ -55,18 +55,20 @@ def _computeEdgeSize(rawExposure, calibExposure):
     return nx//2
 
 
-class DecamCpIsrConfig(DecamIsrConfig):
+class DecamCpIsrConfig(IsrTaskConfig):
 
     def setDefaults(self):
         self.biasDataProductName = "cpBias"
         self.flatDataProductName = "cpFlat"
+        self.illuminationCorrectionDataProductName = "cpIllumcor"
 
 
-class DecamCpIsrTask(DecamIsrTask):
+class DecamCpIsrTask(IsrTask):
     """Perform ISR task using Community Pipeline Calibration Products MasterCal.
 
-    The CP MasterCal products have butler dataset types cpBias and cpFlat,
-    different from the LSST-generated calibration products (bias/flat).
+    The CP MasterCal products have butler dataset types cpBias, cpFlat,
+    and cpIllumcor, which differ from the LSST-generated calibration products
+    (bias/flat/illumcor).
     """
     ConfigClass = DecamCpIsrConfig
 
@@ -123,6 +125,40 @@ class DecamCpIsrTask(DecamIsrTask):
             flatExposure.getMaskedImage(),
             self.config.flatScalingType,
             self.config.flatUserScale
+        )
+        # Mask the unprocessed edge pixels as EDGE
+        SourceDetectionTask.setEdgeBits(
+            exposure.getMaskedImage(),
+            rawMaskedImage.getBBox(),
+            exposure.getMaskedImage().getMask().getPlaneBitMask("EDGE")
+        )
+
+    def illuminationCorrection(self, exposure, illumMaskedImage):
+        """Apply illumination correction in place.
+
+        DECam illumcor products have been trimmed and are smaller than
+        the raw exposure.  The size of edge trim is computed based
+        on the dimensions of the input data.  Only process the inner
+        part of the raw exposure, and mask the outer pixels as EDGE.
+
+        Parameters
+        ----------
+        exposure : `lsst.afw.image.Exposure`
+            Exposure to process.
+        illumMaskedImage : `lsst.afw.image.MaskedImage`
+            Illumination correction exposure.
+        """
+        nEdge = _computeEdgeSize(exposure, illumMaskedImage)
+        if nEdge > 0:
+            rawMaskedImage = exposure.maskedImage[nEdge:-nEdge, nEdge:-nEdge, LOCAL]
+        else:
+            rawMaskedImage = exposure.getMaskedImage()
+        # Call the illuminationCorrection function from ip_isr
+        illuminationCorrection(
+            rawMaskedImage,
+            illumMaskedImage,
+            illumScale=self.config.illumScale,
+            trimToFit=self.config.doTrimToMatchCalib
         )
         # Mask the unprocessed edge pixels as EDGE
         SourceDetectionTask.setEdgeBits(
