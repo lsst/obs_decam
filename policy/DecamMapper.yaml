@@ -35,6 +35,8 @@ exposures:
     template: '%(date)s/%(filter)s/decam%(visit)07d.fits.fz[%(hdu)d]'
   postISRCCD:
     template: '%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d.fits'
+  postISRCCD_uninterpolated:
+    template: '%(visit)07d/postISR/postISR-%(visit)07d_%(ccdnum)02d_preInterp.fits'
   instcal:
     level: ccd
     persistable: DecoratedImageF
