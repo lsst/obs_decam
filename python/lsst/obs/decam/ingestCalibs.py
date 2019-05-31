@@ -34,7 +34,10 @@ class DecamCalibsParseTask(CalibsParseTask):
         # and use as the calibration dates if not already set
         found = re.search(r'(\d\d\d\d-\d\d-\d\d)', filename)
         for item in infoList:
-            item['calib_hdu'] = item['hdu']
+            try:
+                item['calib_hdu'] = item['hdu']
+            except KeyError:  # workaround for pre- DM-19730 defect ingestion
+                item['calib_hdu'] = 1
         if not found:
             return phuInfo, infoList
         date = found.group(1)
