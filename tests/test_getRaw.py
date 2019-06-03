@@ -158,7 +158,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
     def testDefect(self):
         """Test retrieval of defect list"""
         defectList = self.butler.get("defects", self.dataId)
-        self.assertEqual(len(defectList), 9)
+        self.assertEqual(len(defectList), 408)
         for d in defectList:
             self.assertIsInstance(d, afwImage.DefectBase)
 
