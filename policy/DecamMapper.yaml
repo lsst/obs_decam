@@ -167,7 +167,9 @@ calibrations:
     template: cpFLAT/%(calibDate)s/%(filter)s/FLAT-%(calibDate)s.fits[%(ccdnum)d]
     validRange: true
   defects:
-    columns: date
+    columns:
+    - date
+    - ccdnum
     level: ccd
     obsTimeName: date
     persistable: BaseCatalog
