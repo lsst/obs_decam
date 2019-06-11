@@ -33,6 +33,11 @@ class DecamCalibsParseTask(CalibsParseTask):
         # Try to fetch a date from filename
         # and use as the calibration dates if not already set
         found = re.search(r'(\d\d\d\d-\d\d-\d\d)', filename)
+        for item in infoList:
+            try:
+                item['calib_hdu'] = item['hdu']
+            except KeyError:  # workaround for pre- DM-19730 defect ingestion
+                item['calib_hdu'] = 1
         if not found:
             return phuInfo, infoList
         date = found.group(1)
@@ -149,13 +154,16 @@ class DecamCalibsParseTask(CalibsParseTask):
         raw : `str`
             Destination filename.
         """
-        # Arbitrarily set ccdnum = 1 to make the mapper template happy
+        # Arbitrarily set ccdnum and calib_hdu to 1 to make the mapper template happy
         info["ccdnum"] = 1
+        info["calib_hdu"] = 1
         calibType = self.getCalibType(filename)
         if "flat" in calibType.lower():
             raw = butler.get("cpFlat_filename", info)[0]
         elif ("bias" or "zero") in calibType.lower():
             raw = butler.get("cpBias_filename", info)[0]
+        elif ("illumcor") in calibType.lower():
+            raw = butler.get("cpIllumcor_filename", info)[0]
         else:
             assert False, "Invalid calibType '{:s}'".format(calibType)
         # Remove HDU extension (ccdnum) since we want to refer to the whole file

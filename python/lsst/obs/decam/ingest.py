@@ -204,7 +204,7 @@ class DecamParseTask(ParseTask):
         # Some data IDs can not be extracted from the zeroth extension
         # of the MEF. Add them so Butler does not try to find them
         # in the registry which may still yet to be created.
-        for key in ("ccdnum", "hdu", "ccd"):
+        for key in ("ccdnum", "hdu", "ccd", "calib_hdu"):
             if key not in phuInfo:
                 phuInfo[key] = 0
 

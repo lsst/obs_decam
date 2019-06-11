@@ -83,7 +83,8 @@ class DecamMapper(CameraMapper):
         # template of the raw and instcal et al. datasets, so is not in its
         # keyDict automatically. Add it so the butler know about the data ID key
         # ccdnum.
-        for datasetType in ("raw", "instcal", "dqmask", "wtmap"):
+        # Similarly, add "object" for raws.
+        for datasetType in ("raw", "instcal", "dqmask", "wtmap", "cpIllumcor"):
             self.mappings[datasetType].keyDict.update({'ccdnum': int})
         self.mappings["raw"].keyDict.update({'object': str})
 
@@ -251,7 +252,7 @@ class DecamMapper(CameraMapper):
 
         Parameters
         ----------
-        item : `lsst.afw.image.MaskedImage`
+        item : `lsst.afw.image.DecoratedImage`
             The image read by the butler.
         dataId : data ID
             Data identifier.
@@ -288,6 +289,10 @@ class DecamMapper(CameraMapper):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["flat"], exp, dataId, filter=True)
 
+    def std_illumcor(self, item, dataId):
+        exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+        return self._standardizeExposure(self.calibrations["illumcor"], exp, dataId, filter=True)
+
     def _standardizeCpMasterCal(self, datasetType, item, dataId, setFilter=False):
         """Standardize a MasterCal image obtained from NOAO archive into Exposure
 
@@ -298,8 +303,8 @@ class DecamMapper(CameraMapper):
         Parameters
         ----------
         datasetType : `str`
-            Dataset type ("bias" or "flat").
-        item : `lsst.afw.image.MaskedImage`
+            Dataset type ("bias", "flat", or "illumcor").
+        item : `lsst.afw.image.DecoratedImage`
             The image read by the butler.
         dataId : data ID
             Data identifier.
@@ -335,6 +340,9 @@ class DecamMapper(CameraMapper):
     def std_fringe(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         return self._standardizeExposure(self.calibrations["fringe"], exp, dataId)
+
+    def std_cpIllumcor(self, item, dataId):
+        return self._standardizeCpMasterCal("cpIllumcor", item, dataId, setFilter=True)
 
     def map_defects(self, dataId, write=False):
         """Map defects dataset with the calibration registry.
