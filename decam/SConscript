@@ -4,7 +4,6 @@
 # This code was adapted from obs_subaru hsc/SConscript
 
 import lsst.sconsUtils
-from lsst.utils import getPackageDir
 import glob
 import os
 
@@ -38,8 +37,8 @@ makeLinearizer = env.Command(linearizerOutDir, linearizerInFile, command)
 
 
 # Ingest defects
-pipe_tasks_dir = getPackageDir('pipe_tasks')
-data_dir = getPackageDir('obs_decam_data')
+pipe_tasks_dir = lsst.sconsUtils.env.ProductDir('pipe_tasks')
+data_dir = lsst.sconsUtils.env.ProductDir('obs_decam_data')
 command = (f"{python} {pipe_tasks_dir}/bin/ingestDefects.py decam/CALIB/ {data_dir}/decam/defects "+
             "--calib decam/CALIB --config clobber=True")
 commandInst = env.Command('CALIB/calibRegistry.sqlite3', [], command)
