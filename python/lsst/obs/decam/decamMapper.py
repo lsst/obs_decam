@@ -30,7 +30,7 @@ import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
-from lsst.obs.base import CameraMapper, exposureFromImage
+from lsst.obs.base import CameraMapper
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
@@ -263,14 +263,7 @@ class DecamMapper(CameraMapper):
         result : `lsst.afw.image.Exposure`
             The standardized Exposure.
         """
-        # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
-        exp = exposureFromImage(item, logger=self.log)
-        md = exp.getMetadata()
-        visitInfo = self.makeRawVisitInfo(md=md)
-        exp.getInfo().setVisitInfo(visitInfo)
-
-        # Standardize an Exposure, including setting the photoCalib object
-        return self._standardizeExposure(self.exposures['raw'], exp, dataId,
+        return self._standardizeExposure(self.exposures['raw'], item, dataId,
                                          trimmed=False)
 
     def std_dark(self, item, dataId):
