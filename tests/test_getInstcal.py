@@ -77,7 +77,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
                                            maxSep=0.1*arcseconds)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
-        self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
+        self.assertEqual(visitInfo.getBoresightRotAngle(), visit229388_info['boresightRotAngle'])
         self.assertEqual(visitInfo.getRotType(), visit229388_info['rotType'])
         observatory = visitInfo.getObservatory()
         self.assertAnglesAlmostEqual(observatory.getLongitude(), visit229388_info['obs_longitude'])

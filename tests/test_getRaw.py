@@ -20,7 +20,6 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-import math
 import os
 import warnings
 import unittest
@@ -47,8 +46,8 @@ visit229388_info = {
     "boresightRaDec": SpherePoint(42.81995833, -0.00158305, degrees),
     "boresightAzAlt": SpherePoint(61.24, 90 - 50.46, degrees),
     "boresightAirmass": 1.57,
-    "boresightRotAngle": float("nan")*degrees,
-    "rotType": RotType.UNKNOWN,
+    "boresightRotAngle": 90*degrees,
+    "rotType": RotType.SKY,
     "obs_longitude": -70.81489000000001*degrees,
     "obs_latitude": -30.16606*degrees,
     "obs_elevation": 2215.0,
@@ -109,7 +108,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
                                            maxSep=0.1*arcseconds)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightAzAlt(), visit229388_info['boresightAzAlt'])
         self.assertAlmostEqual(visitInfo.getBoresightAirmass(), visit229388_info['boresightAirmass'])
-        self.assertTrue(math.isnan(visitInfo.getBoresightRotAngle().asDegrees()))
+        self.assertEqual(visitInfo.getBoresightRotAngle(), visit229388_info['boresightRotAngle'])
         self.assertEqual(visitInfo.getRotType(), visit229388_info['rotType'])
         observatory = visitInfo.getObservatory()
         self.assertAnglesAlmostEqual(observatory.getLongitude(), visit229388_info['obs_longitude'])
