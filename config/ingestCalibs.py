@@ -15,12 +15,12 @@ config.parse.translators = {'filter': 'translate_filter',
 config.register.columns = {'filter': 'text',
                            'ccdnum': 'int',
                            'calib_hdu': 'int',
-                           'path': 'text',
+                           'path': 'text',  # Needed for linearizer and others
                            'calibDate': 'text',
                            'validStart': 'text',
                            'validEnd': 'text',
                            }
 config.register.detector = ['filter', 'ccdnum']
 config.register.unique = ['filter', 'ccdnum', 'calibDate']
-config.register.tables = ['bias', 'flat', 'fringe', 'defect', 'dark', 'illumcor']
+config.register.tables = ['bias', 'flat', 'fringe', 'dark', 'illumcor']
 config.register.visit = ['calibDate']

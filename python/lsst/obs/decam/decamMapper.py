@@ -31,7 +31,6 @@ from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
 from lsst.obs.base import CameraMapper, exposureFromImage
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
-import lsst.ip.isr as isr
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
 np.seterr(divide="ignore")
@@ -343,52 +342,6 @@ class DecamMapper(CameraMapper):
 
     def std_cpIllumcor(self, item, dataId):
         return self._standardizeCpMasterCal("cpIllumcor", item, dataId, setFilter=True)
-
-    def map_defects(self, dataId, write=False):
-        """Map defects dataset with the calibration registry.
-
-        Overriding the method so to use CalibrationMapping policy,
-        instead of looking up the path in defectRegistry as currently
-        implemented in CameraMapper.
-
-        Parameters
-        ----------
-        dataId : data ID
-            Dataset identifier.
-
-        Returns
-        -------
-        result : `lsst.daf.persistence.ButlerLocation`
-        """
-        return self.mappings["defects"].map(self, dataId=dataId, write=write)
-
-    def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
-        """Return a defect list based on butlerLocation returned by map_defects.
-
-        Use all nonzero pixels in the Community Pipeline Bad Pixel Masks.
-
-        Parameters
-        ----------
-        butlerLocation : `lsst.daf.persistence.ButlerLocation`
-            Butler Location with path to defects FITS.
-        dataId : data ID
-            Data identifier.
-
-        Returns
-        -------
-        result : `lsst.meas.algorithms.DefectListT`
-        """
-        bpmFitsPath = butlerLocation.getLocationsWithRoot()[0]
-        bpmImg = afwImage.ImageU(bpmFitsPath, allowUnsafe=True)
-        idxBad = np.nonzero(bpmImg.getArray())
-        mim = afwImage.MaskedImageU(bpmImg.getDimensions())
-        mim.getMask().getArray()[idxBad] |= mim.getMask().getPlaneBitMask("BAD")
-        return isr.getDefectListFromMask(mim, "BAD")
-
-    def std_defects(self, item, dataId):
-        """Return the defect list as it is. Do not standardize it to Exposure.
-        """
-        return item
 
     @classmethod
     def getLinearizerDir(cls):

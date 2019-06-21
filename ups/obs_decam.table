@@ -10,6 +10,7 @@ setupRequired(pex_config)
 setupRequired(pex_policy)
 setupRequired(ip_isr)
 setupRequired(astro_metadata_translator)
+setupRequired(obs_decam_data)
 
 setupOptional(testdata_decam)
 
