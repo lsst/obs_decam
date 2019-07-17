@@ -32,7 +32,7 @@ from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.afw.image import RotType
-from lsst.afw.geom import degrees, radians, arcseconds, SpherePoint
+from lsst.geom import degrees, radians, arcseconds, SpherePoint
 
 
 # Desired VisitInfo values for visit 229388, shared between test_getRaw.py and

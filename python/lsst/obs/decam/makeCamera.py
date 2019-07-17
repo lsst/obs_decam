@@ -1,6 +1,6 @@
 
 
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 import lsst.afw.cameraGeom as cameraGeom
 
 pixelSize = 24e-3                   # pixel size in mm
@@ -11,7 +11,7 @@ def makeAmp(i):
     raise RuntimeError("this routine is broken because nExtended and nOverclock are not defined")
     # height = 2048
     # width = 4096
-    # allPixels = afwGeom.BoxI(afwGeom.PointI(0, 0), afwGeom.ExtentI(width + nExtended + nOverclock, height))
+    # allPixels = geom.BoxI(geom.PointI(0, 0), geom.ExtentI(width + nExtended + nOverclock, height))
     # return cameraGeom.Amp(cameraGeom.Id(i), allPixels, None, None, None)
 
 
@@ -23,7 +23,7 @@ def makeCcd(ccdName):
 
 def makeRaft(raftName):
     dewar = cameraGeom.Raft(cameraGeom.Id("DECam"), 1, 1)
-    dewar.addDetector(afwGeom.PointI(0, 0), cameraGeom.FpPoint(0.0, 0.0),
+    dewar.addDetector(geom.PointI(0, 0), cameraGeom.FpPoint(0.0, 0.0),
                       cameraGeom.Orientation(0), makeCcd(raftName))
     return dewar
 
@@ -36,7 +36,7 @@ def makeCamera(name="DECam"):
             dewarName = "S%d" % (62-i+1)
         else:
             dewarName = "S%d" % (i+1)
-        camera.addDetector(afwGeom.PointI(i, 0), cameraGeom.FpPoint(25.4*2.5*(2.5 - i), 0.0),
+        camera.addDetector(geom.PointI(i, 0), cameraGeom.FpPoint(25.4*2.5*(2.5 - i), 0.0),
                            cameraGeom.Orientation(0), makeRaft(dewarName))
 
     return camera

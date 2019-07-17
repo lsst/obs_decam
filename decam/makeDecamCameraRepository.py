@@ -31,6 +31,7 @@ import os
 import shutil
 
 import lsst.utils
+import lsst.geom as geom
 import lsst.afw.geom as afwGeom
 import lsst.afw.table as afwTable
 from lsst.afw.cameraGeom import DetectorConfig, CameraConfig, PUPIL, FOCAL_PLANE, PIXELS
@@ -84,37 +85,37 @@ def makeAmpTables(segmentsFile):
             prescan = 6
             hoverscan = 50
             voverscan = 50
-            rawBBox = afwGeom.Box2I(afwGeom.Point2I(xoff, yoff),
-                                    afwGeom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan))
+            rawBBox = geom.Box2I(geom.Point2I(xoff, yoff),
+                                 geom.Extent2I(ndatax + prescan + hoverscan, ndatay + voverscan))
             # Note: I'm not particularry happy with how the data origin is derived (it neglects [xy]off),
             # but I don't see a better way.
             if readCorner is afwTable.LL:
-                originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
-                originData = afwGeom.Point2I(0, 0)
-                originHOverscan = afwGeom.Point2I(xoff + prescan, yoff)
-                originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + ndatay)
+                originRawData = geom.Point2I(xoff + prescan + hoverscan, yoff)
+                originData = geom.Point2I(0, 0)
+                originHOverscan = geom.Point2I(xoff + prescan, yoff)
+                originVOverscan = geom.Point2I(xoff + prescan + hoverscan, yoff + ndatay)
             elif readCorner is afwTable.LR:
-                originRawData = afwGeom.Point2I(xoff, yoff)
-                originData = afwGeom.Point2I(ndatax, 0)
-                originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff)
-                originVOverscan = afwGeom.Point2I(xoff, yoff + ndatay)
+                originRawData = geom.Point2I(xoff, yoff)
+                originData = geom.Point2I(ndatax, 0)
+                originHOverscan = geom.Point2I(xoff + ndatax, yoff)
+                originVOverscan = geom.Point2I(xoff, yoff + ndatay)
             elif readCorner is afwTable.UL:
-                originRawData = afwGeom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
-                originData = afwGeom.Point2I(0, 0)
-                originHOverscan = afwGeom.Point2I(xoff + prescan, yoff + voverscan)
-                originVOverscan = afwGeom.Point2I(xoff + prescan + hoverscan, yoff)
+                originRawData = geom.Point2I(xoff + prescan + hoverscan, yoff + voverscan)
+                originData = geom.Point2I(0, 0)
+                originHOverscan = geom.Point2I(xoff + prescan, yoff + voverscan)
+                originVOverscan = geom.Point2I(xoff + prescan + hoverscan, yoff)
             elif readCorner is afwTable.UR:
-                originRawData = afwGeom.Point2I(xoff, yoff + voverscan)
-                originData = afwGeom.Point2I(ndatax, 0)
-                originHOverscan = afwGeom.Point2I(xoff + ndatax, yoff + voverscan)
-                originVOverscan = afwGeom.Point2I(xoff, yoff)
+                originRawData = geom.Point2I(xoff, yoff + voverscan)
+                originData = geom.Point2I(ndatax, 0)
+                originHOverscan = geom.Point2I(xoff + ndatax, yoff + voverscan)
+                originVOverscan = geom.Point2I(xoff, yoff)
             else:
                 raise RuntimeError("Expected readout corner to be LL, LR, UL, or UR")
 
-            rawDataBBox = afwGeom.Box2I(originRawData, afwGeom.Extent2I(ndatax, ndatay))
-            dataBBox = afwGeom.Box2I(originData, afwGeom.Extent2I(ndatax, ndatay))
-            rawHorizontalOverscanBBox = afwGeom.Box2I(originHOverscan, afwGeom.Extent2I(hoverscan, ndatay))
-            rawVerticalOverscanBBox = afwGeom.Box2I(originVOverscan, afwGeom.Extent2I(ndatax, voverscan))
+            rawDataBBox = geom.Box2I(originRawData, geom.Extent2I(ndatax, ndatay))
+            dataBBox = geom.Box2I(originData, geom.Extent2I(ndatax, ndatay))
+            rawHorizontalOverscanBBox = geom.Box2I(originHOverscan, geom.Extent2I(hoverscan, ndatay))
+            rawVerticalOverscanBBox = geom.Box2I(originVOverscan, geom.Extent2I(ndatax, voverscan))
 
             print("\nDetector=%s; Amp=%s" % (detectorName, name))
             print(rawHorizontalOverscanBBox)
@@ -138,23 +139,23 @@ def makeAmpTables(segmentsFile):
             record.setRawFlipY(flipy)
             record.setRawBBox(rawBBox)
             # I believe that xy offset is not needed if the raw data are pre-assembled
-            record.setRawXYOffset(afwGeom.Extent2I(0, 0))
+            record.setRawXYOffset(geom.Extent2I(0, 0))
             """
             if readCorner is afwTable.LL:
-                record.setRawXYOffset(afwGeom.Extent2I(xoff + prescan + hoverscan, yoff))
+                record.setRawXYOffset(geom.Extent2I(xoff + prescan + hoverscan, yoff))
             elif readCorner is afwTable.LR:
-                record.setRawXYOffset(afwGeom.Extent2I(xoff, yoff))
+                record.setRawXYOffset(geom.Extent2I(xoff, yoff))
             elif readCorner is afwTable.UL:
-                record.setRawXYOffset(afwGeom.Extent2I(xoff + prescan + hoverscan, yoff + voverscan))
+                record.setRawXYOffset(geom.Extent2I(xoff + prescan + hoverscan, yoff + voverscan))
             elif readCorner is afwTable.UR:
-                record.setRawXYOffset(afwGeom.Extent2I(xoff, yoff + voverscan))
+                record.setRawXYOffset(geom.Extent2I(xoff, yoff + voverscan))
             """
             record.setRawDataBBox(rawDataBBox)
             record.setRawHorizontalOverscanBBox(rawHorizontalOverscanBBox)
             record.setRawVerticalOverscanBBox(rawVerticalOverscanBBox)
             # I think of prescan as being along the bottom of the raw data.  I actually
             # don't know how you would do a prescan in the serial direction.
-            record.setRawPrescanBBox(afwGeom.Box2I())
+            record.setRawPrescanBBox(geom.Box2I())
     return returnDict
 
 
@@ -237,7 +238,7 @@ if __name__ == "__main__":
     camConfig.name = 'DECAM'
     # From DECam calibration doc
     camConfig.plateScale = 17.575
-    pScaleRad = afwGeom.arcsecToRad(camConfig.plateScale)
+    pScaleRad = geom.arcsecToRad(camConfig.plateScale)
     tConfig = afwGeom.TransformConfig()
     tConfig.transform.name = 'radial'
     nomWavelen = 0.625  # nominal wavelen in microns
