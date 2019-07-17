@@ -25,6 +25,7 @@ import re
 import numpy as np
 
 from lsst.utils import getPackageDir
+from astro_metadata_translator import fix_header, DecamTranslator
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.afw.fits import readMetadata
@@ -231,6 +232,7 @@ class DecamMapper(CameraMapper):
 
         mi = afwImage.MaskedImageF(afwImage.ImageF(instcal.getImage()), mask, variance)
         md = readMetadata(instcalMap.getLocationsWithRoot()[0])
+        fix_header(md, translator_class=DecamTranslator)
         wcs = makeSkyWcs(md, strip=True)
         exp = afwImage.ExposureF(mi, wcs)
 
@@ -276,6 +278,7 @@ class DecamMapper(CameraMapper):
         rawPath = self.map_raw(dataId).getLocations()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", rawPath)
         md0 = readMetadata(headerPath)
+        fix_header(md0, translator_class=DecamTranslator)
         visitInfo = self.makeRawVisitInfo(md0)
         exp.getInfo().setVisitInfo(visitInfo)
         return self._standardizeExposure(self.calibrations["dark"], exp, dataId, filter=False)
@@ -321,6 +324,7 @@ class DecamMapper(CameraMapper):
         masterCalPath = masterCalMap(dataId).getLocationsWithRoot()[0]
         headerPath = re.sub(r'[\[](\d+)[\]]$', "[0]", masterCalPath)
         md0 = readMetadata(headerPath)
+        fix_header(md0, translator_class=DecamTranslator)
         for kw in ('CTYPE1', 'CTYPE2', 'CRVAL1', 'CRVAL2', 'CUNIT1', 'CUNIT2',
                    'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2'):
             if kw in md0.paramNames() and kw not in md.paramNames():
