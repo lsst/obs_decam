@@ -28,7 +28,7 @@ import warnings
 
 import lsst.utils.tests
 import lsst.afw.image as afwImage
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 import lsst.pex.exceptions as pexExcept
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
 from lsst.utils import getPackageDir
@@ -100,7 +100,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
         wcsPost = expPost.getWcs()
         # Shift WCS for trimming the prescan and overscan region
         # ccdnum 1 is S29, with overscan in the bottom
-        wcsRaw = wcsRaw.copyAtShiftedPixelOrigin(afwGeom.Extent2D(-56, -50))
+        wcsRaw = wcsRaw.copyAtShiftedPixelOrigin(geom.Extent2D(-56, -50))
         self.assertWcsAlmostEqualOverBBox(wcsRaw, wcsPost, expPost.getBBox())
 
 

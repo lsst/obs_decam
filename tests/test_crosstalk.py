@@ -28,7 +28,7 @@ import lsst.utils.tests
 
 from lsst.utils import getPackageDir
 import lsst.pex.exceptions as pexExcept
-import lsst.afw.geom as afwGeom
+import lsst.geom as geom
 import lsst.daf.persistence as dafPersist
 from lsst.ip.isr.isrTask import IsrTask
 
@@ -103,9 +103,9 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         image2 = expWithCrosstalkCorr.getMaskedImage().getImage()
 
         # Work with a small image chunk only
-        pmin = afwGeom.Point2I(self.xtalkX - self.xtalkRad, self.xtalkY - self.xtalkRad)
-        pmax = afwGeom.Point2I(self.xtalkX + self.xtalkRad, self.xtalkY + self.xtalkRad)
-        box = afwGeom.Box2I(pmin, pmax)
+        pmin = geom.Point2I(self.xtalkX - self.xtalkRad, self.xtalkY - self.xtalkRad)
+        pmax = geom.Point2I(self.xtalkX + self.xtalkRad, self.xtalkY + self.xtalkRad)
+        box = geom.Box2I(pmin, pmax)
         chunk1 = image1.Factory(image1, box)
         chunk2 = image2.Factory(image2, box)
         chunkDiff = chunk1.clone()

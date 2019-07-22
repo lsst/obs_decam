@@ -11,6 +11,7 @@ setupRequired(pex_policy)
 setupRequired(ip_isr)
 setupRequired(astro_metadata_translator)
 setupRequired(obs_decam_data)
+setupRequired(geom)
 
 setupOptional(testdata_decam)
 

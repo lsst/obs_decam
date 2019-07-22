@@ -23,6 +23,7 @@ import os
 import re
 
 
+from astro_metadata_translator import fix_header, DecamTranslator
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 
@@ -100,6 +101,7 @@ class DecamParseTask(ParseTask):
         for file in os.listdir(path):
             fileName = os.path.join(path, file)
             md = readMetadata(fileName)
+            fix_header(md, translator_class=DecamTranslator)
             if "EXPNUM" not in md.names():
                 return
             expnum = md.getScalar("EXPNUM")
