@@ -271,6 +271,8 @@ class DecamMapper(CameraMapper):
     def _createInitialSkyWcs(self, exposure):
         # DECam has a coordinate system flipped on X with respect to our
         # VisitInfo definition of the field angle orientation.
+        # We have to override this method until RFC-605 is implemented, to pass
+        # `flipX=True` to createInitialSkyWcs below.
         self._createSkyWcsFromMetadata(exposure)
 
         if exposure.getInfo().getVisitInfo() is None:
