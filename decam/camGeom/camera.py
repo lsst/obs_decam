@@ -3809,4 +3809,4 @@ config.detectorList[61].id = 62
 config.radialCoeffs = None
 
 # Name of this camera
-config.name = 'DECAM'
+config.name = 'DECam'
