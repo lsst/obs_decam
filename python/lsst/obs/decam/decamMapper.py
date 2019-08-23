@@ -21,6 +21,7 @@
 #
 import os
 import re
+import traceback
 
 import numpy as np
 
@@ -30,7 +31,8 @@ import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 from lsst.afw.fits import readMetadata
 from lsst.afw.geom import makeSkyWcs
-from lsst.obs.base import CameraMapper, exposureFromImage
+from lsst.obs.base import CameraMapper
+from lsst.obs.base.utils import createInitialSkyWcs, InitialSkyWcsError
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 
@@ -263,15 +265,31 @@ class DecamMapper(CameraMapper):
         result : `lsst.afw.image.Exposure`
             The standardized Exposure.
         """
-        # Convert the raw DecoratedImage to an Exposure, set metadata and wcs.
-        exp = exposureFromImage(item, logger=self.log)
-        md = exp.getMetadata()
-        visitInfo = self.makeRawVisitInfo(md=md)
-        exp.getInfo().setVisitInfo(visitInfo)
-
-        # Standardize an Exposure, including setting the photoCalib object
-        return self._standardizeExposure(self.exposures['raw'], exp, dataId,
+        return self._standardizeExposure(self.exposures['raw'], item, dataId,
                                          trimmed=False)
+
+    def _createInitialSkyWcs(self, exposure):
+        # DECam has a coordinate system flipped on X with respect to our
+        # VisitInfo definition of the field angle orientation.
+        # We have to override this method until RFC-605 is implemented, to pass
+        # `flipX=True` to createInitialSkyWcs below.
+        self._createSkyWcsFromMetadata(exposure)
+
+        if exposure.getInfo().getVisitInfo() is None:
+            msg = "No VisitInfo; cannot access boresight information. Defaulting to metadata-based SkyWcs."
+            self.log.warn(msg)
+            return
+        try:
+            newSkyWcs = createInitialSkyWcs(exposure.getInfo().getVisitInfo(), exposure.getDetector(),
+                                            flipX=True)
+            exposure.setWcs(newSkyWcs)
+        except InitialSkyWcsError as e:
+            msg = "Cannot create SkyWcs using VisitInfo and Detector, using metadata-based SkyWcs: %s"
+            self.log.warn(msg, e)
+            self.log.debug("Exception was: %s", traceback.TracebackException.from_exception(e))
+            if e.__context__ is not None:
+                self.log.debug("Root-cause Exception was: %s",
+                               traceback.TracebackException.from_exception(e.__context__))
 
     def std_dark(self, item, dataId):
         exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
