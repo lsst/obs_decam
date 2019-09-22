@@ -32,7 +32,7 @@ import lsst.obs.decam
 testDataPackage = "testdata_decam"
 try:
     testDataDirectory = lsst.utils.getPackageDir(testDataPackage)
-except lsst.pex.exceptions.NotFoundError:
+except LookupError:
     testDataDirectory = None
 
 
