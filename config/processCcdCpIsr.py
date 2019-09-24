@@ -21,3 +21,5 @@ for refObjLoader in (config.calibrate.astromRefObjLoader,
     refObjLoader.filterMap['Y'] = 'y'
 
 config.calibrate.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
+config.calibrate.connections.astromRefCat = "ps1_pv3_3pi_20170110"
+config.calibrate.connections.photoRefCat = "ps1_pv3_3pi_20170110"

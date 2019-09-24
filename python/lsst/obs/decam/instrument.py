@@ -57,18 +57,23 @@ class DarkEnergyCamera(Instrument):
 
     def register(self, registry):
         camera = self.getCamera()
-        dataId = {"instrument": self.getName()}
         obsMax = 2**31
-        registry.addDimensionEntry("instrument", dataId,
-                                   entries={"detector_max": 64,
-                                            "visit_max": obsMax,
-                                            "exposure_max": obsMax})
+        registry.insertDimensionData(
+            "instrument",
+            {"name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax}
+        )
 
         for detector in camera:
-            registry.addDimensionEntry(
-                "detector", dataId,
-                detector=detector.getId(),
-                name=detector.getName(),
+            registry.insertDimensionData(
+                "detector",
+                {
+                    "instrument": self.getName(),
+                    "id": detector.getId(),
+                    "full_name": detector.getName(),
+                    "name_in_raft": detector.getName()[1:],
+                    "raft": detector.getName()[0],
+                    "purpose": str(detector.getType()).split(".")[-1],
+                }
             )
 
         self._registerFilters(registry)

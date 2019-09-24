@@ -26,20 +26,20 @@ import unittest
 import os
 import lsst.utils.tests
 
-from lsst.obs.base.gen3.ingest_tests import IngestTestBase
+from lsst.obs.base.ingest_tests import IngestTestBase
 import lsst.obs.decam
 
 testDataPackage = "testdata_decam"
 try:
     testDataDirectory = lsst.utils.getPackageDir(testDataPackage)
-except lsst.pex.exceptions.NotFoundError:
+except LookupError:
     testDataDirectory = None
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     def setUp(self):
-        self.ingestdir = os.path.dirname(__file__)
+        self.ingestDir = os.path.dirname(__file__)
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
         self.file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
         self.dataId = dict(instrument="DECam", exposure=229388, detector=25)

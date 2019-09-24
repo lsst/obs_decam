@@ -11,6 +11,7 @@ config.isr.load(os.path.join(obsConfigDir, 'isr.py'))
 
 config.charImage.repair.cosmicray.nCrPixelMax = 100000
 
+# This sets the reference catalog name for Gen2.
 for refObjLoader in (config.calibrate.astromRefObjLoader,
                      config.calibrate.photoRefObjLoader,
                      config.charImage.refObjLoader,
@@ -20,6 +21,11 @@ for refObjLoader in (config.calibrate.astromRefObjLoader,
     refObjLoader.filterMap['u'] = 'g'
     refObjLoader.filterMap['Y'] = 'y'
 
+# This sets up the reference catalog for Gen3.
+# Note that in Gen3, we've stopped pretending (which is what Gen2 does,
+# for backwards compatibility) that charImage uses a reference catalog.
+config.calibrate.connections.astromRefCat = "ps1_pv3_3pi_20170110"
+config.calibrate.connections.photoRefCat = "ps1_pv3_3pi_20170110"
 
 config.calibrate.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
 # this was the default prior to DM-11521.  New default is 2000.
