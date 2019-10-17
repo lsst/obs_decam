@@ -28,10 +28,10 @@ config.detectorList[0] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[0].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[0].bbox_y1 = 4093  # 4095
+config.detectorList[0].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[0].bbox_x1 = 2045  # 2047
+config.detectorList[0].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[0].bbox_x0 = 0
@@ -89,10 +89,10 @@ config.detectorList[1] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[1].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[1].bbox_y1 = 4093  # 4095
+config.detectorList[1].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[1].bbox_x1 = 2045  # 2047
+config.detectorList[1].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[1].bbox_x0 = 0
@@ -150,10 +150,10 @@ config.detectorList[2] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[2].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[2].bbox_y1 = 4093  # 4095
+config.detectorList[2].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[2].bbox_x1 = 2045  # 2047
+config.detectorList[2].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[2].bbox_x0 = 0
@@ -211,10 +211,10 @@ config.detectorList[3] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[3].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[3].bbox_y1 = 4093  # 4095
+config.detectorList[3].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[3].bbox_x1 = 2045  # 2047
+config.detectorList[3].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[3].bbox_x0 = 0
@@ -272,10 +272,10 @@ config.detectorList[4] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[4].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[4].bbox_y1 = 4093  # 4095
+config.detectorList[4].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[4].bbox_x1 = 2045  # 2047
+config.detectorList[4].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[4].bbox_x0 = 0
@@ -333,10 +333,10 @@ config.detectorList[5] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[5].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[5].bbox_y1 = 4093  # 4095
+config.detectorList[5].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[5].bbox_x1 = 2045  # 2047
+config.detectorList[5].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[5].bbox_x0 = 0
@@ -394,10 +394,10 @@ config.detectorList[6] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[6].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[6].bbox_y1 = 4093  # 4095
+config.detectorList[6].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[6].bbox_x1 = 2045  # 2047
+config.detectorList[6].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[6].bbox_x0 = 0
@@ -455,10 +455,10 @@ config.detectorList[7] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[7].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[7].bbox_y1 = 4093  # 4095
+config.detectorList[7].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[7].bbox_x1 = 2045  # 2047
+config.detectorList[7].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[7].bbox_x0 = 0
@@ -516,10 +516,10 @@ config.detectorList[8] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[8].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[8].bbox_y1 = 4093  # 4095
+config.detectorList[8].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[8].bbox_x1 = 2045  # 2047
+config.detectorList[8].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[8].bbox_x0 = 0
@@ -577,10 +577,10 @@ config.detectorList[9] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[9].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[9].bbox_y1 = 4093  # 4095
+config.detectorList[9].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[9].bbox_x1 = 2045  # 2047
+config.detectorList[9].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[9].bbox_x0 = 0
@@ -638,10 +638,10 @@ config.detectorList[10] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[10].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[10].bbox_y1 = 4093  # 4095
+config.detectorList[10].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[10].bbox_x1 = 2045  # 2047
+config.detectorList[10].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[10].bbox_x0 = 0
@@ -699,10 +699,10 @@ config.detectorList[11] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[11].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[11].bbox_y1 = 4093  # 4095
+config.detectorList[11].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[11].bbox_x1 = 2045  # 2047
+config.detectorList[11].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[11].bbox_x0 = 0
@@ -760,10 +760,10 @@ config.detectorList[12] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[12].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[12].bbox_y1 = 4093  # 4095
+config.detectorList[12].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[12].bbox_x1 = 2045  # 2047
+config.detectorList[12].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[12].bbox_x0 = 0
@@ -821,10 +821,10 @@ config.detectorList[13] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[13].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[13].bbox_y1 = 4093  # 4095
+config.detectorList[13].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[13].bbox_x1 = 2045  # 2047
+config.detectorList[13].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[13].bbox_x0 = 0
@@ -882,10 +882,10 @@ config.detectorList[14] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[14].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[14].bbox_y1 = 4093  # 4095
+config.detectorList[14].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[14].bbox_x1 = 2045  # 2047
+config.detectorList[14].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[14].bbox_x0 = 0
@@ -943,10 +943,10 @@ config.detectorList[15] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[15].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[15].bbox_y1 = 4093  # 4095
+config.detectorList[15].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[15].bbox_x1 = 2045  # 2047
+config.detectorList[15].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[15].bbox_x0 = 0
@@ -1004,10 +1004,10 @@ config.detectorList[16] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[16].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[16].bbox_y1 = 4093  # 4095
+config.detectorList[16].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[16].bbox_x1 = 2045  # 2047
+config.detectorList[16].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[16].bbox_x0 = 0
@@ -1065,10 +1065,10 @@ config.detectorList[17] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[17].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[17].bbox_y1 = 4093  # 4095
+config.detectorList[17].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[17].bbox_x1 = 2045  # 2047
+config.detectorList[17].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[17].bbox_x0 = 0
@@ -1126,10 +1126,10 @@ config.detectorList[18] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[18].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[18].bbox_y1 = 4093  # 4095
+config.detectorList[18].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[18].bbox_x1 = 2045  # 2047
+config.detectorList[18].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[18].bbox_x0 = 0
@@ -1187,10 +1187,10 @@ config.detectorList[19] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[19].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[19].bbox_y1 = 4093  # 4095
+config.detectorList[19].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[19].bbox_x1 = 2045  # 2047
+config.detectorList[19].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[19].bbox_x0 = 0
@@ -1248,10 +1248,10 @@ config.detectorList[20] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[20].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[20].bbox_y1 = 4093  # 4095
+config.detectorList[20].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[20].bbox_x1 = 2045  # 2047
+config.detectorList[20].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[20].bbox_x0 = 0
@@ -1309,10 +1309,10 @@ config.detectorList[21] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[21].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[21].bbox_y1 = 4093  # 4095
+config.detectorList[21].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[21].bbox_x1 = 2045  # 2047
+config.detectorList[21].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[21].bbox_x0 = 0
@@ -1370,10 +1370,10 @@ config.detectorList[22] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[22].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[22].bbox_y1 = 4093  # 4095
+config.detectorList[22].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[22].bbox_x1 = 2045  # 2047
+config.detectorList[22].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[22].bbox_x0 = 0
@@ -1431,10 +1431,10 @@ config.detectorList[23] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[23].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[23].bbox_y1 = 4093  # 4095
+config.detectorList[23].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[23].bbox_x1 = 2045  # 2047
+config.detectorList[23].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[23].bbox_x0 = 0
@@ -1492,10 +1492,10 @@ config.detectorList[24] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[24].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[24].bbox_y1 = 4093  # 4095
+config.detectorList[24].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[24].bbox_x1 = 2045  # 2047
+config.detectorList[24].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[24].bbox_x0 = 0
@@ -1553,10 +1553,10 @@ config.detectorList[25] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[25].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[25].bbox_y1 = 4093  # 4095
+config.detectorList[25].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[25].bbox_x1 = 2045  # 2047
+config.detectorList[25].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[25].bbox_x0 = 0
@@ -1614,10 +1614,10 @@ config.detectorList[26] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[26].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[26].bbox_y1 = 4093  # 4095
+config.detectorList[26].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[26].bbox_x1 = 2045  # 2047
+config.detectorList[26].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[26].bbox_x0 = 0
@@ -1675,10 +1675,10 @@ config.detectorList[27] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[27].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[27].bbox_y1 = 4093  # 4095
+config.detectorList[27].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[27].bbox_x1 = 2045  # 2047
+config.detectorList[27].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[27].bbox_x0 = 0
@@ -1736,10 +1736,10 @@ config.detectorList[28] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[28].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[28].bbox_y1 = 4093  # 4095
+config.detectorList[28].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[28].bbox_x1 = 2045  # 2047
+config.detectorList[28].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[28].bbox_x0 = 0
@@ -1797,10 +1797,10 @@ config.detectorList[29] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[29].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[29].bbox_y1 = 4093  # 4095
+config.detectorList[29].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[29].bbox_x1 = 2045  # 2047
+config.detectorList[29].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[29].bbox_x0 = 0
@@ -1858,10 +1858,10 @@ config.detectorList[30] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[30].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[30].bbox_y1 = 4093  # 4095
+config.detectorList[30].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[30].bbox_x1 = 2045  # 2047
+config.detectorList[30].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[30].bbox_x0 = 0
@@ -1919,10 +1919,10 @@ config.detectorList[31] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[31].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[31].bbox_y1 = 4093  # 4095
+config.detectorList[31].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[31].bbox_x1 = 2045  # 2047
+config.detectorList[31].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[31].bbox_x0 = 0
@@ -1980,10 +1980,10 @@ config.detectorList[32] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[32].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[32].bbox_y1 = 4093  # 4095
+config.detectorList[32].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[32].bbox_x1 = 2045  # 2047
+config.detectorList[32].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[32].bbox_x0 = 0
@@ -2041,10 +2041,10 @@ config.detectorList[33] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[33].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[33].bbox_y1 = 4093  # 4095
+config.detectorList[33].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[33].bbox_x1 = 2045  # 2047
+config.detectorList[33].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[33].bbox_x0 = 0
@@ -2102,10 +2102,10 @@ config.detectorList[34] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[34].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[34].bbox_y1 = 4093  # 4095
+config.detectorList[34].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[34].bbox_x1 = 2045  # 2047
+config.detectorList[34].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[34].bbox_x0 = 0
@@ -2163,10 +2163,10 @@ config.detectorList[35] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[35].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[35].bbox_y1 = 4093  # 4095
+config.detectorList[35].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[35].bbox_x1 = 2045  # 2047
+config.detectorList[35].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[35].bbox_x0 = 0
@@ -2224,10 +2224,10 @@ config.detectorList[36] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[36].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[36].bbox_y1 = 4093  # 4095
+config.detectorList[36].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[36].bbox_x1 = 2045  # 2047
+config.detectorList[36].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[36].bbox_x0 = 0
@@ -2285,10 +2285,10 @@ config.detectorList[37] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[37].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[37].bbox_y1 = 4093  # 4095
+config.detectorList[37].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[37].bbox_x1 = 2045  # 2047
+config.detectorList[37].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[37].bbox_x0 = 0
@@ -2346,10 +2346,10 @@ config.detectorList[38] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[38].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[38].bbox_y1 = 4093  # 4095
+config.detectorList[38].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[38].bbox_x1 = 2045  # 2047
+config.detectorList[38].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[38].bbox_x0 = 0
@@ -2407,10 +2407,10 @@ config.detectorList[39] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[39].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[39].bbox_y1 = 4093  # 4095
+config.detectorList[39].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[39].bbox_x1 = 2045  # 2047
+config.detectorList[39].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[39].bbox_x0 = 0
@@ -2468,10 +2468,10 @@ config.detectorList[40] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[40].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[40].bbox_y1 = 4093  # 4095
+config.detectorList[40].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[40].bbox_x1 = 2045  # 2047
+config.detectorList[40].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[40].bbox_x0 = 0
@@ -2529,10 +2529,10 @@ config.detectorList[41] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[41].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[41].bbox_y1 = 4093  # 4095
+config.detectorList[41].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[41].bbox_x1 = 2045  # 2047
+config.detectorList[41].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[41].bbox_x0 = 0
@@ -2590,10 +2590,10 @@ config.detectorList[42] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[42].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[42].bbox_y1 = 4093  # 4095
+config.detectorList[42].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[42].bbox_x1 = 2045  # 2047
+config.detectorList[42].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[42].bbox_x0 = 0
@@ -2651,10 +2651,10 @@ config.detectorList[43] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[43].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[43].bbox_y1 = 4093  # 4095
+config.detectorList[43].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[43].bbox_x1 = 2045  # 2047
+config.detectorList[43].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[43].bbox_x0 = 0
@@ -2712,10 +2712,10 @@ config.detectorList[44] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[44].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[44].bbox_y1 = 4093  # 4095
+config.detectorList[44].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[44].bbox_x1 = 2045  # 2047
+config.detectorList[44].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[44].bbox_x0 = 0
@@ -2773,10 +2773,10 @@ config.detectorList[45] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[45].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[45].bbox_y1 = 4093  # 4095
+config.detectorList[45].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[45].bbox_x1 = 2045  # 2047
+config.detectorList[45].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[45].bbox_x0 = 0
@@ -2834,10 +2834,10 @@ config.detectorList[46] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[46].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[46].bbox_y1 = 4093  # 4095
+config.detectorList[46].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[46].bbox_x1 = 2045  # 2047
+config.detectorList[46].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[46].bbox_x0 = 0
@@ -2895,10 +2895,10 @@ config.detectorList[47] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[47].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[47].bbox_y1 = 4093  # 4095
+config.detectorList[47].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[47].bbox_x1 = 2045  # 2047
+config.detectorList[47].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[47].bbox_x0 = 0
@@ -2956,10 +2956,10 @@ config.detectorList[48] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[48].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[48].bbox_y1 = 4093  # 4095
+config.detectorList[48].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[48].bbox_x1 = 2045  # 2047
+config.detectorList[48].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[48].bbox_x0 = 0
@@ -3017,10 +3017,10 @@ config.detectorList[49] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[49].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[49].bbox_y1 = 4093  # 4095
+config.detectorList[49].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[49].bbox_x1 = 2045  # 2047
+config.detectorList[49].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[49].bbox_x0 = 0
@@ -3078,10 +3078,10 @@ config.detectorList[50] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[50].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[50].bbox_y1 = 4093  # 4095
+config.detectorList[50].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[50].bbox_x1 = 2045  # 2047
+config.detectorList[50].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[50].bbox_x0 = 0
@@ -3139,10 +3139,10 @@ config.detectorList[51] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[51].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[51].bbox_y1 = 4093  # 4095
+config.detectorList[51].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[51].bbox_x1 = 2045  # 2047
+config.detectorList[51].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[51].bbox_x0 = 0
@@ -3200,10 +3200,10 @@ config.detectorList[52] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[52].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[52].bbox_y1 = 4093  # 4095
+config.detectorList[52].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[52].bbox_x1 = 2045  # 2047
+config.detectorList[52].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[52].bbox_x0 = 0
@@ -3261,10 +3261,10 @@ config.detectorList[53] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[53].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[53].bbox_y1 = 4093  # 4095
+config.detectorList[53].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[53].bbox_x1 = 2045  # 2047
+config.detectorList[53].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[53].bbox_x0 = 0
@@ -3322,10 +3322,10 @@ config.detectorList[54] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[54].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[54].bbox_y1 = 4093  # 4095
+config.detectorList[54].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[54].bbox_x1 = 2045  # 2047
+config.detectorList[54].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[54].bbox_x0 = 0
@@ -3383,10 +3383,10 @@ config.detectorList[55] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[55].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[55].bbox_y1 = 4093  # 4095
+config.detectorList[55].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[55].bbox_x1 = 2045  # 2047
+config.detectorList[55].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[55].bbox_x0 = 0
@@ -3444,10 +3444,10 @@ config.detectorList[56] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[56].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[56].bbox_y1 = 4093  # 4095
+config.detectorList[56].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[56].bbox_x1 = 2045  # 2047
+config.detectorList[56].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[56].bbox_x0 = 0
@@ -3505,10 +3505,10 @@ config.detectorList[57] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[57].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[57].bbox_y1 = 4093  # 4095
+config.detectorList[57].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[57].bbox_x1 = 2045  # 2047
+config.detectorList[57].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[57].bbox_x0 = 0
@@ -3566,10 +3566,10 @@ config.detectorList[58] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[58].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[58].bbox_y1 = 4093  # 4095
+config.detectorList[58].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[58].bbox_x1 = 2045  # 2047
+config.detectorList[58].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[58].bbox_x0 = 0
@@ -3627,10 +3627,10 @@ config.detectorList[59] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[59].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[59].bbox_y1 = 4093  # 4095
+config.detectorList[59].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[59].bbox_x1 = 2045  # 2047
+config.detectorList[59].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[59].bbox_x0 = 0
@@ -3688,10 +3688,10 @@ config.detectorList[60] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[60].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[60].bbox_y1 = 4093  # 4095
+config.detectorList[60].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[60].bbox_x1 = 2045  # 2047
+config.detectorList[60].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[60].bbox_x0 = 0
@@ -3749,10 +3749,10 @@ config.detectorList[61] = lsst.afw.cameraGeom.cameraConfig.DetectorConfig()
 config.detectorList[61].bbox_y0 = 0
 
 # y1 of pixel bounding box
-config.detectorList[61].bbox_y1 = 4093  # 4095
+config.detectorList[61].bbox_y1 = 4095
 
 # x1 of pixel bounding box
-config.detectorList[61].bbox_x1 = 2045  # 2047
+config.detectorList[61].bbox_x1 = 2047
 
 # x0 of pixel bounding box
 config.detectorList[61].bbox_x0 = 0
