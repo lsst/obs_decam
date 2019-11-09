@@ -27,7 +27,7 @@ __all__ = ("DarkEnergyCamera",)
 import os
 
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
-from lsst.daf.butler.instrument import Instrument
+from lsst.obs.base import Instrument
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
 from lsst.utils import getPackageDir

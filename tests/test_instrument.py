@@ -25,7 +25,7 @@
 import unittest
 
 import lsst.utils.tests
-from lsst.daf.butler.instrument_tests import InstrumentTests, InstrumentTestData
+from lsst.obs.base.instrument_tests import InstrumentTests, InstrumentTestData
 import lsst.obs.decam
 
 
