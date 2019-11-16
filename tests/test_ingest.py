@@ -26,7 +26,7 @@ import unittest
 import os
 import lsst.utils.tests
 
-from lsst.obs.base.ingest_tests import IngestTestBase
+from lsst.obs.base.ingest_tests import IngestTestBase, InstrumentSignatureDataIds
 import lsst.obs.decam
 
 testDataPackage = "testdata_decam"
@@ -39,10 +39,16 @@ except LookupError:
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     def setUp(self):
-        self.ingestDir = os.path.dirname(__file__)
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
         self.file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
         self.dataId = dict(instrument="DECam", exposure=229388, detector=25)
+
+        # DECam has neither brighter-fatter nor transmission corrections.
+        self.instrumentSignatureDataIds = InstrumentSignatureDataIds(
+            camera={'calibration_label': 'unbounded'},
+            defects={'detector': 8, 'calibration_label': 'defect/1970-01-01T00:00:00/8'},
+            instrument=self.instrument.getName()
+        )
 
         super().setUp()
 
