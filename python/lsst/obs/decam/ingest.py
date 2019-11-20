@@ -76,7 +76,6 @@ class DecamIngestTask(IngestTask):
                     for info in hduInfoList:
                         self.register.addRow(registry, info, dryrun=args.dryrun, create=args.create)
 
-                self.register.addVisits(registry, dryrun=args.dryrun)
         elif args.filetype == "raw":
             IngestTask.run(self, args)
 
