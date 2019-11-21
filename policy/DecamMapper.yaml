@@ -300,6 +300,8 @@ datasets:
     template: dcrDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   apPipe_metadata:
     template: '%(visit)07d/apPipe_metadata/metadata-%(visit)07d_%(ccdnum)02d.yaml'
+  apdb_marker:
+    template: '%(visit)07d/apdb/apdb_marker-%(visit)07d_%(ccdnum)02d.py'
   ossThumb:
     template: '%(visit)07d/thumbs/oss-%(visit)07d-%(ccdnum)03d.png'
   flattenedThumb:
