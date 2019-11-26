@@ -10,6 +10,6 @@ config.textDefectPath = os.path.join(getPackageDir('obs_decam_data'), 'decam', '
 config.dataIngester.retarget(DecamIngestTask)
 config.dataIngester.load(os.path.join(decamConfigDir, 'ingest.py'))
 config.calibIngester.load(os.path.join(decamConfigDir, 'ingestCalibs.py'))
-config.defectIngester.load(os.path.join(decamConfigDir, 'ingestStdTextCalibs.py'))
+config.defectIngester.load(os.path.join(decamConfigDir, 'ingestCuratedCalibs.py'))
 config.defectIngester.parse.extnames = []
 
