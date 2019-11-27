@@ -39,7 +39,7 @@ makeLinearizer = env.Command(linearizerOutDir, linearizerInFile, command)
 # Ingest defects
 pipe_tasks_dir = lsst.sconsUtils.env.ProductDir('pipe_tasks')
 data_dir = lsst.sconsUtils.env.ProductDir('obs_decam_data')
-command = (f"{python} {pipe_tasks_dir}/bin/ingestDefects.py decam/CALIB/ {data_dir}/decam/defects "+
+command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {data_dir}/decam/defects "+
             "--calib decam/CALIB --config clobber=True")
 commandInst = env.Command('CALIB/calibRegistry.sqlite3', [], command)
 env.Depends(commandInst, lsst.sconsUtils.targets["python"])
