@@ -121,11 +121,11 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         self.assertGreater(chunk1.getArray().std(), chunk2.getArray().std())
 
         # More specific tests for the exact image statistics expected
-        self.assertAlmostEqual(chunk1.getArray().mean(), 3730.96, places=2)
-        self.assertAlmostEqual(chunk2.getArray().mean(), 3727.55, places=2)
+        self.assertAlmostEqual(chunk1.getArray().mean(), 3730.9656, places=2)
+        self.assertAlmostEqual(chunk2.getArray().mean(), 3727.5552, places=2)
         self.assertAlmostEqual(chunkDiff.getArray().mean(), 3.41, places=2)
-        self.assertAlmostEqual(chunk1.getArray().std(), 33.80, places=2)
-        self.assertAlmostEqual(chunk2.getArray().std(), 33.31, places=2)
+        self.assertAlmostEqual(chunk1.getArray().std(), 33.792892, places=2)
+        self.assertAlmostEqual(chunk2.getArray().std(), 33.302906, places=2)
         self.assertAlmostEqual(chunkDiff.getArray().std(), 5.86, places=2)
 
         # Option to display the portions of the image with/without crosstalk
