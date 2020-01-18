@@ -4,3 +4,4 @@ from . import makeCamera
 from .makeDecamRawVisitInfo import *
 from .instrument import *
 from .rawFormatter import *
+from .ingest import *

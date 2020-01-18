@@ -26,11 +26,37 @@ import re
 from astro_metadata_translator import fix_header, DecamTranslator
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
+from lsst.obs.base.ingest import RawFileData
+import lsst.obs.base
 
-__all__ = ["DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask"]
+__all__ = ["DecamRawIngestTask", "DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask"]
+
+
+class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
+    """Task for ingesting raw DECam data into a Gen3 Butler repository.
+    """
+    def extractMetadata(self, filename: str) -> RawFileData:
+        datasets = []
+        fitsData = lsst.afw.fits.Fits(filename, 'r')
+        # NOTE: The primary header (HDU=0) does not contain detector data.
+        for i in range(1, fitsData.countHdus()):
+            fitsData.setHdu(i)
+            header = fitsData.readMetadata()
+            fix_header(header)
+            datasets.append(self._calculate_dataset_info(header, filename))
+
+        # The data model currently assumes that whilst multiple datasets
+        # can be associated with a single file, they must all share the
+        # same formatter.
+        FormatterClass = self.instrument.getRawFormatter(datasets[0].dataId)
+
+        return RawFileData(datasets=datasets, filename=filename,
+                           FormatterClass=FormatterClass)
 
 
 class DecamIngestArgumentParser(IngestArgumentParser):
+    """Gen2 DECam ingest additional arguments.
+    """
 
     def __init__(self, *args, **kwargs):
         super(DecamIngestArgumentParser, self).__init__(*args, **kwargs)
@@ -39,6 +65,8 @@ class DecamIngestArgumentParser(IngestArgumentParser):
 
 
 class DecamIngestTask(IngestTask):
+    """Gen2 DECam file ingest task.
+    """
     ArgumentParser = DecamIngestArgumentParser
 
     def __init__(self, *args, **kwargs):
