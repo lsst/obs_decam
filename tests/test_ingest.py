@@ -52,6 +52,40 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
         super().setUp()
 
 
+class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+    """Test ingesting a file that contains all "normal" DECam HDUs.
+    """
+    def setUp(self):
+        self.ingestDir = os.path.dirname(__file__)
+        self.instrument = lsst.obs.decam.DarkEnergyCamera()
+        # DecamRawIngestTask ingests every detector in each raw file, so we
+        # only have to specify one file here, but should get many dataIds
+        # in the output repo.
+        self.file = os.path.join(testDataDirectory, "rawData", "raw",
+                                 "c4d_150227_012718_ori-stripped.fits.fz")
+        self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+        self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
+
+        super().setUp()
+
+
+class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+    """Test ingesting a file that contains all detectors in a random order.
+    """
+    def setUp(self):
+        self.ingestDir = os.path.dirname(__file__)
+        self.instrument = lsst.obs.decam.DarkEnergyCamera()
+        # DecamRawIngestTask ingests every detector in each raw file, so we
+        # only have to specify one file here, but should get many dataIds
+        # in the output repo.
+        self.file = os.path.join(testDataDirectory, "rawData", "raw",
+                                 "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
+        self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+        self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
+
+        super().setUp()
+
+
 def setup_module(module):
     lsst.utils.tests.init()
 

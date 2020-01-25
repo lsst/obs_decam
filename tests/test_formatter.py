@@ -87,6 +87,30 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
         expected = lsst.afw.image.ImageI(self.filename, 2)
         self.check_readImage(dataId, expected)
 
+    def test_readMetadata_full_file(self):
+        """Test reading a file with all HDUs, and with all HDUs in a shuffled
+        order.
+        """
+
+        full_file = 'rawData/raw/c4d_150227_012718_ori-stripped.fits.fz'
+        full_location = lsst.daf.butler.Location(testDataDirectory, full_file)
+        full_fileDescriptor = lsst.daf.butler.FileDescriptor(full_location, None)
+
+        shuffled_file = 'rawData/raw/c4d_150227_012718_ori-stripped-shuffled.fits.fz'
+        shuffled_location = lsst.daf.butler.Location(testDataDirectory, shuffled_file)
+        shuffled_fileDescriptor = lsst.daf.butler.FileDescriptor(shuffled_location, None)
+
+        for detector in range(1, 63):
+            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(full_fileDescriptor, detector)
+            full_index, full_metadata = formatter._determineHDU(detector)
+            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(shuffled_fileDescriptor, detector)
+            shuffled_index, shuffled_metadata = formatter._determineHDU(detector)
+
+            # The shuffled file should have different indices,
+            self.assertNotEqual(full_index, shuffled_index)
+            # but the metadata should be the same in both files.
+            self.assertEqual(shuffled_metadata, full_metadata)
+
 
 def setup_module(module):
     lsst.utils.tests.init()

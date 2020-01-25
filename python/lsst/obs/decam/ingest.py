@@ -42,6 +42,8 @@ class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
         for i in range(1, fitsData.countHdus()):
             fitsData.setHdu(i)
             header = fitsData.readMetadata()
+            if header['CCDNUM'] > 62:  # ignore the guide CCDs
+                continue
             fix_header(header)
             datasets.append(self._calculate_dataset_info(header, filename))
 
@@ -50,6 +52,7 @@ class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
         # same formatter.
         FormatterClass = self.instrument.getRawFormatter(datasets[0].dataId)
 
+        self.log.debug(f"Found images for {len(datasets)} detectors in {filename}")
         return RawFileData(datasets=datasets, filename=filename,
                            FormatterClass=FormatterClass)
 
