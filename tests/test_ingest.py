@@ -52,6 +52,7 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
         super().setUp()
 
 
+@unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all "normal" DECam HDUs.
     """
@@ -69,6 +70,7 @@ class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
         super().setUp()
 
 
+@unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all detectors in a random order.
     """
