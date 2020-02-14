@@ -31,7 +31,7 @@ from lsst.obs.base.fitsRawFormatterBase import FitsRawFormatterBase
 
 from . import DarkEnergyCamera
 
-__all__ = ("DarkEnergyCameraRawFormatter",)
+__all__ = ("DarkEnergyCameraRawFormatter", "DarkEnergyCameraCPCalibFormatter")
 
 
 # The mapping of detector id to HDU in raw files for "most" DECam data.
@@ -133,3 +133,22 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
     def readImage(self):
         index, metadata = self._determineHDU(self.dataId['detector'])
         return lsst.afw.image.ImageI(self.fileDescriptor.location.path, index)
+
+
+class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
+    """DECam Community Pipeline calibrations (bias, dark, flat, fringe) are
+    multi-extension FITS files with detector=index+1.
+    """
+
+    def _determineHDU(self, detectorId):
+        """The HDU to read is the same as the detector number."""
+        filename = self.fileDescriptor.location.path
+        metadata = lsst.afw.image.readMetadata(filename, detectorId)
+        if metadata['CCDNUM'] != detectorId:
+            msg = f"Found CCDNUM={metadata['CCDNUM']} instead of {detectorId} in {filename} HDU={detectorId}."
+            raise ValueError(msg)
+        return detectorId, metadata
+
+    def readImage(self):
+        index, metadata = self._determineHDU(self.dataId['detector'])
+        return lsst.afw.image.ImageF(self.fileDescriptor.location.path, index)

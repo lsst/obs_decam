@@ -38,12 +38,18 @@ try:
 except LookupError:
     testDataDirectory = None
 
+try:
+    hitsDirectory = lsst.utils.getPackageDir("ap_verify_ci_hits2015")
+except LookupError:
+    hitsDirectory = None
+
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
-        self.filename = os.path.join(testDataDirectory, 'rawData/2013-09-01/z/decam0229388.fits.fz')
-        location = lsst.daf.butler.Location(testDataDirectory, 'rawData/2013-09-01/z/decam0229388.fits.fz')
+        path = 'rawData/2013-09-01/z/decam0229388.fits.fz'
+        self.filename = os.path.join(testDataDirectory, path)
+        location = lsst.daf.butler.Location(testDataDirectory, path)
         self.fileDescriptor = lsst.daf.butler.FileDescriptor(location, None)
 
     def check_readMetadata(self, dataId, expected):
@@ -110,6 +116,41 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
             self.assertNotEqual(full_index, shuffled_index)
             # but the metadata should be the same in both files.
             self.assertEqual(shuffled_metadata, full_metadata)
+
+
+@unittest.skipIf(hitsDirectory is None, "ap_verify_ci_hits2015 must be set up")
+class DarkEnergyCameraCPCalibFormatterTestCase(lsst.utils.tests.TestCase):
+    """DECam Community Pipeline calibrations have one detector per HDU.
+
+    Note: this test uses the ap_verify_ci_hits2015 dataset, which has complete
+    calibrations, whereas the testdata_decam package has only one detector in
+    its bias and flat files.
+    """
+    def setUp(self):
+        path = 'calib/c4d_150218_191721_zci_v1.fits.fz'
+        self.biasFile = os.path.join(hitsDirectory, path)
+        location = lsst.daf.butler.Location(hitsDirectory, path)
+        self.biasDescriptor = lsst.daf.butler.FileDescriptor(location, None)
+
+        path = 'calib/c4d_150218_200522_fci_g_v1.fits.fz'
+        self.flatFile = os.path.join(hitsDirectory, path)
+        location = lsst.daf.butler.Location(hitsDirectory, path)
+        self.flatDescriptor = lsst.daf.butler.FileDescriptor(location, None)
+
+    def check_readMetadata(self, dataId, expected, fileDescriptor):
+        formatter = lsst.obs.decam.DarkEnergyCameraCPCalibFormatter(fileDescriptor, dataId)
+        metadata = formatter.readMetadata()
+        self.assertEqual(metadata['CCDNUM'], dataId['detector'], dataId)
+        self.assertEqual(metadata, expected, msg=dataId)
+
+    def test_readMetadata(self):
+        for i in range(1, 63):
+            dataId = {'detector': i}
+            expected = lsst.afw.image.readMetadata(self.biasFile, i)
+            self.check_readMetadata(dataId, expected, self.biasDescriptor)
+
+            expected = lsst.afw.image.readMetadata(self.flatFile, i)
+            self.check_readMetadata(dataId, expected, self.flatDescriptor)
 
 
 def setup_module(module):
