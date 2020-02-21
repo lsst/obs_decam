@@ -39,7 +39,7 @@ class TestDarkEnergyCamera(InstrumentTests, lsst.utils.tests.TestCase):
                             "z DECam SDSS c0004 9260.0 1520.0",
                             "i DECam SDSS c0003 7835.0 1470.0",
                             "u DECam c0006 3500.0 1000.0",
-                            "solid"}
+                            "solid plate 0.0 0.0"}
         self.data = InstrumentTestData(name="DECam",
                                        nDetectors=62,
                                        firstDetectorName="S29",
