@@ -8,12 +8,10 @@ from lsst.utils import getPackageDir
 obsConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
 
 config.isr.load(os.path.join(obsConfigDir, 'isr.py'))
-
-config.charImage.repair.cosmicray.nCrPixelMax = 100000
+config.charImage.load(os.path.join(obsConfigDir, 'characterizeImage.py'))
 
 for refObjLoader in (config.calibrate.astromRefObjLoader,
                      config.calibrate.photoRefObjLoader,
-                     config.charImage.refObjLoader,
                      ):
     refObjLoader.ref_dataset_name = "ps1_pv3_3pi_20170110"
     # Note the u-band results may not be useful without a color term
