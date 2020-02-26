@@ -60,9 +60,9 @@ exposures:
     template: '%(visit)07d/wtmap%(visit)07d.fits.fz[%(hdu)d]'
   icExp:
     template: '%(visit)07d/icExp/icExp-%(visit)07d_%(ccdnum)02d.fits'
-  calexp:
-    template: '%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits'
   fakes_calexp:
+    template: '%(visit)07d/calexp/calexp-%(visit)07d_%(ccdnum)02d.fits'
+  calexp:
     template: '%(visit)07d/calexp/fakes_calexp-%(visit)07d_%(ccdnum)02d.fits'
   wcs:  # deprecated in favor of jointcal_wcs; retained for reading old outputs
     persistable: ExposureF
@@ -220,9 +220,9 @@ calibrations:
 datasets:
   icSrc:
     template: '%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccdnum)02d.fits'
-  src:
-    template: '%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits'
   fakes_src:
+    template: '%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits'
+  src:
     template: '%(visit)07d/src/fakes_src-%(visit)07d_%(ccdnum)02d.fits'
   icMatch:
     persistable: BaseCatalog
