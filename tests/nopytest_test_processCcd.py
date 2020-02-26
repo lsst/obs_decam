@@ -51,13 +51,10 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
 
         cls.outPath = tempfile.mkdtemp() if OutputName is None else OutputName
         cls.dataId = {'visit': 229388, 'ccdnum': 1}
-        configPath = os.path.join(getPackageDir("obs_decam"), "config")
         argsList = [os.path.join(cls.datadir, "rawData"), "--output", cls.outPath, "--id"]
         argsList += ["%s=%s" % (key, val) for key, val in cls.dataId.items()]
         argsList += ["--calib", os.path.join(cls.datadir, "rawData/cpCalib")]
-        argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
-                     # This test uses CP-MasterCal calibration products
-                     "-C", "%s/processCcdCpIsr.py" % configPath]
+        argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False"]
         argsList.append('--doraise')
         disableImplicitThreading()  # avoid contention with other processes
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
