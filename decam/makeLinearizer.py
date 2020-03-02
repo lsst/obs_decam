@@ -9,7 +9,6 @@ import os.path
 import numpy as np
 import astropy.io.fits as fits
 
-from lsst.ip.isr import LinearizeLookupTable
 from lsst.obs.decam import DecamMapper
 from lsst.daf.persistence import Butler
 
@@ -60,7 +59,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             lsstTable[i, :] = fromData["ADU_LINEAR_" + ampName] - uncorr
             if verbose:
                 print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
-        linearizer = LinearizeLookupTable(table=lsstTable, detector=detector)
+        linearizer = lsstTable
         butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
     print("Wrote %s linearizers" % (ccdind+1,))
 

@@ -27,7 +27,7 @@ import warnings
 import lsst.daf.persistence as dafPersist
 import lsst.pex.exceptions as pexExcept
 import lsst.utils.tests
-from lsst.ip.isr import LinearizeLookupTable
+from lsst.ip.isr import Linearizer, LinearizeLookupTable
 from lsst.utils import getPackageDir
 
 
@@ -74,9 +74,13 @@ class ButlerTestCase(unittest.TestCase):
         camera = self.butler.get("camera")
         for ccdnum in (1, 62):
             detector = camera[ccdnum]
-            linearizer = self.butler.get("linearizer", dataId=dict(ccdnum=ccdnum), immediate=True)
-            self.assertEqual(linearizer.LinearityType, LinearizeLookupTable.LinearityType)
-            linearizer.checkDetector(detector)
+            linearizer = Linearizer(table=self.butler.get("linearizer",
+                                                          dataId=dict(ccdnum=ccdnum),
+                                                          immediate=True),
+                                    detector=detector)
+            for amp in detector:
+                self.assertEqual(linearizer.linearityType[amp.getName()], LinearizeLookupTable.LinearityType)
+            linearizer.validate(detector=detector)
         for badccdnum in (0, 63):
             with self.assertRaises(Exception):
                 self.butler.get("linearizer", dataId=dict(ccdnum=badccdnum), immediate=True)
