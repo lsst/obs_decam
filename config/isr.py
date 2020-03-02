@@ -49,7 +49,8 @@ config.doAssembleIsrExposures = False
 config.doTrimToMatchCalib = True
 
 config.doBias = True
-config.biasDataProductName = "cpBias"
+config.connections.bias = "cpBias"
+config.biasDataProductName = config.connections.bias
 
 config.doVariance = True
 config.gain = float("NaN")
@@ -73,12 +74,14 @@ config.doSaturationInterpolation = True
 config.numEdgeSuspect=35
 
 config.doDark = False
-config.darkDataProductName = "dark"
+config.connections.dark = "dark"
+config.darkDataProductName = config.connections.dark
 
 config.doStrayLight = False
 
 config.doFlat = True
-config.flatDataProductName = "cpFlat"
+config.connections.flat = "cpFlat"
+config.flatDataProductName = config.connections.flat
 config.flatScalingType = "USER"
 config.flatUserScale = 1.0
 config.doTweakFlat = False
@@ -107,6 +110,7 @@ config.doUseAtmosphereTransmission = False
 
 # Illumination correction should almost certainly be done,
 # but not all decam datasets yet have the necessary calibration products.
+# Nor is it supported yet in Gen 3
 config.doIlluminationCorrection = False
 # config.doIlluminationCorrection = True
 config.illuminationCorrectionDataProductName = "cpIllumcor"
