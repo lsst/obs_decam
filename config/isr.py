@@ -10,8 +10,6 @@ config.fallbackFilterName = None
 config.expectWcs = True
 config.fwhm = 1.0
 
-config.doConvertIntToFloat = False
-
 config.doSaturation=True
 config.saturatedMaskName = "SAT"
 config.saturation = float("NaN")
