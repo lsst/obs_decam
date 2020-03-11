@@ -49,6 +49,6 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
     FilterDefinition(physical_filter="N964 DECam c0008 9645.0 94.0",
                      abstract_filter="N964",
                      lambdaEff=964),
-    FilterDefinition(physical_filter="solid",
+    FilterDefinition(physical_filter="solid plate 0.0 0.0",
                      afw_name='SOLID', lambdaEff=0)
 )
