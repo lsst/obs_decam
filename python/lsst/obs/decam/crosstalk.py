@@ -197,9 +197,9 @@ class DecamCrosstalkTask(CrosstalkTask):
                         applied (`lsst.afw.image.Exposure`).
         """
         self.log.info('Applying crosstalk correction')
-        assert crosstalkSources is not None, "Sources are required for DECam crosstalk correction; \
-                                              you must run CrosstalkTask via IsrTask which will \
-                                              call prepCrosstalk to get the sources."
+        assert crosstalkSources is not None, "Sources are required for DECam crosstalk correction; " \
+                                             "you must run CrosstalkTask via IsrTask which will " \
+                                             "call prepCrosstalk to get the sources."
         # Load data from crosstalk 'victim' exposure we want to correct
         det = exposure.getDetector()
         for amp in det:
