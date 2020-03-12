@@ -50,7 +50,8 @@ class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
         self.instrumentClass = "lsst.obs.decam.DarkEnergyCamera"
         self.config = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                    "config", "convert2to3Config.py")
-        self.args = ("--calibFilterType", "abstract_filter")
+        self.kwargs = {"calibFilterType": "abstract_filter"}
+        self.collections = {"skymaps", "calib/DECam"}
 
         detectors = (5, 10, 56, 60)
         dates = ('2015-02-18', '2015-03-13')
