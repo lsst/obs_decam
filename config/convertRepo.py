@@ -14,6 +14,10 @@ config.storageClasses['cpBias'] = "ExposureF"
 config.storageClasses['cpFlat'] = "ExposureF"
 config.storageClasses['cpIllumcor'] = "ExposureF"
 
+# And define the specialist formatter
+config.formatterClasses['cpBias'] = "lsst.obs.decam.DarkEnergyCameraCPCalibFormatter"
+config.formatterClasses['cpFlat'] = "lsst.obs.decam.DarkEnergyCameraCPCalibFormatter"
+
 # DECam calibRegistry entries are abstract_filters, but we need physical_filter
 # in the gen3 registry.
 Translator.addRule(AbstractToPhysicalFilterKeyHandler(lsst.obs.decam.DarkEnergyCamera.filterDefinitions),
