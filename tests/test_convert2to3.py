@@ -30,8 +30,7 @@ import lsst.utils.tests
 from lsst.obs.base.gen2to3 import convertTests
 import lsst.obs.decam
 
-# testDataPackage = "testdata_decam"
-testDataPackage = "ap_verify_ci_hits2015"
+testDataPackage = "testdata_decam"
 try:
     testDataDirectory = lsst.utils.getPackageDir(testDataPackage)
 except LookupError:
@@ -42,19 +41,16 @@ except LookupError:
 class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
                                   lsst.utils.tests.TestCase):
     def setUp(self):
-        # self.gen2root = os.path.join(testDataDirectory, 'rawData')
-        # self.gen2calib = os.path.join(testDataDirectory, 'rawData/cpCalib')
-        # NOTE: this test will produce a bunch fo "Skipping ingestion for" warnings,
+        # NOTE: this test will produce a bunch of "Skipping ingestion for" warnings,
         # due to the bias/flat calibRegistry only having the same ccds as the
         # raws, even though the files themselves have more.
-        self.gen2root = os.path.join(testDataDirectory, 'gen2-output/ingested')
-        self.gen2calib = os.path.join(testDataDirectory, 'gen2-output/calibingested')
+        self.gen2root = os.path.join(testDataDirectory, 'ingested')
+        self.gen2calib = os.path.join(testDataDirectory, 'calibingested')
         self.instrumentName = "DECam"
         self.instrumentClass = "lsst.obs.decam.DarkEnergyCamera"
         self.config = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                    "config", "convert2to3Config.py")
         self.args = ("--calibFilterType", "abstract_filter")
-        self.collections = set(['skymaps'])
 
         detectors = (5, 10, 56, 60)
         dates = ('2015-02-18', '2015-03-13')
