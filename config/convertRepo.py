@@ -14,6 +14,14 @@ config.storageClasses['cpBias'] = "ExposureF"
 config.storageClasses['cpFlat'] = "ExposureF"
 config.storageClasses['cpIllumcor'] = "ExposureF"
 
+# And define the specialist formatter
+config.formatterClasses['cpBias'] = "lsst.obs.decam.DarkEnergyCameraCPCalibFormatter"
+config.formatterClasses['cpFlat'] = "lsst.obs.decam.DarkEnergyCameraCPCalibFormatter"
+
+# and multi extension fits handler
+config.targetHandlerClasses['cpFlat'] = "lsst.obs.base.gen2to3.repoWalker.handlers.MultiExtensionFileHandler"
+config.targetHandlerClasses['cpBias'] = "lsst.obs.base.gen2to3.repoWalker.handlers.MultiExtensionFileHandler"
+
 # DECam calibRegistry entries are abstract_filters, but we need physical_filter
 # in the gen3 registry.
 Translator.addRule(AbstractToPhysicalFilterKeyHandler(lsst.obs.decam.DarkEnergyCamera.filterDefinitions),
