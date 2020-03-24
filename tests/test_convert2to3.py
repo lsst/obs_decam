@@ -51,7 +51,6 @@ class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
         self.config = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                    "config", "convert2to3Config.py")
         self.kwargs = {"calibFilterType": "abstract_filter"}
-        self.collections = {"calib/DECam"}
 
         detectors = (5, 10, 56, 60)
         dates = ('2015-02-18', '2015-03-13')
@@ -66,6 +65,7 @@ class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
                       for detector, date in itertools.product(detectors, dates)]
         self.refcats = ['gaia', 'panstarrs']
         super().setUp()
+        self.collections.add("calib/DECam")
 
 
 def setup_module(module):
