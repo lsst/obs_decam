@@ -71,7 +71,7 @@ exposures:
   deepCoadd_psfMatchedWarp:
     template: deepCoadd/%(filter)s/%(tract)d/%(patch)stempExp/psfMatched-v%(visit)d-f%(filter)s.fits
   dcrCoadd_directWarp:
-    template: dcrCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s%(subfilter)d.fits
+    template: dcrCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s%(subfilter)s.fits
   deepDiff_differenceExp:
     template: deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
   deepDiff_matchedExp:
@@ -261,7 +261,7 @@ datasets:
   deep_safeClipAssembleCoadd_metadata:
     template: deepCoadd/%(filter)s/%(tract)d/%(patch)s/assembleCoaddMD.yaml
   dcrCoadd_measMatchFull:
-    template: dcrCoadd-results/%(filter)s%(subfilter)d/%(tract)d/%(patch)s/srcMatchFull-%(filter)s%(subfilter)d-%(tract)d-%(patch)s.fits
+    template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
   detectCoaddSources_config:
     template: config/detectCoadd.py
   detectCoaddSources_metadata:
@@ -287,7 +287,7 @@ datasets:
   deepDiff_kernelSrc:
     template: deepDiff/v%(visit)d/kernelSrc-%(ccdnum)02d.fits
   dcrCoadd_measMatch:
-    template: dcrCoadd-results/%(filter)s%(subfilter)d/%(tract)d/%(patch)s/srcMatch-%(filter)s%(subfilter)d-%(tract)d-%(patch)s.fits
+    template: dcrCoadd-results/%(filter)s%(subfilter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s%(subfilter)s-%(tract)d-%(patch)s.fits
   dcrCoadd_forced_src:
     template: dcrCoadd-results/%(filter)s/%(tract)d/%(patch)s/forced-%(filter)s-%(tract)d-%(patch)s.fits
   dcrCoadd_forced_metadata:
