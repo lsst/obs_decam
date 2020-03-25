@@ -3,3 +3,7 @@
 # testdata_decam, with two refcats in the repo.
 
 config.refCats = ['gaia', 'panstarrs']
+
+# Need to specify runs for each refcat
+for refcat in config.refCats:
+    config.runs[refcat] = "refcats"
