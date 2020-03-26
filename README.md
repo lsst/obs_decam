@@ -77,5 +77,3 @@ Documentation of the LSST Science Pipelines is at https://pipelines.lsst.io
 
         from lsst.obs.decam.decamNullIsr import DecamNullIsrTask
         config.isr.retarget(DecamNullIsrTask)
-
-7. To process raw data with the Community-Pipeline calibration products, retarget the ISR task to `DecamCpIsrTask` by using the config override file config/processCcdCpIsr.py
