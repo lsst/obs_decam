@@ -35,6 +35,8 @@ from lsst.utils import getPackageDir
 
 class DarkEnergyCamera(Instrument):
     filterDefinitions = DECAM_FILTER_DEFINITIONS
+    policyName = "decam"
+    obsDataPackage = "obs_decam_data"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -46,7 +48,7 @@ class DarkEnergyCamera(Instrument):
         return "DECam"
 
     def getCamera(self):
-        path = os.path.join(getPackageDir("obs_decam"), "decam", "camGeom")
+        path = os.path.join(getPackageDir("obs_decam"), self.policyName, "camGeom")
         config = CameraConfig()
         config.load(os.path.join(path, "camera.py"))
         return makeCameraFromPath(
@@ -82,7 +84,3 @@ class DarkEnergyCamera(Instrument):
         # local import to prevent circular dependency
         from .rawFormatter import DarkEnergyCameraRawFormatter
         return DarkEnergyCameraRawFormatter
-
-    def writeCuratedCalibrations(self, butler):
-        # TODO: DM-21016
-        pass
