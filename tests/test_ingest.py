@@ -38,6 +38,8 @@ except LookupError:
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+    curatedCalibrationDatasetTypes = ("camera", "defects")
+
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
@@ -56,6 +58,9 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all "normal" DECam HDUs.
     """
+    # No need to test writeCuratedCalibrations again
+    curatedCalibrationDatasetTypes = None
+
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
@@ -74,6 +79,9 @@ class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all detectors in a random order.
     """
+    # No need to test writeCuratedCalibrations again
+    curatedCalibrationDatasetTypes = None
+
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
