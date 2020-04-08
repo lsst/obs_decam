@@ -30,6 +30,7 @@ from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
+from lsst.daf.butler.core.utils import getFullTypeName
 from lsst.utils import getPackageDir
 
 
@@ -62,7 +63,9 @@ class DarkEnergyCamera(Instrument):
         obsMax = 2**31
         registry.insertDimensionData(
             "instrument",
-            {"name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax}
+            {"name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax,
+             "class_name": getFullTypeName(self),
+             }
         )
 
         for detector in camera:
