@@ -26,6 +26,7 @@ import unittest
 import os
 import lsst.utils.tests
 
+from lsst.daf.butler import DataCoordinate
 from lsst.obs.base.ingest_tests import IngestTestBase
 import lsst.obs.decam
 
@@ -52,6 +53,19 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
         self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
 
         super().setUp()
+        self.visits = {
+            DataCoordinate.standardize(
+                instrument="DECam",
+                visit=229388,
+                universe=self.butler.registry.dimensions
+            ): [
+                DataCoordinate.standardize(
+                    instrument="DECam",
+                    exposure=229388,
+                    universe=self.butler.registry.dimensions
+                )
+            ]
+        }
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
@@ -73,6 +87,19 @@ class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
         self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
 
         super().setUp()
+        self.visits = {
+            DataCoordinate.standardize(
+                instrument="DECam",
+                visit=415282,
+                universe=self.butler.registry.dimensions
+            ): [
+                DataCoordinate.standardize(
+                    instrument="DECam",
+                    exposure=415282,
+                    universe=self.butler.registry.dimensions
+                )
+            ]
+        }
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
@@ -94,6 +121,19 @@ class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestC
         self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
 
         super().setUp()
+        self.visits = {
+            DataCoordinate.standardize(
+                instrument="DECam",
+                visit=415282,
+                universe=self.butler.registry.dimensions
+            ): [
+                DataCoordinate.standardize(
+                    instrument="DECam",
+                    exposure=415282,
+                    universe=self.butler.registry.dimensions
+                )
+            ]
+        }
 
 
 def setup_module(module):
