@@ -3,7 +3,6 @@ DECam-specific overrides of IsrTask
 """
 import os.path
 
-from lsst.obs.decam.crosstalk import DecamCrosstalkTask
 
 config.datasetType = "raw"
 config.fallbackFilterName = None
@@ -59,7 +58,6 @@ config.doLinearize = True
 
 config.doCrosstalkBeforeAssemble = True
 config.doCrosstalk = True
-config.crosstalk.retarget(DecamCrosstalkTask)
 config.crosstalk.minPixelToMask=45000.0
 config.crosstalk.crosstalkMaskPlane="CROSSTALK"
 
