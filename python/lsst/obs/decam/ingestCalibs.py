@@ -1,12 +1,19 @@
 
 import collections.abc
 import re
+from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
 
 __all__ = ["DecamCalibsParseTask"]
 
 
 class DecamCalibsParseTask(CalibsParseTask):
+    """Parse calibration products for ingestion.
+
+    Handle either DECam Community Pipeline calibration products or
+    calibration products produced with the LSST Science Pipelines
+    (i.e., pipe_drivers' constructBias.py and constructFlat.py).
+    """
 
     def getInfo(self, filename):
         """Get information about the image from the filename and/or its contents.
@@ -52,7 +59,7 @@ class DecamCalibsParseTask(CalibsParseTask):
         Calibration products made with constructCalibs have some metadata
         saved in its FITS header CALIB_ID.
         """
-        data = md.getScalar("CALIB_ID")
+        data = md["CALIB_ID"]
         match = re.search(r".*%s=(\S+)" % field, data)
         return match.groups()[0]
 
@@ -64,8 +71,8 @@ class DecamCalibsParseTask(CalibsParseTask):
         md : `lsst.daf.base.PropertySet`
             FITS header metadata.
         """
-        if md.exists("CCDNUM"):
-            ccdnum = md.getScalar("CCDNUM")
+        if "CCDNUM" in md:
+            ccdnum = md["CCDNUM"]
         else:
             return self._translateFromCalibId("ccdnum", md)
         # Some MasterCal from NOAO Archive has 2 CCDNUM keys in each HDU
@@ -86,15 +93,15 @@ class DecamCalibsParseTask(CalibsParseTask):
         md : `lsst.daf.base.PropertySet`
             FITS header metadata.
         """
-        if md.exists("DATE-OBS"):
-            date = md.getScalar("DATE-OBS")
+        if "DATE-OBS" in md:
+            date = md["DATE-OBS"]
             found = re.search(r'(\d\d\d\d-\d\d-\d\d)', date)
             if found:
                 date = found.group(1)
             else:
                 self.log.warn("DATE-OBS does not match format YYYY-MM-DD")
                 date = "unknown"
-        elif md.exists("CALIB_ID"):
+        elif "CALIB_ID" in md:
             date = self._translateFromCalibId("calibDate", md)
         else:
             date = "unknown"
@@ -112,11 +119,18 @@ class DecamCalibsParseTask(CalibsParseTask):
         md : `lsst.daf.base.PropertySet`
             FITS header metadata.
         """
-        if md.exists("FILTER"):
-            if md.exists("OBSTYPE") and "zero" in md.getScalar("OBSTYPE").strip().lower():
-                return "NONE"
-            return CalibsParseTask.translate_filter(self, md)
-        elif md.exists("CALIB_ID"):
+        if "FILTER" in md:
+            if "OBSTYPE" in md:
+                obstype = md["OBSTYPE"].strip().lower()
+                if "zero" in obstype or "bias" in obstype:
+                    return "NONE"
+            filterName = CalibsParseTask.translate_filter(self, md)
+            # TODO (DM-24514): remove workaround if/else
+            if filterName == '_unknown_' and "CALIB_ID" in md:
+                return self._translateFromCalibId("filter", md)
+            else:
+                return CalibsParseTask.translate_filter(self, md)
+        elif "CALIB_ID" in md:
             return self._translateFromCalibId("filter", md)
         else:
             return "unknown"
@@ -133,9 +147,10 @@ class DecamCalibsParseTask(CalibsParseTask):
         Returns
         -------
         result : `str`
-            The string from the EXTNAME header card.
+            The string from the EXTNAME header card, or None.
         """
-        return md.getScalar('EXTNAME')
+        ext = md.get("EXTNAME", None)
+        return ext
 
     def getDestination(self, butler, info, filename):
         """Get destination for the file.
@@ -154,18 +169,26 @@ class DecamCalibsParseTask(CalibsParseTask):
         raw : `str`
             Destination filename.
         """
-        # Arbitrarily set ccdnum and calib_hdu to 1 to make the mapper template happy
-        info["ccdnum"] = 1
-        info["calib_hdu"] = 1
         calibType = self.getCalibType(filename)
-        if "flat" in calibType.lower():
-            raw = butler.get("cpFlat_filename", info)[0]
-        elif ("bias" or "zero") in calibType.lower():
-            raw = butler.get("cpBias_filename", info)[0]
-        elif ("illumcor") in calibType.lower():
-            raw = butler.get("cpIllumcor_filename", info)[0]
-        else:
-            assert False, "Invalid calibType '{:s}'".format(calibType)
+        md = readMetadata(filename, self.config.hdu)
+        if "PROCTYPE" not in md:
+            raise RuntimeError(f"Unable to find the calib header keyword PROCTYPE \
+                               in {filename}, hdu {self.config.hdu}")
+        proctype = md["PROCTYPE"].strip()
+        if "MasterCal" in proctype:  # DECam Community Pipeline calibration product case
+            # Arbitrarily set ccdnum and calib_hdu to 1 to make the mapper template happy
+            info["ccdnum"] = 1
+            info["calib_hdu"] = 1
+            if "flat" in calibType.lower():
+                raw = butler.get("cpFlat_filename", info)[0]
+            elif ("bias" or "zero") in calibType.lower():
+                raw = butler.get("cpBias_filename", info)[0]
+            elif ("illumcor") in calibType.lower():
+                raw = butler.get("cpIllumcor_filename", info)[0]
+            else:
+                raise RuntimeError(f"Invalid DECam Community Pipeline calibType {calibType}")
+        else:  # LSST-built calibration product case
+            raw = butler.get(calibType + "_filename", info)[0]
         # Remove HDU extension (ccdnum) since we want to refer to the whole file
         c = raw.find("[")
         if c > 0:
