@@ -1,10 +1,9 @@
 # Config override for lsst.ap.verify.DatasetIngestTask
 import os.path
 
-from lsst.utils import getPackageDir
 from lsst.obs.decam.ingest import DecamIngestTask
 
-decamConfigDir = os.path.join(getPackageDir('obs_decam'), 'config')
+decamConfigDir = os.path.dirname(__file__)
 
 config.textDefectPath = os.path.join(getPackageDir('obs_decam_data'), 'decam', 'defects')
 config.dataIngester.retarget(DecamIngestTask)
