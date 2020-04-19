@@ -1,6 +1,7 @@
 # Config override for lsst.ap.verify.DatasetIngestTask
 import os.path
 
+from lsst.utils import getPackageDir
 from lsst.obs.decam.ingest import DecamIngestTask
 
 decamConfigDir = os.path.dirname(__file__)
