@@ -93,8 +93,6 @@ config.fringe.filters = ['z', 'y']
 
 config.doNanInterpAfterFlat = False
 
-config.doAddDistortionModel = False  # rely on the TPV terms instead
-
 config.doMeasureBackground = True
 
 config.doCameraSpecificMasking = False
