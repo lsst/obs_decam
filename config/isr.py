@@ -23,9 +23,9 @@ config.doSetBadRegions = True
 config.badStatistic = "MEANCLIP"
 
 config.doOverscan = True
-config.overscanFitType = "MEDIAN"
-config.overscanOrder = 1
-config.overscanNumSigmaClip = 3.0
+config.overscan.fitType = "MEDIAN"
+config.overscan.order = 1
+config.overscan.numSigmaClip = 3.0
 config.overscanNumLeadingColumnsToSkip = 0
 config.overscanNumTrailingColumnsToSkip = 0
 config.overscanMaxDev = 1000.0
