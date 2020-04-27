@@ -78,9 +78,9 @@ class DecamMapper(CameraMapper):
         DecamMapper._nbit_tract = 10
         DecamMapper._nbit_patch = 10
         DecamMapper._nbit_filter = 4
-        DecamMapper._nbit_id = 64 - (DecamMapper._nbit_tract +
-                                     2*DecamMapper._nbit_patch +
-                                     DecamMapper._nbit_filter)
+        DecamMapper._nbit_id = 64 - (DecamMapper._nbit_tract
+                                     + 2*DecamMapper._nbit_patch
+                                     + DecamMapper._nbit_filter)
 
     def _extractDetectorName(self, dataId):
         copyId = self._transformId(dataId)
