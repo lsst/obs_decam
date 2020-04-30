@@ -1,4 +1,5 @@
 # -*- python -*-
+import os
 import lsst.sconsUtils
 
 env = lsst.sconsUtils.env.Clone()
@@ -8,3 +9,6 @@ tests = lsst.sconsUtils.scripts.BasicSConscript.tests(
 )
 
 env.Depends(tests, "../decam/linearizer")
+
+if "DAF_BUTLER_PLUGINS" in os.environ:
+    lsst.sconsUtils.env["ENV"]["DAF_BUTLER_PLUGINS"] = os.environ["DAF_BUTLER_PLUGINS"]
