@@ -40,7 +40,6 @@ import lsst.pipe.base as pipeBase
 from lsst.ip.isr import CrosstalkConfig, CrosstalkTask, IsrTask
 from lsst.obs.decam import DecamMapper
 from lsst.utils import getPackageDir
-import lsst.afw.math as afwMath
 
 
 __all__ = ["DecamCrosstalkTask"]
@@ -109,7 +108,7 @@ class DecamCrosstalkTask(CrosstalkTask):
     ConfigClass = DecamCrosstalkConfig
     _DefaultName = 'decamCrosstalk'
 
-    def prepCrosstalk(self, dataRef):
+    def prepCrosstalk(self, dataRef, crosstalk=None):
         """Retrieve source image data and coefficients to prepare for crosstalk correction.
 
         This is called by readIsrData. The crosstalkSources land in isrData.
@@ -119,6 +118,8 @@ class DecamCrosstalkTask(CrosstalkTask):
         dataRef : `lsst.daf.persistence.butlerSubset.ButlerDataRef`
             DataRef of exposure to correct which must include a dataId with
             at least one visit and a ccdnum corresponding to the detector id.
+        crosstalk : `lsst.ip.isr.CrosstalkCalib`
+            Crosstalk calibration that will be used.
 
         Returns
         -------
@@ -126,120 +127,36 @@ class DecamCrosstalkTask(CrosstalkTask):
             Contains image data and corresponding crosstalk coefficients for
             each crosstalk source of the given dataRef victim.
         """
-        # Retrieve crosstalk sources and coefficients for the whole focal plane
-        sources, coeffs = self.config.getSourcesAndCoeffs()
-
         # Define a butler to prepare for accessing crosstalk 'source' image data
         try:
             butler = dataRef.getButler()
         except RuntimeError:
             self.log.fatal('Cannot get a Butler from the dataRef provided')
 
+        # If there is no interChip CT, then we're done.
+        if crosstalk.interChip is None or len(crosstalk.interChip) == 0:
+            return None
+
         # Retrieve visit and ccdnum from 'victim' so we can look up 'sources'
-        victim_exposure = dataRef.get()
-        det = victim_exposure.getDetector()
         visit = dataRef.dataId['visit']
-        ccdnum = det.getId()
-        ccdnum_str = '%02d' % ccdnum
         crosstalkSources = defaultdict(list)
+
         decamisr = IsrTask()  # needed for source_exposure overscan correction
-        for amp in det:
-            victim = ccdnum_str + amp.getName()
-            for source in sources[victim]:
-                source_ccdnum = int(source[:2])
-                try:
-                    source_exposure = butler.get('raw', dataId={'visit': visit, 'ccdnum': source_ccdnum})
-                except RuntimeError:
-                    self.log.warn('Cannot access source %d, SKIPPING IT' % source_ccdnum)
-                else:
-                    self.log.info('Correcting victim %s from crosstalk source %s' % (victim, source))
-                    if 'A' in source:
-                        amp_idx = 0
-                    elif 'B' in source:
-                        amp_idx = 1
-                    else:
-                        self.log.fatal('DECam source amp name does not contain A or B, cannot proceed')
-                    source_amp = source_exposure.getDetector()[amp_idx]
-                    # If doCrosstalkBeforeAssemble=True, then use getRawBBox().  Otherwise, getRawDataBBox().
-                    source_dataBBox = source_amp.getRawBBox()
-                    # Check to see if source overscan has been corrected, and if not, correct it first
-                    if not source_exposure.getMetadata().exists('OVERSCAN'):
-                        decamisr.overscanCorrection(source_exposure, source_amp)
-                        self.log.info('Correcting source %s overscan before using to correct crosstalk'
-                                      % source)
-                    source_image = source_exposure.getMaskedImage().getImage()
+        for sourceDet in crosstalk.interChip:
+            try:
+                source_exposure = butler.get('raw', dataId={'visit': visit, 'ccd': sourceDet})
+            except RuntimeError:
+                self.log.warn('Cannot access source %s, SKIPPING IT' % sourceDet)
+            else:
+                self.log.info('Correcting victim %s from crosstalk source %s' %
+                              (crosstalk._detectorName, sourceDet))
 
-                    source_data = source_image.Factory(source_image, source_dataBBox, deep=True)
-                    crosstalkSources[victim].append((source_data, coeffs[(victim, source)], amp_idx))
+                for amp in source_exposure.getDetector():
+                    decamisr.overscanCorrection(source_exposure, amp)
+
+                # Do not assemble here, as DECam CT is corrected before assembly.
+                crosstalkSources[sourceDet] = source_exposure
         return crosstalkSources
-
-    @pipeBase.timeMethod
-    def run(self, exposure, crosstalkSources=None):
-        """Perform crosstalk correction on a DECam exposure and its corresponding dataRef.
-
-        Parameters
-        ----------
-        exposure : `lsst.afw.image.Exposure`
-            Exposure to correct.
-        dataRef : `lsst.daf.persistence.butlerSubset.ButlerDataRef`
-            DataRef of exposure to correct which must include a dataId
-            with at least one visit and ccdnum.
-        crosstalkSources : `defaultdict`
-            Must contain image data and corresponding crosstalk coefficients for
-            each crosstalk source of the given dataRef victim. This is returned
-            by prepCrosstalk.
-
-        Returns
-        -------
-        `lsst.pipe.base.Struct`
-        Struct with components:
-        - ``exposure``: The exposure after crosstalk correction has been
-                        applied (`lsst.afw.image.Exposure`).
-        """
-        self.log.info('Applying crosstalk correction')
-        assert crosstalkSources is not None, "Sources are required for DECam crosstalk correction; " \
-                                             "you must run CrosstalkTask via IsrTask which will " \
-                                             "call prepCrosstalk to get the sources."
-        # Load data from crosstalk 'victim' exposure we want to correct
-        det = exposure.getDetector()
-        for amp in det:
-            ccdnum = det.getId()
-            ccdnum_str = '%02d' % ccdnum
-            victim = ccdnum_str + amp.getName()
-            # If doCrosstalkBeforeAssemble=True, then use getRawBBox().  Otherwise, getBBox().
-            dataBBox = amp.getRawBBox()
-            # Check to see if victim overscan has been corrected, and if not, correct it first
-            if not exposure.getMetadata().exists('OVERSCAN'):
-                decamisr = IsrTask()
-                decamisr.overscanCorrection(exposure, amp)
-                self.log.warn('Overscan correction did not happen prior to crosstalk correction')
-                self.log.info('Correcting victim %s overscan before crosstalk' % victim)
-            image = exposure.getMaskedImage().getImage()
-            victim_data = image.Factory(image, dataBBox)
-            # Load data from crosstalk 'source' exposures
-            for source in crosstalkSources[victim]:
-                source_data, source_coeff, source_idx = source
-                victim_idx = 0
-                if 'A' in victim:
-                    victim_idx = 0
-                elif 'B' in victim:
-                    victim_idx = 1
-                else:
-                    self.log.fatal('DECam victim amp name does not contain A or B, cannot proceed')
-
-                if source_idx != victim_idx:
-                    # Occurs with amp A and B mismatch; need to flip horizontally
-                    source_data = afwMath.flipImage(source_data, flipLR=True, flipTB=False)
-                # Perform the linear crosstalk correction
-                try:
-                    source_data *= source_coeff
-                    victim_data -= source_data
-                except RuntimeError:
-                    self.log.fatal('Crosstalk correction failed for victim %s from source %s'
-                                   % (victim, source))
-        return pipeBase.Struct(
-            exposure=exposure,
-        )
 
 
 class DecamCrosstalkIO(pipeBase.Task):
