@@ -43,3 +43,20 @@ command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {
             "--calib decam/CALIB --config clobber=True")
 commandInst = env.Command('CALIB/calibRegistry.sqlite3', [], command)
 env.Depends(commandInst, lsst.sconsUtils.targets["python"])
+
+
+# Create crosstalk tables
+def getCrosstalkInFile():
+    crosstalkInFiles = glob.glob("DECam_xtalk_*.txt")
+    if len(crosstalkInFiles) == 1:
+        return crosstalkInFiles[0]
+    elif len(crosstalkInFiles) == 0:
+        raise RuntimeError("Could not find a crosstalk table")
+    else:
+        raise RuntimeError("Found %s crosstalk tables; need just one" % (len(crosstalkInFiles),))
+
+crosstalkInFile = getCrosstalkInFile()
+crosstalkOutDir = "decam/crosstalk"
+command = "%s decam/makeCrosstalkDecam.py $SOURCE --force" % (python,)
+
+makeCrosstalk = env.Command(crosstalkOutDir, crosstalkInFile, command)

@@ -8,6 +8,7 @@ import sys
 
 import lsst.ip.isr as ipIsr
 from lsst.daf.base import PropertyList
+from lsst.obs.decam import DecamMapper
 
 
 def makeDetectorCrosstalk(dataDict):
@@ -18,12 +19,13 @@ def makeDetectorCrosstalk(dataDict):
     dataDict : `dict`
         Dictionary from ``readFile`` containing crosstalk definition.
     """
-    decamCT = ipIsr.crosstalk.CrosstalkCalib()
-    decamCT.fromDict(dataDict)
-    decamCT.updateMetadata(setDate=True)
+    dataDict['coeffs'] = dataDict['coeffs'].transpose()
 
+    decamCT = ipIsr.crosstalk.CrosstalkCalib.fromDict(dataDict)
+    decamCT.updateMetadata(setDate=True)
+    outDir = DecamMapper.getCrosstalkDir()
     detName = dataDict['DETECTOR']
-    decamCT.writeFits(f"./crosstalk/{detName}.fits")
+    decamCT.writeFits(f"{outDir}/{detName}.fits")
 
 
 def readFile(fromFile):
@@ -60,7 +62,6 @@ def readFile(fromFile):
               'ccd56': 'N25', 'ccd57': 'N26', 'ccd58': 'N27', 'ccd59': 'N28', 'ccd60': 'N29',
               'ccd61': 'N30', 'ccd62': 'N31',
               }
-
     outDict = dict()
     with open(fromFile) as f:
         for line in f:
@@ -102,25 +103,20 @@ def readFile(fromFile):
                     outDict[victimDet]['crosstalkShape'] = (2, 2)
                     outDict[victimDet]['hasCrosstalk'] = True
                     outDict[victimDet]['nAmp'] = 2
+                    if 'coeffs' not in outDict[victimDet]:
+                        # shape=outDict[victimDet]['crosstalkShape'])
+                        outDict[victimDet]['coeffs'] = np.zeros_like([], shape=(2, 2))
 
                 if sourceDet == victimDet:
                     outDict[victimDet]['metadata']['DETECTOR'] = victimDet
                     outDict[victimDet]['metadata']['DETECTOR_SERIAL'] = "UNKNOWN"
                     outDict[victimDet]['DETECTOR'] = victimDet
                     outDict[victimDet]['DETECTOR_SERIAL'] = "UNKNOWN"
-
-                    if 'coeffs' not in outDict[victimDet]:
-                        # shape=outDict[victimDet]['crosstalkShape'])
-                        outDict[victimDet]['coeffs'] = np.zeros_like([], shape=(2, 2))
-
                     outDict[victimDet]['coeffs'][victimAmp][sourceAmp] = coeff
                 else:
                     if sourceDet not in outDict[victimDet]['interChip']:
-                        # shape=outDict[victimDet]['crosstalkShape'])
                         outDict[victimDet]['interChip'][sourceDet] = np.zeros_like([], shape=(2, 2))
-
                     outDict[victimDet]['interChip'][sourceDet][victimAmp][sourceAmp] = coeff
-
     return outDict
 
 
@@ -133,7 +129,7 @@ if __name__ == "__main__":
 
     outDict = readFile(fromFile=cmd.fromFile)
 
-    crosstalkDir = "./crosstalk/"
+    crosstalkDir = DecamMapper.getCrosstalkDir()
     if os.path.exists(crosstalkDir):
         if not cmd.force:
             print("Output directory %r exists; use --force to replace" % (crosstalkDir, ))
@@ -142,7 +138,6 @@ if __name__ == "__main__":
     else:
         print("Creating crosstalk directory %r" % (crosstalkDir, ))
         os.makedirs(crosstalkDir)
-
     for detName in outDict:
         if cmd.verbose:
             print(f"{detName}: has crosstalk? {outDict[detName]['hasCrosstalk']}")

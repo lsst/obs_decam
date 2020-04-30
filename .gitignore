@@ -18,3 +18,4 @@ bin/runCrosstalkAlone.py
 repositoryCfg.yaml
 decam/CALIB/defects
 decam/CALIB/calibRegistry*
+decam/crosstalk
