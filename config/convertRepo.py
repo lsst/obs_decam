@@ -1,6 +1,5 @@
 # Config overrides for converting gen2 to gen3 repos.
 
-from lsst.obs.base.gen2to3 import Translator, AbstractToPhysicalFilterKeyHandler
 import lsst.obs.decam
 
 # Use the specialized Decam ingest task to handle multi-HDU FITS files.
@@ -26,11 +25,3 @@ config.formatterClasses['cpFlat'] = "lsst.obs.decam.DarkEnergyCameraCPCalibForma
 # and multi extension fits handler
 config.targetHandlerClasses['cpFlat'] = "lsst.obs.base.gen2to3.repoWalker.handlers.MultiExtensionFileHandler"
 config.targetHandlerClasses['cpBias'] = "lsst.obs.base.gen2to3.repoWalker.handlers.MultiExtensionFileHandler"
-
-# DECam calibRegistry entries are abstract_filters, but we need physical_filter
-# in the gen3 registry.
-Translator.addRule(AbstractToPhysicalFilterKeyHandler(lsst.obs.decam.DarkEnergyCamera.filterDefinitions),
-                   instrument=lsst.obs.decam.DarkEnergyCamera.getName(),
-                   gen2keys=("filter",),
-                   consume=("filter",),
-                   datasetTypeName="cpFlat")
