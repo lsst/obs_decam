@@ -8,7 +8,7 @@ config.register.columns = {'filter': 'text',
                            'validStart': 'text',
                            'validEnd': 'text',
                            }
-config.register.tables = ['defects',]
+config.register.tables = ['defects', 'crosstalk']
 config.register.detector = ['filter', 'ccdnum']
 config.register.unique = ['filter', 'ccdnum', 'calibDate']
 config.register.visit = ['calibDate']

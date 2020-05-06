@@ -376,19 +376,3 @@ class DecamMapper(CameraMapper):
         packageName = cls.getPackageName()
         packageDir = getPackageDir(packageName)
         return os.path.join(packageDir, "decam", "crosstalk")
-
-    def map_crosstalk(self, dataId, write=False):
-        """Map a crosstalk table.
-        """
-        actualId = self._transformId(dataId)
-        detName = self._extractDetectorName(dataId)
-        location = "%s.fits" % (detName)
-        return ButlerLocation(
-            pythonType="lsst.ip.isr.CrosstalkCalib",
-            cppType="Config",
-            storageName="FitsStorage",
-            locationList=[location],
-            dataId=actualId,
-            mapper=self,
-            storage=Storage.makeFromURI(self.getCrosstalkDir())
-        )

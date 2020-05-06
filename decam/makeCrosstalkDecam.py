@@ -11,7 +11,7 @@ from lsst.daf.base import PropertyList
 from lsst.obs.decam import DecamMapper
 
 
-def makeDetectorCrosstalk(dataDict):
+def makeDetectorCrosstalk(dataDict, force=False):
     """Generate and write CrosstalkCalib from dictionary.
 
     Parameters
@@ -23,9 +23,16 @@ def makeDetectorCrosstalk(dataDict):
 
     decamCT = ipIsr.crosstalk.CrosstalkCalib.fromDict(dataDict)
     decamCT.updateMetadata(setDate=True)
-    outDir = DecamMapper.getCrosstalkDir()
-    detName = dataDict['DETECTOR']
-    decamCT.writeFits(f"{outDir}/{detName}.fits")
+
+    detName = dataDict['DETECTOR_NAME']
+    outDir = os.path.join(DecamMapper.getCrosstalkDir(), detName.lower())
+    if os.path.exists(outDir):
+        if not force:
+            print("Output directory %r exists; use --force to replace" % (outDir, ))
+            sys.exit(1)
+    else:
+        os.makedirs(outDir)
+    decamCT.writeText(f"{outDir}/1970-01-01T00:00:00.yaml")
 
 
 def readFile(fromFile):
@@ -62,6 +69,7 @@ def readFile(fromFile):
               'ccd56': 'N25', 'ccd57': 'N26', 'ccd58': 'N27', 'ccd59': 'N28', 'ccd60': 'N29',
               'ccd61': 'N30', 'ccd62': 'N31',
               }
+    detSerialMap = {value: int(key.replace("ccd", '')) for key, value in detMap.items()}
     outDict = dict()
     with open(fromFile) as f:
         for line in f:
@@ -99,6 +107,7 @@ def readFile(fromFile):
                     outDict[victimDet] = dict()
                     outDict[victimDet]['metadata'] = PropertyList()
                     outDict[victimDet]['metadata']['OBSTYPE'] = 'CROSSTALK'
+                    outDict[victimDet]['metadata']['INSTRUME'] = 'DECam'
                     outDict[victimDet]['interChip'] = dict()
                     outDict[victimDet]['crosstalkShape'] = (2, 2)
                     outDict[victimDet]['hasCrosstalk'] = True
@@ -108,10 +117,12 @@ def readFile(fromFile):
                         outDict[victimDet]['coeffs'] = np.zeros_like([], shape=(2, 2))
 
                 if sourceDet == victimDet:
-                    outDict[victimDet]['metadata']['DETECTOR'] = victimDet
-                    outDict[victimDet]['metadata']['DETECTOR_SERIAL'] = "UNKNOWN"
-                    outDict[victimDet]['DETECTOR'] = victimDet
-                    outDict[victimDet]['DETECTOR_SERIAL'] = "UNKNOWN"
+                    outDict[victimDet]['metadata']['DETECTOR_NAME'] = victimDet
+                    outDict[victimDet]['metadata']['DETECTOR_SERIAL'] = detSerialMap[victimDet]
+                    outDict[victimDet]['metadata']['DETECTOR'] = detSerialMap[victimDet]
+                    outDict[victimDet]['DETECTOR_NAME'] = victimDet
+                    outDict[victimDet]['DETECTOR_SERIAL'] = detSerialMap[victimDet]
+                    outDict[victimDet]['DETECTOR'] = detSerialMap[victimDet]
                     outDict[victimDet]['coeffs'][victimAmp][sourceAmp] = coeff
                 else:
                     if sourceDet not in outDict[victimDet]['interChip']:
@@ -144,4 +155,4 @@ if __name__ == "__main__":
             print(f"COEFF:\n{outDict[detName]['coeffs']}")
             for source in outDict[detName]['interChip']:
                 print(f"INTERCHIP {source}:\n{outDict[detName]['interChip'][source]}")
-        makeDetectorCrosstalk(dataDict=outDict[detName])
+        makeDetectorCrosstalk(dataDict=outDict[detName], force=cmd.force)

@@ -183,6 +183,23 @@ calibrations:
     validStartName: validStart
     validEndName: validEnd
     validRange: true
+  crosstalk:
+    columns:
+    - date
+    - ccdnum
+    level: ccd
+    obsTimeName: date
+    persistable: BaseCatalog
+    python: lsst.ip.isr.CrosstalkCalib
+    refCols:
+    - visit
+    reference: raw_visit
+    storage: FitsStorage
+    tables: crosstalk
+    template: crosstalk/%(calibDate)s/crosstalk-%(calibDate)s-%(ccdnum)03d.fits
+    validStartName: validStart
+    validEndName: validEnd
+    validRange: true
   illumcor:
     columns:
     - filter
