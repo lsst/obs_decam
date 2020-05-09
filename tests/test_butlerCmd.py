@@ -28,9 +28,13 @@ from lsst.obs.base.cli.butler_cmd_test import ButlerCmdTestBase
 
 
 class TestButlerCmd(ButlerCmdTestBase, lsst.utils.tests.TestCase):
-    def setUp(self):
-        self.instrument_class = "lsst.obs.decam.DarkEnergyCamera"
-        self.instrument_name = "DECam"
+    @staticmethod
+    def instrumentClass():
+        return "lsst.obs.decam.DarkEnergyCamera"
+
+    @staticmethod
+    def instrumentName():
+        return "DECam"
 
 
 if __name__ == '__main__':
