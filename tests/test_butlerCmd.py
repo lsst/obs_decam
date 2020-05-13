@@ -28,13 +28,8 @@ from lsst.obs.base.cli.butler_cmd_test import ButlerCmdTestBase
 
 
 class TestButlerCmd(ButlerCmdTestBase, lsst.utils.tests.TestCase):
-    @staticmethod
-    def instrumentClass():
-        return "lsst.obs.decam.DarkEnergyCamera"
 
-    @staticmethod
-    def instrumentName():
-        return "DECam"
+    instrumentClassName = "lsst.obs.decam.DarkEnergyCamera"
 
 
 if __name__ == '__main__':
