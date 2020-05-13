@@ -49,8 +49,8 @@ def makeAmpTables(segmentsFile):
     detectorName = []  # set to a value that is an invalid dict key, to catch bugs
     with open(segmentsFile) as fh:
         fh.readline()
-        for l in fh:
-            els = l.rstrip().split()
+        for ln in fh:
+            els = ln.rstrip().split()
             detectorName = els[1]
             # skip focus and guiding for now:
             if detectorName[0] in ('F', 'G'):
@@ -172,8 +172,8 @@ def makeDetectorConfigs(detectorLayoutFile):
     # There is an overall 0.05 deg rotation to the entire focal plane that I'm ignoring here.
     with open(detectorLayoutFile) as fh:
         fh.readline()
-        for l in fh:
-            els = l.rstrip().split()
+        for ln in fh:
+            els = ln.rstrip().split()
             detectorName = els[1]
             # skip focus and guiding for now:
             if detectorName[0] in ('F', 'G'):

@@ -26,7 +26,7 @@ import unittest
 import os
 import lsst.utils.tests
 
-from lsst.daf.butler import DataCoordinate
+from lsst.daf.butler import Butler, DataCoordinate
 from lsst.obs.base.ingest_tests import IngestTestBase
 import lsst.obs.decam
 
@@ -43,26 +43,28 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
-        self.instrument = lsst.obs.decam.DarkEnergyCamera()
+        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
+        self.instrumentName = "DECam"
         # DecamRawIngestTask ingests every detector in each raw file, so we
         # only have to specify one file here, but should get two dataIds
         # in the output repo.
         self.file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
         self.dataIds = [dict(instrument="DECam", exposure=229388, detector=25),
                         dict(instrument="DECam", exposure=229388, detector=1)]
-        self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
+        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
 
         super().setUp()
+        butler = Butler(self.root, run=self.outputRun)
         self.visits = {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=229388,
-                universe=self.butler.registry.dimensions
+                universe=butler.registry.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=229388,
-                    universe=self.butler.registry.dimensions
+                    universe=butler.registry.dimensions
                 )
             ]
         }
@@ -77,26 +79,28 @@ class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
-        self.instrument = lsst.obs.decam.DarkEnergyCamera()
+        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
+        self.instrumentName = "DECam"
         # DecamRawIngestTask ingests every detector in each raw file, so we
         # only have to specify one file here, but should get many dataIds
         # in the output repo.
         self.file = os.path.join(testDataDirectory, "rawData", "raw",
                                  "c4d_150227_012718_ori-stripped.fits.fz")
         self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
-        self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
+        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
 
         super().setUp()
+        butler = Butler(self.root, run=self.outputRun)
         self.visits = {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
-                universe=self.butler.registry.dimensions
+                universe=butler.registry.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=415282,
-                    universe=self.butler.registry.dimensions
+                    universe=butler.registry.dimensions
                 )
             ]
         }
@@ -111,26 +115,28 @@ class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestC
 
     def setUp(self):
         self.ingestDir = os.path.dirname(__file__)
-        self.instrument = lsst.obs.decam.DarkEnergyCamera()
+        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
+        self.instrumentName = "DECam"
         # DecamRawIngestTask ingests every detector in each raw file, so we
         # only have to specify one file here, but should get many dataIds
         # in the output repo.
         self.file = os.path.join(testDataDirectory, "rawData", "raw",
                                  "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
         self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
-        self.RawIngestTask = lsst.obs.decam.DecamRawIngestTask
+        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
 
         super().setUp()
+        butler = Butler(self.root, run=self.outputRun)
         self.visits = {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
-                universe=self.butler.registry.dimensions
+                universe=butler.registry.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=415282,
-                    universe=self.butler.registry.dimensions
+                    universe=butler.registry.dimensions
                 )
             ]
         }
