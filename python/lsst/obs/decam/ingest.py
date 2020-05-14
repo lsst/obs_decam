@@ -245,10 +245,6 @@ class DecamParseTask(ParseTask):
 
         return phuInfo, infoList
 
-    @staticmethod
-    def getExtensionName(md):
-        return md.getScalar('EXTNAME')
-
     def getDestination(self, butler, info, filename, filetype="raw"):
         """Get destination for the file
 

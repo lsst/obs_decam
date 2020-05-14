@@ -135,23 +135,6 @@ class DecamCalibsParseTask(CalibsParseTask):
         else:
             return "unknown"
 
-    @staticmethod
-    def getExtensionName(md):
-        """Get the name of the extension.
-
-        Parameters
-        ----------
-        md : `lsst.daf.base.PropertySet`
-            FITS header metadata.
-
-        Returns
-        -------
-        result : `str`
-            The string from the EXTNAME header card, or None.
-        """
-        ext = md.get("EXTNAME", None)
-        return ext
-
     def getDestination(self, butler, info, filename):
         """Get destination for the file.
 
