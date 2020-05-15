@@ -59,7 +59,7 @@ class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
 
     @property
     def visits(self):
-        butler = Butler(self.root, run=self.outputRun)
+        butler = Butler(self.root, collections=[self.outputRun])
         return {
             DataCoordinate.standardize(
                 instrument="DECam",
@@ -92,7 +92,7 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
 
     @property
     def visits(self):
-        butler = Butler(self.root, run=self.outputRun)
+        butler = Butler(self.root, collections=[self.outputRun])
         return {
             DataCoordinate.standardize(
                 instrument="DECam",
@@ -126,7 +126,7 @@ class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCa
 
     @property
     def visits(self):
-        butler = Butler(self.root, run=self.outputRun)
+        butler = Butler(self.root, collections=[self.outputRun])
         return {
             DataCoordinate.standardize(
                 instrument="DECam",
