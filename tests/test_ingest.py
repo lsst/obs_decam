@@ -37,25 +37,30 @@ except LookupError:
     testDataDirectory = None
 
 
+class DecamTestBase(IngestTestBase):
+
+    ingestDir = os.path.dirname(__file__)
+    instrumentClassName = "lsst.obs.decam.DarkEnergyCamera"
+    rawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
+
+
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
-class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
+
     curatedCalibrationDatasetTypes = ("camera", "defects")
 
-    def setUp(self):
-        self.ingestDir = os.path.dirname(__file__)
-        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
-        self.instrumentName = "DECam"
-        # DecamRawIngestTask ingests every detector in each raw file, so we
-        # only have to specify one file here, but should get two dataIds
-        # in the output repo.
-        self.file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
-        self.dataIds = [dict(instrument="DECam", exposure=229388, detector=25),
-                        dict(instrument="DECam", exposure=229388, detector=1)]
-        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
+    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # only have to specify one file here, but should get two dataIds
+    # in the output repo.
+    file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
 
-        super().setUp()
-        butler = Butler(self.root, run=self.outputRun)
-        self.visits = {
+    dataIds = [dict(instrument="DECam", exposure=229388, detector=25),
+               dict(instrument="DECam", exposure=229388, detector=1)]
+
+    @property
+    def visits(self):
+        butler = Butler(self.root, collections=[self.outputRun])
+        return {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=229388,
@@ -71,27 +76,24 @@ class DecamIngestTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
-class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all "normal" DECam HDUs.
     """
+
     # No need to test writeCuratedCalibrations again
     curatedCalibrationDatasetTypes = None
 
-    def setUp(self):
-        self.ingestDir = os.path.dirname(__file__)
-        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
-        self.instrumentName = "DECam"
-        # DecamRawIngestTask ingests every detector in each raw file, so we
-        # only have to specify one file here, but should get many dataIds
-        # in the output repo.
-        self.file = os.path.join(testDataDirectory, "rawData", "raw",
-                                 "c4d_150227_012718_ori-stripped.fits.fz")
-        self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
-        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
+    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # only have to specify one file here, but should get many dataIds
+    # in the output repo.
+    file = os.path.join(testDataDirectory, "rawData", "raw", "c4d_150227_012718_ori-stripped.fits.fz")
 
-        super().setUp()
-        butler = Butler(self.root, run=self.outputRun)
-        self.visits = {
+    dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+
+    @property
+    def visits(self):
+        butler = Butler(self.root, collections=[self.outputRun])
+        return {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
@@ -107,27 +109,25 @@ class DecamIngestFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
-class DecamIngestShuffledFullFileTestCase(IngestTestBase, lsst.utils.tests.TestCase):
+class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
     """Test ingesting a file that contains all detectors in a random order.
     """
+
     # No need to test writeCuratedCalibrations again
     curatedCalibrationDatasetTypes = None
 
-    def setUp(self):
-        self.ingestDir = os.path.dirname(__file__)
-        self.instrument = "lsst.obs.decam.DarkEnergyCamera"
-        self.instrumentName = "DECam"
-        # DecamRawIngestTask ingests every detector in each raw file, so we
-        # only have to specify one file here, but should get many dataIds
-        # in the output repo.
-        self.file = os.path.join(testDataDirectory, "rawData", "raw",
-                                 "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
-        self.dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
-        self.RawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
+    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # only have to specify one file here, but should get many dataIds
+    # in the output repo.
+    file = os.path.join(testDataDirectory, "rawData", "raw",
+                        "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
 
-        super().setUp()
-        butler = Butler(self.root, run=self.outputRun)
-        self.visits = {
+    dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+
+    @property
+    def visits(self):
+        butler = Butler(self.root, collections=[self.outputRun])
+        return {
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
