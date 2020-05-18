@@ -40,14 +40,15 @@ except LookupError:
 @unittest.skipIf(testDataDirectory is None, f"{testDataPackage} not setup")
 class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
                                   lsst.utils.tests.TestCase):
+
+    instrumentClassName = "lsst.obs.decam.DarkEnergyCamera"
+
     def setUp(self):
         # NOTE: this test will produce a bunch of "Skipping ingestion for" warnings,
         # due to the bias/flat calibRegistry only having the same ccds as the
         # raws, even though the files themselves have more.
         self.gen2root = os.path.join(testDataDirectory, 'ingested')
         self.gen2calib = os.path.join(testDataDirectory, 'calibingested')
-        self.instrumentName = "DECam"
-        self.instrumentClass = "lsst.obs.decam.DarkEnergyCamera"
         self.config = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                    "config", "convert2to3Config.py")
         self.kwargs = {}
