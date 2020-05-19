@@ -52,7 +52,9 @@ class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
     # DecamRawIngestTask ingests every detector in each raw file, so we
     # only have to specify one file here, but should get two dataIds
     # in the output repo.
-    file = os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
+    @property
+    def file(self):
+        return os.path.join(testDataDirectory, "rawData", "raw", "raw.fits")
 
     dataIds = [dict(instrument="DECam", exposure=229388, detector=25),
                dict(instrument="DECam", exposure=229388, detector=1)]
@@ -86,7 +88,9 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
     # DecamRawIngestTask ingests every detector in each raw file, so we
     # only have to specify one file here, but should get many dataIds
     # in the output repo.
-    file = os.path.join(testDataDirectory, "rawData", "raw", "c4d_150227_012718_ori-stripped.fits.fz")
+    @property
+    def file(self):
+        return os.path.join(testDataDirectory, "rawData", "raw", "c4d_150227_012718_ori-stripped.fits.fz")
 
     dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
 
@@ -119,8 +123,10 @@ class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCa
     # DecamRawIngestTask ingests every detector in each raw file, so we
     # only have to specify one file here, but should get many dataIds
     # in the output repo.
-    file = os.path.join(testDataDirectory, "rawData", "raw",
-                        "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
+    @property
+    def file(self):
+        return os.path.join(testDataDirectory, "rawData", "raw",
+                            "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
 
     dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
 
