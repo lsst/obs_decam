@@ -56,21 +56,11 @@ def readFile(crosstalkInfile):
         Raised if the detector is not known.
     """
     ampIndexMap = {'A': 0, 'B': 1}
-    detMap = {'ccd01': 'S29', 'ccd02': 'S30', 'ccd03': 'S31', 'ccd04': 'S25', 'ccd05': 'S26',
-              'ccd06': 'S27', 'ccd07': 'S28', 'ccd08': 'S20', 'ccd09': 'S21', 'ccd10': 'S22',
-              'ccd11': 'S23', 'ccd12': 'S24', 'ccd13': 'S14', 'ccd14': 'S15', 'ccd15': 'S16',
-              'ccd16': 'S17', 'ccd17': 'S18', 'ccd18': 'S19', 'ccd19': 'S8', 'ccd20': 'S9',
-              'ccd21': 'S10', 'ccd22': 'S11', 'ccd23': 'S12', 'ccd24': 'S13', 'ccd25': 'S1',
-              'ccd26': 'S2', 'ccd27': 'S3', 'ccd28': 'S4', 'ccd29': 'S5', 'ccd30': 'S6',
-              'ccd31': 'S7', 'ccd32': 'N1', 'ccd33': 'N2', 'ccd34': 'N3', 'ccd35': 'N4',
-              'ccd36': 'N5', 'ccd37': 'N6', 'ccd38': 'N7', 'ccd39': 'N8', 'ccd40': 'N9',
-              'ccd41': 'N10', 'ccd42': 'N11', 'ccd43': 'N12', 'ccd44': 'N13', 'ccd45': 'N14',
-              'ccd46': 'N15', 'ccd47': 'N16', 'ccd48': 'N17', 'ccd49': 'N18', 'ccd50': 'N19',
-              'ccd51': 'N20', 'ccd52': 'N21', 'ccd53': 'N22', 'ccd54': 'N23', 'ccd55': 'N24',
-              'ccd56': 'N25', 'ccd57': 'N26', 'ccd58': 'N27', 'ccd59': 'N28', 'ccd60': 'N29',
-              'ccd61': 'N30', 'ccd62': 'N31',
-              }
-    detSerialMap = {value: int(key.replace("ccd", '')) for key, value in detMap.items()}
+    detMap = {f"ccd{key:02d}": value for key, value in DecamMapper.detectorNames.items()}
+    detMap['ccd61'] = 'N30'
+    detSerialMap = {value: key for key, value in DecamMapper.detectorNames.items()}
+    detSerialMap['N30'] = 61
+
     outDict = dict()
     with open(crosstalkInfile) as f:
         for line in f:
