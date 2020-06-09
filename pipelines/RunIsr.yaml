@@ -1,0 +1,10 @@
+description: ip_isr handling of DECam-specific inter-chip crosstalk.  See DM-25348.
+instrument: lsst.obs.decam.DarkEnergyCamera
+tasks:
+  isrOscan:
+    class: lsst.ip.isr.isrTask.IsrTask
+    config:
+      connections.ccdExposure: 'raw'
+      connections.outputExposure: 'postISRCCD'
+      doLinearize: False
+      doCrosstalk: True
