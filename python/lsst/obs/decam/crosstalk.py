@@ -146,10 +146,10 @@ class DecamCrosstalkTask(CrosstalkTask):
             try:
                 source_exposure = butler.get('raw', dataId={'visit': visit, 'ccd': sourceDet})
             except RuntimeError:
-                self.log.warn('Cannot access source %s, SKIPPING IT' % sourceDet)
+                self.log.warn(f"Cannot access source {sourceDet}, SKIPPING IT")
             else:
-                self.log.info('Correcting victim %s from crosstalk source %s' %
-                              (crosstalk._detectorName, sourceDet))
+                self.log.info(f"Correcting victim {crosstalk._detectorName} "
+                              f"from crosstalk source {sourceDet}.")
 
                 for amp in source_exposure.getDetector():
                     decamisr.overscanCorrection(source_exposure, amp)

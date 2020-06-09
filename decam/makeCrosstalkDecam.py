@@ -22,7 +22,8 @@ def makeDetectorCrosstalk(dataDict, force=False):
     dataDict['coeffs'] = dataDict['coeffs'].transpose()
 
     decamCT = ipIsr.crosstalk.CrosstalkCalib.fromDict(dataDict)
-    decamCT.updateMetadata(setDate=True)
+    # Supply a date prior to all data, to ensure universal use.
+    decamCT.updateMetadata(setDate=False, CALIBDATE='1970-01-01T00:00:00')
 
     detName = dataDict['DETECTOR_NAME']
     outDir = os.path.join(DecamMapper.getCrosstalkDir(), detName.lower())
@@ -35,12 +36,12 @@ def makeDetectorCrosstalk(dataDict, force=False):
     decamCT.writeText(f"{outDir}/1970-01-01T00:00:00.yaml")
 
 
-def readFile(fromFile):
-    """Construct crosstalk dictionary-of-dictionaries from fromFile.
+def readFile(crosstalkInfile):
+    """Construct crosstalk dictionary-of-dictionaries from crosstalkInfile.
 
     Parameters
     ----------
-    fromFile : `str`
+    crosstalkInfile : `str`
         File containing crosstalk coefficient information.
 
     Results
@@ -71,7 +72,7 @@ def readFile(fromFile):
               }
     detSerialMap = {value: int(key.replace("ccd", '')) for key, value in detMap.items()}
     outDict = dict()
-    with open(fromFile) as f:
+    with open(crosstalkInfile) as f:
         for line in f:
             li = line.strip()
             if not li.startswith('#'):
@@ -133,12 +134,12 @@ def readFile(fromFile):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert a DECam crosstalk file into LSST CrosstalkCalibs.")
-    parser.add_argument(dest="fromFile", help="DECam crosstalk file.")
+    parser.add_argument(dest="crosstalkInfile", help="DECam crosstalk file.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Print data about each detector.")
     parser.add_argument("-f", "--force", action="store_true", help="Overwrite existing CrosstalkCalibs.")
     cmd = parser.parse_args()
 
-    outDict = readFile(fromFile=cmd.fromFile)
+    outDict = readFile(crosstalkInfile=cmd.crosstalkInfile)
 
     crosstalkDir = DecamMapper.getCrosstalkDir()
     if os.path.exists(crosstalkDir):
