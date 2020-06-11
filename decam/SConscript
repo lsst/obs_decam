@@ -1,6 +1,6 @@
 # -*- python -*-
 
-# Build the linearity tables
+# Build the linearity, defect, and crosstalk tables
 # This code was adapted from obs_subaru hsc/SConscript
 
 import lsst.sconsUtils
@@ -43,3 +43,29 @@ command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {
             "--calib decam/CALIB --config clobber=True")
 commandInst = env.Command('CALIB/calibRegistry.sqlite3', [], command)
 env.Depends(commandInst, lsst.sconsUtils.targets["python"])
+
+
+# Create crosstalk calibration tables by parsing the ascii table
+def getCrosstalkInFile():
+    crosstalkInFiles = glob.glob("DECam_xtalk_*.txt")
+    if len(crosstalkInFiles) == 1:
+        return crosstalkInFiles[0]
+    elif len(crosstalkInFiles) == 0:
+        raise RuntimeError("Could not find a crosstalk table")
+    else:
+        raise RuntimeError("Found %s crosstalk tables; need just one" % (len(crosstalkInFiles),))
+
+crosstalkInFile = getCrosstalkInFile()
+crosstalkOutDir = "decam/crosstalk/1970-01-01T00:00:00/"
+command = "%s decam/makeCrosstalkDecam.py $SOURCE --force" % (python,)
+
+makeCrosstalk = env.Command(crosstalkOutDir, crosstalkInFile, command)
+
+# Ingest crosstalk calibration tables into decam/CALIB with
+# ingestCuratedCalibs.py so they can be found by butlers using this
+# build of obs_decam.
+decam_dir = lsst.sconsUtils.env.ProductDir('obs_decam')
+command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {decam_dir}/decam/crosstalk "+
+           "--calib decam/CALIB --config clobber=True")
+commandCrosstalkIng = env.Command('CALIB/calibRegistry.sqlite3', [], command)
+env.Depends(commandCrosstalkIng, lsst.sconsUtils.targets["python"])

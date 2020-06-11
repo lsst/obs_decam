@@ -368,3 +368,11 @@ class DecamMapper(CameraMapper):
             mapper=self,
             storage=Storage.makeFromURI(self.getLinearizerDir())
         )
+
+    @classmethod
+    def getCrosstalkDir(cls):
+        """Directory containing crosstalk tables.
+        """
+        packageName = cls.getPackageName()
+        packageDir = getPackageDir(packageName)
+        return os.path.join(packageDir, "decam", "crosstalk")
