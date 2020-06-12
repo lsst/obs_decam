@@ -27,7 +27,7 @@ import astro_metadata_translator
 import lsst.afw.fits
 import lsst.afw.image
 import lsst.log
-from lsst.obs.base.fitsRawFormatterBase import FitsRawFormatterBase
+from lsst.obs.base import FitsRawFormatterBase
 
 from . import DarkEnergyCamera
 
