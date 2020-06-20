@@ -56,7 +56,8 @@ class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
 
         self.log.debug(f"Found images for {len(datasets)} detectors in {filename}")
         return RawFileData(datasets=datasets, filename=filename,
-                           FormatterClass=FormatterClass)
+                           FormatterClass=FormatterClass,
+                           instrumentClass=type(instrument))
 
 
 class DecamIngestArgumentParser(IngestArgumentParser):

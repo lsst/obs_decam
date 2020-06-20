@@ -66,7 +66,6 @@ class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
                       for detector, date in itertools.product(detectors, dates)]
         self.refcats = ['gaia', 'panstarrs']
         super().setUp()
-        self.collections.add("calib/DECam")
 
 
 def setup_module(module):
