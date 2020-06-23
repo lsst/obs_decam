@@ -16,41 +16,37 @@ class DecamCalibsParseTask(CalibsParseTask):
     """
 
     def getInfo(self, filename):
-        """Get information about the image from the filename and/or its contents.
+        """Retrieve path, calib_hdu, and possibly calibDate.
 
         Parameters
         ----------
         filename: `str`
-            Name of file to inspect.
+            Calibration file to inspect.
 
         Returns
         -------
         phuInfo : `dict`
             Primary header unit info.
         infoList : `list` of `dict`
-            File properties; list of file properties for each extension.
+            List of file properties to use for each extension.
         """
         phuInfo, infoList = CalibsParseTask.getInfo(self, filename)
-        # Single-extension fits without EXTNAME can be a valid CP calibration product
-        # Use info of primary header unit
-        if not infoList:
-            infoList.append(phuInfo)
-        for info in infoList:
-            info['path'] = filename
+        # In practice, this returns an empty dict
+        # and a list containing an empty dict.
+        for item in infoList:
+            item['path'] = filename
+            try:
+                item['calib_hdu'] = item['hdu']
+            except KeyError:  # calib_hdu is required for the calib registry
+                item['calib_hdu'] = 1
         # Try to fetch a date from filename
         # and use as the calibration dates if not already set
         found = re.search(r'(\d\d\d\d-\d\d-\d\d)', filename)
-        for item in infoList:
-            try:
-                item['calib_hdu'] = item['hdu']
-            except KeyError:  # workaround for pre- DM-19730 defect ingestion
-                item['calib_hdu'] = 1
-        if not found:
-            return phuInfo, infoList
-        date = found.group(1)
-        for info in infoList:
-            if 'calibDate' not in info or info['calibDate'] == "unknown":
-                info['calibDate'] = date
+        if found:
+            date = found.group(1)
+            for info in infoList:
+                if 'calibDate' not in info or info['calibDate'] == "unknown":
+                    info['calibDate'] = date
         return phuInfo, infoList
 
     def _translateFromCalibId(self, field, md):
@@ -118,6 +114,11 @@ class DecamCalibsParseTask(CalibsParseTask):
         ----------
         md : `lsst.daf.base.PropertySet`
             FITS header metadata.
+
+        Returns
+        -------
+        filter : `str`
+            The name of the filter to use in the calib registry.
         """
         if "FILTER" in md:
             if "OBSTYPE" in md:
