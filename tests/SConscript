@@ -9,6 +9,8 @@ tests = lsst.sconsUtils.scripts.BasicSConscript.tests(
 )
 
 env.Depends(tests, "../decam/linearizer")
+env.Depends(tests, "../decam/CALIB/calibRegistry.sqlite3")
+env.Depends(tests, "../decam/crosstalk")
 
 if "DAF_BUTLER_PLUGINS" in os.environ:
     lsst.sconsUtils.env["ENV"]["DAF_BUTLER_PLUGINS"] = os.environ["DAF_BUTLER_PLUGINS"]
