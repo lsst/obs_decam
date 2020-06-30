@@ -74,10 +74,14 @@ exposures:
     template: dcrCoadd/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-f%(filter)s%(subfilter)d.fits
   deepDiff_differenceExp:
     template: deepDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
+  deepDiff_warpedExp:
+    template: deepDiff/v%(visit)d/warpexp-%(ccdnum)02d.fits
   deepDiff_matchedExp:
     template: deepDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits
   dcrDiff_differenceExp:
     template: dcrDiff/v%(visit)d/diffexp-%(ccdnum)02d.fits
+  dcrDiff_warpedExp:
+    template: dcrDiff/v%(visit)d/warpexp-%(ccdnum)02d.fits
   dcrDiff_matchedExp:
     template: dcrDiff/v%(visit)d/matchexp-%(ccdnum)02d.fits
 
