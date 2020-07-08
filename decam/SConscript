@@ -60,6 +60,7 @@ crosstalkOutDir = "crosstalk"
 command = "%s decam/makeCrosstalkDecam.py $SOURCE --force" % (python,)
 
 makeCrosstalk = env.Command(crosstalkOutDir, crosstalkInFile, command)
+env.Depends(makeCrosstalk, "makeCrosstalkDecam.py")
 
 # Ingest crosstalk calibration tables into decam/CALIB with
 # ingestCuratedCalibs.py so they can be found by butlers using this
@@ -68,4 +69,4 @@ decam_dir = lsst.sconsUtils.env.ProductDir('obs_decam')
 command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {decam_dir}/decam/crosstalk "+
            "--calib decam/CALIB --config clobber=True")
 commandCrosstalkIng = env.Command('CALIB/calibRegistry.sqlite3', [], command)
-env.Depends(commandCrosstalkIng, lsst.sconsUtils.targets["python"])
+env.Depends(commandCrosstalkIng, [makeCrosstalk, lsst.sconsUtils.targets["python"]])
