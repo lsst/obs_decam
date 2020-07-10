@@ -10,10 +10,8 @@ The LSST does not commit to supporting this package, and makes no warranty
 about its quality or performance.  It is licensed under the GNU Public License
 version 3.
 
-The initial version of this package was provided by Paul Price
-(price@astro.princeton.edu), and though he also makes no commitment to
-support it, users are welcome to contact him and/or the LSST Data Management
-mailing list (lsst-data@lsstcorp.org) with questions.
+Questions about this package and support requests should be directed to
+[the LSST Community site](https://community.lsst.org).
 
 
 Copyleft
