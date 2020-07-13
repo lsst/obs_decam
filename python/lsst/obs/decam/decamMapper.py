@@ -35,6 +35,7 @@ from lsst.obs.base.utils import createInitialSkyWcs, InitialSkyWcsError
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
 from .decamFilters import DECAM_FILTER_DEFINITIONS
+from ._instrument import DarkEnergyCamera
 
 np.seterr(divide="ignore")
 
@@ -43,6 +44,7 @@ __all__ = ["DecamMapper"]
 
 class DecamMapper(CameraMapper):
     packageName = 'obs_decam'
+    _gen3instrument = DarkEnergyCamera
 
     MakeRawVisitInfoClass = MakeDecamRawVisitInfo
 

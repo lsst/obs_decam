@@ -5,11 +5,6 @@ import lsst.obs.decam
 # Use the specialized Decam ingest task to handle multi-HDU FITS files.
 config.raws.retarget(lsst.obs.decam.DecamRawIngestTask)
 
-# Override the instrument class name in the configuration.  We probably got
-# here from the command-line script, which sets this anyway, but it's better to
-# set it twice than set it never.
-config.instrument = "lsst.obs.decam.DarkEnergyCamera"
-
 # DECam names its detectors differently in the registry
 config.ccdKey = "ccdnum"
 
