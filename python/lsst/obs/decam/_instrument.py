@@ -25,6 +25,7 @@
 __all__ = ("DarkEnergyCamera",)
 
 import os
+from functools import lru_cache
 
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument
@@ -51,6 +52,13 @@ class DarkEnergyCamera(Instrument):
 
     def getCamera(self):
         path = os.path.join(getPackageDir("obs_decam"), self.policyName, "camGeom")
+        return self._getCameraFromPath(path)
+
+    @staticmethod
+    @lru_cache()
+    def _getCameraFromPath(path):
+        """Return the camera geometry given solely the path to the location
+        of that definition."""
         config = CameraConfig()
         config.load(os.path.join(path, "camera.py"))
         return makeCameraFromPath(
