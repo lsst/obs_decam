@@ -51,6 +51,11 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
     translatorClass = astro_metadata_translator.DecamTranslator
     filterDefinitions = DarkEnergyCamera.filterDefinitions
 
+    # DECam has a coordinate system flipped on X with respect to our
+    # VisitInfo definition of the field angle orientation.
+    # We have to specify the flip explicitly until DM-20746 is implemented.
+    wcsFlipX = True
+
     def getDetector(self, id):
         return DarkEnergyCamera().getCamera()[id]
 
