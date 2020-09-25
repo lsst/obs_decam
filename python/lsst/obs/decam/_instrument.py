@@ -29,7 +29,7 @@ from functools import lru_cache
 
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument
-from lsst.obs.base.gen2to3 import AbstractToPhysicalFilterKeyHandler, TranslatorFactory
+from lsst.obs.base.gen2to3 import BandToPhysicalFilterKeyHandler, TranslatorFactory
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
 from lsst.daf.butler.core.utils import getFullTypeName
@@ -100,11 +100,11 @@ class DarkEnergyCamera(Instrument):
     def makeDataIdTranslatorFactory(self) -> TranslatorFactory:
         # Docstring inherited from lsst.obs.base.Instrument.
         factory = TranslatorFactory()
-        factory.addGenericInstrumentRules(self.getName(), calibFilterType="abstract_filter",
+        factory.addGenericInstrumentRules(self.getName(), calibFilterType="band",
                                           detectorKey="ccdnum")
-        # DECam calibRegistry entries are abstract_filters, but we need physical_filter
+        # DECam calibRegistry entries are bands, but we need physical_filter
         # in the gen3 registry.
-        factory.addRule(AbstractToPhysicalFilterKeyHandler(self.filterDefinitions),
+        factory.addRule(BandToPhysicalFilterKeyHandler(self.filterDefinitions),
                         instrument=self.getName(),
                         gen2keys=("filter",),
                         consume=("filter",),
