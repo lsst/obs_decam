@@ -56,12 +56,10 @@ class DecamConvertGen2To3TestCase(convertTests.ConvertGen2To3TestCase,
         detectors = (5, 10, 56, 60)
         dates = ('2015-02-18', '2015-03-13')
         self.biasName = 'cpBias'
-        self.biases = [{'detector': detector, 'calibration_label': f"gen2/cpBias_{date}_{detector:03}",
-                        'instrument': 'DECam'}
+        self.biases = [{'detector': detector, 'instrument': 'DECam'}
                        for detector, date in itertools.product(detectors, dates)]
         self.flatName = 'cpFlat'
         self.flats = [{'detector': detector,
-                       'calibration_label': f"gen2/cpFlat_{date}_{detector:03}_g",
                        'instrument': 'DECam', 'physical_filter': 'g DECam SDSS c0001 4720.0 1520.0'}
                       for detector, date in itertools.product(detectors, dates)]
         self.refcats = ['gaia', 'panstarrs']
