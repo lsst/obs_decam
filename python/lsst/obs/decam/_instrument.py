@@ -70,27 +70,29 @@ class DarkEnergyCamera(Instrument):
     def register(self, registry):
         camera = self.getCamera()
         obsMax = 2**31
-        registry.insertDimensionData(
-            "instrument",
-            {"name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax,
-             "class_name": getFullTypeName(self),
-             }
-        )
-
-        for detector in camera:
-            registry.insertDimensionData(
-                "detector",
+        with registry.transaction():
+            registry.syncDimensionData(
+                "instrument",
                 {
-                    "instrument": self.getName(),
-                    "id": detector.getId(),
-                    "full_name": detector.getName(),
-                    "name_in_raft": detector.getName()[1:],
-                    "raft": detector.getName()[0],
-                    "purpose": str(detector.getType()).split(".")[-1],
+                    "name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax,
+                    "class_name": getFullTypeName(self),
                 }
             )
 
-        self._registerFilters(registry)
+            for detector in camera:
+                registry.syncDimensionData(
+                    "detector",
+                    {
+                        "instrument": self.getName(),
+                        "id": detector.getId(),
+                        "full_name": detector.getName(),
+                        "name_in_raft": detector.getName()[1:],
+                        "raft": detector.getName()[0],
+                        "purpose": str(detector.getType()).split(".")[-1],
+                    }
+                )
+
+            self._registerFilters(registry)
 
     def getRawFormatter(self, dataId):
         # local import to prevent circular dependency
