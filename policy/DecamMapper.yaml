@@ -177,7 +177,7 @@ calibrations:
     level: ccd
     obsTimeName: date
     persistable: BaseCatalog
-    python: lsst.meas.algorithms.Defects
+    python: lsst.ip.isr.Defects
     refCols:
     - visit
     reference: raw_visit
