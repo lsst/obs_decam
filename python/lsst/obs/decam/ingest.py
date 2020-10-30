@@ -45,7 +45,6 @@ class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
             header = fitsData.readMetadata()
             if header['CCDNUM'] > 62:  # ignore the guide CCDs
                 continue
-            fix_header(header)
             datasets.append(self._calculate_dataset_info(header, filename))
 
         # The data model currently assumes that whilst multiple datasets
