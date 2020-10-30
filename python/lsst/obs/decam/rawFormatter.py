@@ -118,7 +118,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
         filename = self.fileDescriptor.location.path
         try:
             index = detector_to_hdu[detectorId]
-            metadata = lsst.afw.image.readMetadata(filename, index)
+            metadata = lsst.afw.fits.readMetadata(filename, index)
             if metadata['CCDNUM'] != detectorId:
                 # the detector->HDU mapping is different in this file: try scanning
                 return self._scanHdus(filename, detectorId)
@@ -148,7 +148,7 @@ class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
     def _determineHDU(self, detectorId):
         """The HDU to read is the same as the detector number."""
         filename = self.fileDescriptor.location.path
-        metadata = lsst.afw.image.readMetadata(filename, detectorId)
+        metadata = lsst.afw.fits.readMetadata(filename, detectorId)
         if metadata['CCDNUM'] != detectorId:
             msg = f"Found CCDNUM={metadata['CCDNUM']} instead of {detectorId} in {filename} HDU={detectorId}."
             raise ValueError(msg)

@@ -55,13 +55,13 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
     def test_readMetadata(self):
         dataId = {'detector': 25}
         # detector 25 is in HDU 1
-        expected = lsst.afw.image.readMetadata(self.filename, 1)
+        expected = lsst.afw.fits.readMetadata(self.filename, 1)
         self.assertEqual(expected['CCDNUM'], 25)  # sanity check
         self.check_readMetadata(dataId, expected)
 
         dataId = {'detector': 1}
         # detector 1 is in HDU 2
-        expected = lsst.afw.image.readMetadata(self.filename, 2)
+        expected = lsst.afw.fits.readMetadata(self.filename, 2)
         astro_metadata_translator.fix_header(expected)
         self.assertEqual(expected['CCDNUM'], 1)  # sanity check
         self.check_readMetadata(dataId, expected)
@@ -137,10 +137,10 @@ class DarkEnergyCameraCPCalibFormatterTestCase(lsst.utils.tests.TestCase):
     def test_readMetadata(self):
         for i in range(1, 63):
             dataId = {'detector': i}
-            expected = lsst.afw.image.readMetadata(self.biasFile, i)
+            expected = lsst.afw.fits.readMetadata(self.biasFile, i)
             self.check_readMetadata(dataId, expected, self.biasDescriptor)
 
-            expected = lsst.afw.image.readMetadata(self.flatFile, i)
+            expected = lsst.afw.fits.readMetadata(self.flatFile, i)
             self.check_readMetadata(dataId, expected, self.flatDescriptor)
 
 
