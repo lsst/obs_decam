@@ -118,6 +118,8 @@ class DecamParseTask(ParseTask):
     put the file in the correct location and populate the registry.
     """
 
+    _translatorClass = DecamTranslator
+
     def __init__(self, *args, **kwargs):
         super(ParseTask, self).__init__(*args, **kwargs)
 
@@ -133,10 +135,10 @@ class DecamParseTask(ParseTask):
         for file in os.listdir(path):
             fileName = os.path.join(path, file)
             md = readMetadata(fileName)
-            fix_header(md, translator_class=DecamTranslator)
-            if "EXPNUM" not in md.names():
+            fix_header(md, translator_class=self._translatorClass)
+            if "EXPNUM" not in md:
                 return
-            expnum = md.getScalar("EXPNUM")
+            expnum = md["EXPNUM"]
             if expnum not in self.expnumMapper:
                 self.expnumMapper[expnum] = {self.instcalPrefix: None,
                                              self.wtmapPrefix: None,
