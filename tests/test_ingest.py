@@ -58,6 +58,7 @@ class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
 
     dataIds = [dict(instrument="DECam", exposure=229388, detector=25),
                dict(instrument="DECam", exposure=229388, detector=1)]
+    filterLabel = lsst.afw.image.FilterLabel(physical="z DECam SDSS c0004 9260.0 1520.0", band="z")
 
     @property
     def visits(self):
@@ -93,6 +94,7 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
         return os.path.join(testDataDirectory, "rawData", "raw", "c4d_150227_012718_ori-stripped.fits.fz")
 
     dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+    filterLabel = lsst.afw.image.FilterLabel(physical="r DECam SDSS c0002 6415.0 1480.0", band="r")
 
     @property
     def visits(self):
@@ -129,6 +131,7 @@ class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCa
                             "c4d_150227_012718_ori-stripped-shuffled.fits.fz")
 
     dataIds = [{"instrument": "DECam", "exposure": 415282, "detector": i} for i in range(1, 63)]
+    filterLabel = lsst.afw.image.FilterLabel(physical="r DECam SDSS c0002 6415.0 1480.0", band="r")
 
     @property
     def visits(self):
