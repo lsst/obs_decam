@@ -89,7 +89,7 @@ config.normalizeGains = False
 
 config.doFringe = True
 config.fringeAfterFlat = True
-config.fringe.filters = ['z', 'y']
+config.fringe.filters = ['z DECam SDSS c0004 9260.0 1520.0', 'Y DECam c0005 10095.0 1130.0']
 
 config.doNanInterpAfterFlat = False
 
@@ -110,4 +110,5 @@ config.doUseAtmosphereTransmission = False
 config.doIlluminationCorrection = False
 # config.doIlluminationCorrection = True
 config.illuminationCorrectionDataProductName = "cpIllumcor"
-config.illumFilters = ['g', 'r', 'i']
+config.illumFilters = ['g DECam SDSS c0001 4720.0 1520.0', 'r DECam SDSS c0002 6415.0 1480.0',
+                       'i DECam SDSS c0003 7835.0 1470.0']
