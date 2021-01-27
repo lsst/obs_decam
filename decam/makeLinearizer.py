@@ -5,12 +5,13 @@ import argparse
 import sys
 import os.path
 
-
 import numpy as np
 import astropy.io.fits as fits
 
 from lsst.obs.decam import DecamMapper
 from lsst.daf.persistence import Butler
+from lsst.ip.isr import Linearizer
+from lsst.utils import getPackageDir
 
 
 def makeLinearizerDecam(fromFile, force=False, verbose=False):
@@ -61,6 +62,33 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
                 print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
         linearizer = lsstTable
         butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
+
+        # Generate gen3 files into local directory.
+        myLinearity = Linearizer(table=lsstTable)
+        for i, ampName in enumerate("AB"):
+            myLinearity.ampNames.append(ampName)
+            myLinearity.linearityType[ampName] = 'LookupTable'
+            myLinearity.linearityCoeffs[ampName] = np.array([i, 0])
+            myLinearity.linearityBBox[ampName] = detector.getAmplifiers()[i].getBBox()
+            myLinearity.fitParams[ampName] = np.array([])
+            myLinearity.fitParamsErr[ampName] = np.array([])
+            myLinearity.fitChiSq[ampName] = np.nan
+        myLinearity.updateMetadata(camera=camera, detector=detector,
+                                   CALIBDATE='1970-01-01T00:00:00',
+                                   setCalibId=True)
+        myLinearity.hasLinearity = True
+
+        outDir = os.path.join(getPackageDir('obs_decam'), 'decam', 'CALIB', 'linearity',
+                              detector.getName().lower())
+        if os.path.exists(outDir) and not force:
+            print("Output directory %r exists; use --force to replace" % (outDir, ))
+            sys.exit(1)
+        else:
+            os.makedirs(outDir)
+
+        filename = "1970-01-01T00:00:00.yaml"
+        myLinearity.writeText(os.path.join(outDir, filename))
+
     print("Wrote %s linearizers" % (ccdind+1,))
 
 
