@@ -45,6 +45,8 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
                      alias={'Y'}),
     FilterDefinition(physical_filter="VR DECam c0007 6300.0 2600.0",
                      band="VR",
+                     doc='A very broad-band filter, intended for "discovery", not "accurate photometry".'
+                         'For details, wee: http://www.ctio.noao.edu/noao/content/decam-vr-filter',
                      lambdaEff=630, lambdaMin=490, lambdaMax=765),
     FilterDefinition(physical_filter="N964 DECam c0008 9645.0 94.0",
                      band="N964",
