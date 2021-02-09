@@ -52,5 +52,6 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
                      band="N964",
                      lambdaEff=964),
     FilterDefinition(physical_filter="solid plate 0.0 0.0",
+                     band="opaque",
                      afw_name='SOLID', lambdaEff=0)
 )
