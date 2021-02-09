@@ -73,9 +73,9 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             myLinearity.fitParams[ampName] = np.array([])
             myLinearity.fitParamsErr[ampName] = np.array([])
             myLinearity.fitChiSq[ampName] = np.nan
+        calibDate = '1970-01-01T00:00:00'
         myLinearity.updateMetadata(camera=camera, detector=detector,
-                                   CALIBDATE='1970-01-01T00:00:00',
-                                   setCalibId=True)
+                                   CALIBDATE=calibDate, setCalibId=True)
         myLinearity.hasLinearity = True
 
         outDir = os.path.join(getPackageDir('obs_decam'), 'decam', 'CALIB', 'linearity',
@@ -86,7 +86,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
         else:
             os.makedirs(outDir)
 
-        filename = "1970-01-01T00:00:00.yaml"
+        filename = calibDate + ".yaml"
         myLinearity.writeText(os.path.join(outDir, filename))
 
     print("Wrote %s linearizers" % (ccdind+1,))
