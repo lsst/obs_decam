@@ -113,6 +113,22 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
             ]
         }
 
+    def checkRepo(self, files=None):
+        """Additional tests run on post-ingest repos.
+
+        See base class for additional information; note that using this hook
+        rather than adding a new test_ method saves us from having to (slowly)
+        run ingest again just to get a useful to repo to test against.
+        """
+        butler = Butler(self.root)
+        # Test that packing visit+detector data IDs into integers yields
+        # results consistent with what we have historically gotten (from Gen2).
+        for dataId in self.dataIds:
+            expandedDataId = butler.registry.expandDataId(dataId)
+            packed, bits = expandedDataId.pack("exposure_detector", returnMaxBits=True)
+            self.assertEqual(packed, int(f"{dataId['exposure']}{dataId['detector']:02}"))
+            self.assertEqual(bits, 32)
+
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
