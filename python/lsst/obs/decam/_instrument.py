@@ -69,12 +69,21 @@ class DarkEnergyCamera(Instrument):
 
     def register(self, registry):
         camera = self.getCamera()
-        obsMax = 2**31
+        # Combined with detector_max=100 (below), obsMax=2**25 causes the
+        # number of bits in packed IDs to match the Gen2 ones.
+        obsMax = 2**25
         with registry.transaction():
+            # Note that detector_max here is really only used for packing
+            # detector and visit/exposure IDs together into a single integer,
+            # so it's rounded up to the nearest power of ten to make that
+            # encoding decodable by humans (and consistent with its previous
+            # Gen2 definition).  There are other checks (database constraints)
+            # that ensure any ingested raws have "real" detector values, and
+            # those are based on the detector records added in the loop below.
             registry.syncDimensionData(
                 "instrument",
                 {
-                    "name": self.getName(), "detector_max": 64, "visit_max": obsMax, "exposure_max": obsMax,
+                    "name": self.getName(), "detector_max": 100, "visit_max": obsMax, "exposure_max": obsMax,
                     "class_name": getFullTypeName(self),
                 }
             )
