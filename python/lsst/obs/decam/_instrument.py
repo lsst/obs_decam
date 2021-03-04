@@ -69,7 +69,9 @@ class DarkEnergyCamera(Instrument):
 
     def register(self, registry):
         camera = self.getCamera()
-        obsMax = 2**31
+        # Combined with detector_max=100 (below), obsMax=2**25 causes the
+        # number of bits in packed IDs to match the Gen2 ones.
+        obsMax = 2**25
         with registry.transaction():
             # Note that detector_max here is really only used for packing
             # detector and visit/exposure IDs together into a single integer,
