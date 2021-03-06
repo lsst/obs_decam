@@ -1,11 +1,11 @@
-description: Prepare overscanSources (for ISR/interchip crosstalk).
+description: Prepare crosstalkSources for ISR/interchip crosstalk by running overscan correction on raw frames.
 instrument: lsst.obs.decam.DarkEnergyCamera
 tasks:
   overscan:
     class: lsst.ip.isr.isrTask.IsrTask
     config:
       connections.ccdExposure: 'raw'
-      connections.outputExposure: 'oscanRaw'
+      connections.outputExposure: 'overscanRaw'
       doBias: False
       doOverscan: True
       doAssembleCcd: False

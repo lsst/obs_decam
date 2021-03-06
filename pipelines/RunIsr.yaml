@@ -1,4 +1,4 @@
-description: ip_isr handling of DECam-specific inter-chip crosstalk.  See DM-25348.
+description: Run IsrTask for DECam with only intra-chip crosstalk.  Inter-chip crosstalk needs pre-prepared crosstalkSources.
 instrument: lsst.obs.decam.DarkEnergyCamera
 tasks:
   isrOscan:
