@@ -1,10 +1,11 @@
-description: Run IsrTask for DECam with only intra-chip crosstalk.  Inter-chip crosstalk needs pre-prepared crosstalkSources.
+description: Run ISR using pregenerated crosstalkSources for interchip crosstalk.
 instrument: lsst.obs.decam.DarkEnergyCamera
 tasks:
-  isrOscan:
+  isr:
     class: lsst.ip.isr.isrTask.IsrTask
     config:
       connections.ccdExposure: 'raw'
       connections.outputExposure: 'postISRCCD'
-      doLinearize: False
+      connections.crosstalkSources: 'overscanRaw'
+      doOverscan: True
       doCrosstalk: True
