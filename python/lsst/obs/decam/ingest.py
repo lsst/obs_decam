@@ -29,7 +29,6 @@ from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
 from lsst.obs.base.ingest import RawFileData
 import lsst.obs.base
-from ._instrument import DarkEnergyCamera
 
 __all__ = ["DecamRawIngestTask", "DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask"]
 
@@ -52,12 +51,13 @@ class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
         # The data model currently assumes that whilst multiple datasets
         # can be associated with a single file, they must all share the
         # same formatter.
-        instrument = DarkEnergyCamera()
-        FormatterClass = instrument.getRawFormatter(datasets[0].dataId)
+        instrument, formatterClass = self._determine_instrument_formatter(datasets[0].dataId, filename)
+        if instrument is None:
+            datasets = []
 
         self.log.debug(f"Found images for {len(datasets)} detectors in {filename}")
         return RawFileData(datasets=datasets, filename=filename,
-                           FormatterClass=FormatterClass,
+                           FormatterClass=formatterClass,
                            instrumentClass=type(instrument))
 
 
