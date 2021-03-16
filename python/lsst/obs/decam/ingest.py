@@ -23,6 +23,7 @@ import os
 import re
 
 
+from lsst.daf.butler import ButlerURI
 from astro_metadata_translator import fix_header, DecamTranslator
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
@@ -36,16 +37,17 @@ __all__ = ["DecamRawIngestTask", "DecamIngestArgumentParser", "DecamIngestTask",
 class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
     """Task for ingesting raw DECam data into a Gen3 Butler repository.
     """
-    def extractMetadata(self, filename: str) -> RawFileData:
+    def extractMetadata(self, filename: ButlerURI) -> RawFileData:
         datasets = []
-        fitsData = lsst.afw.fits.Fits(filename, 'r')
-        # NOTE: The primary header (HDU=0) does not contain detector data.
-        for i in range(1, fitsData.countHdus()):
-            fitsData.setHdu(i)
-            header = fitsData.readMetadata()
-            if header['CCDNUM'] > 62:  # ignore the guide CCDs
-                continue
-            datasets.append(self._calculate_dataset_info(header, filename))
+        with filename.as_local() as local_file:
+            fitsData = lsst.afw.fits.Fits(local_file.ospath, 'r')
+            # NOTE: The primary header (HDU=0) does not contain detector data.
+            for i in range(1, fitsData.countHdus()):
+                fitsData.setHdu(i)
+                header = fitsData.readMetadata()
+                if header['CCDNUM'] > 62:  # ignore the guide CCDs
+                    continue
+                datasets.append(self._calculate_dataset_info(header, filename))
 
         # The data model currently assumes that whilst multiple datasets
         # can be associated with a single file, they must all share the
