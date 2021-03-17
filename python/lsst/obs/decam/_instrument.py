@@ -113,9 +113,9 @@ class DarkEnergyCamera(Instrument):
         factory = TranslatorFactory()
         factory.addGenericInstrumentRules(self.getName(), calibFilterType="band",
                                           detectorKey="ccdnum")
-        # DECam calibRegistry entries are bands, but we need physical_filter
-        # in the gen3 registry.
-        factory.addRule(BandToPhysicalFilterKeyHandler(self.filterDefinitions),
+        # DECam calibRegistry entries are bands or aliases, but we need
+        # physical_filter in the gen3 registry.
+        factory.addRule(_DecamBandToPhysicalFilterKeyHandler(self.filterDefinitions),
                         instrument=self.getName(),
                         gen2keys=("filter",),
                         consume=("filter",),
