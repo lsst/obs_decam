@@ -39,6 +39,13 @@ except LookupError:
     testDataDirectory = None
 
 
+def _clean_metadata_provenance(hdr):
+    """Remove metadata fix up provenance."""
+    for k in hdr:
+        if k.startswith("HIERARCH ASTRO METADATA"):
+            del hdr[k]
+
+
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
@@ -50,6 +57,11 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
     def check_readMetadata(self, dataId, expected):
         formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(self.fileDescriptor, dataId)
         metadata = formatter.readMetadata()
+
+        # Remove provenance
+        _clean_metadata_provenance(metadata)
+        _clean_metadata_provenance(expected)
+
         self.assertEqual(metadata, expected)
 
     def test_readMetadata(self):
@@ -132,6 +144,11 @@ class DarkEnergyCameraCPCalibFormatterTestCase(lsst.utils.tests.TestCase):
         formatter = lsst.obs.decam.DarkEnergyCameraCPCalibFormatter(fileDescriptor, dataId)
         metadata = formatter.readMetadata()
         self.assertEqual(metadata['CCDNUM'], dataId['detector'], dataId)
+
+        # Remove provenance
+        _clean_metadata_provenance(metadata)
+        _clean_metadata_provenance(expected)
+
         self.assertEqual(metadata, expected, msg=dataId)
 
     def test_readMetadata(self):
