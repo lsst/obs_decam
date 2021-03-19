@@ -1,10 +1,5 @@
 # Config overrides for converting gen2 to gen3 repos.
 
-import lsst.obs.decam
-
-# Use the specialized Decam ingest task to handle multi-HDU FITS files.
-config.raws.retarget(lsst.obs.decam.DecamRawIngestTask)
-
 # DECam names its detectors differently in the registry
 config.ccdKey = "ccdnum"
 
