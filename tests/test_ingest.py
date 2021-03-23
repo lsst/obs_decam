@@ -41,7 +41,6 @@ class DecamTestBase(IngestTestBase):
 
     ingestDir = os.path.dirname(__file__)
     instrumentClassName = "lsst.obs.decam.DarkEnergyCamera"
-    rawIngestTask = "lsst.obs.decam.DecamRawIngestTask"
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
@@ -49,7 +48,7 @@ class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
 
     curatedCalibrationDatasetTypes = ("camera", "defects")
 
-    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # Decam ingests every detector in each raw file, so we
     # only have to specify one file here, but should get two dataIds
     # in the output repo.
     @property
@@ -86,7 +85,7 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
     # No need to test writeCuratedCalibrations again
     curatedCalibrationDatasetTypes = None
 
-    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # Decam ingests every detector in each raw file, so we
     # only have to specify one file here, but should get many dataIds
     # in the output repo.
     @property
@@ -138,7 +137,7 @@ class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCa
     # No need to test writeCuratedCalibrations again
     curatedCalibrationDatasetTypes = None
 
-    # DecamRawIngestTask ingests every detector in each raw file, so we
+    # Decam ingests every detector in each raw file, so we
     # only have to specify one file here, but should get many dataIds
     # in the output repo.
     @property

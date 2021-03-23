@@ -22,54 +22,23 @@
 import os
 import re
 
+from deprecated.sphinx import deprecated
 
-from lsst.daf.butler import ButlerURI, Formatter
 from astro_metadata_translator import fix_header, DecamTranslator
 from lsst.afw.fits import readMetadata
 from lsst.pipe.tasks.ingest import ParseTask, IngestTask, IngestArgumentParser
-from lsst.obs.base.ingest import RawFileData
 import lsst.obs.base
 
 __all__ = ["DecamRawIngestTask", "DecamIngestArgumentParser", "DecamIngestTask", "DecamParseTask"]
 
 
+@deprecated(reason="DECam no longer requires a specialist gen3 ingest task. Please use the default."
+            " Will be removed after v23.",
+            category=FutureWarning,
+            version="23.0")
 class DecamRawIngestTask(lsst.obs.base.RawIngestTask):
     """Task for ingesting raw DECam data into a Gen3 Butler repository.
     """
-    def extractMetadata(self, filename: ButlerURI) -> RawFileData:
-        datasets = []
-        try:
-            with filename.as_local() as local_file:
-                fitsData = lsst.afw.fits.Fits(local_file.ospath, 'r')
-                # NOTE: The primary header (HDU=0) does not contain detector data.
-                for i in range(1, fitsData.countHdus()):
-                    fitsData.setHdu(i)
-                    header = fitsData.readMetadata()
-                    if header['CCDNUM'] > 62:  # ignore the guide CCDs
-                        continue
-                    datasets.append(self._calculate_dataset_info(header, filename))
-        except Exception as e:
-            self.log.debug("Problem extracting metadata from %s: %s", filename, e)
-            # Indicate to the caller that we failed to read.
-            # Do not try to ingest partial contents of file.
-            datasets = []
-            formatterClass = Formatter
-            instrument = None
-            self._on_metadata_failure(filename, e)
-            if self.config.failFast:
-                raise RuntimeError(f"Problem extracting metadata for file {filename}") from e
-        else:
-            # The data model currently assumes that whilst multiple datasets
-            # can be associated with a single file, they must all share the
-            # same formatter.
-            instrument, formatterClass = self._determine_instrument_formatter(datasets[0].dataId, filename)
-            if instrument is None:
-                datasets = []
-
-        self.log.debug(f"Found images for {len(datasets)} detectors in {filename}")
-        return RawFileData(datasets=datasets, filename=filename,
-                           FormatterClass=formatterClass,
-                           instrumentClass=type(instrument))
 
 
 class DecamIngestArgumentParser(IngestArgumentParser):
