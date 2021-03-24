@@ -113,11 +113,36 @@ class DarkEnergyCamera(Instrument):
         factory = TranslatorFactory()
         factory.addGenericInstrumentRules(self.getName(), calibFilterType="band",
                                           detectorKey="ccdnum")
-        # DECam calibRegistry entries are bands, but we need physical_filter
-        # in the gen3 registry.
-        factory.addRule(BandToPhysicalFilterKeyHandler(self.filterDefinitions),
+        # DECam calibRegistry entries are bands or aliases, but we need
+        # physical_filter in the gen3 registry.
+        factory.addRule(_DecamBandToPhysicalFilterKeyHandler(self.filterDefinitions),
                         instrument=self.getName(),
                         gen2keys=("filter",),
                         consume=("filter",),
                         datasetTypeName="cpFlat")
         return factory
+
+
+class _DecamBandToPhysicalFilterKeyHandler(BandToPhysicalFilterKeyHandler):
+    """A specialization of `~lsst.obs.base.gen2to3.BandToPhysicalKeyHandler`
+    that allows filter aliases to be used as alternative band names.
+
+    Parameters
+    ----------
+    filterDefinitions : `lsst.obs.base.FilterDefinitionCollection`
+        The filters to translate from Gen 2 to Gen 3.
+    """
+
+    __slots__ = ("_aliasMap",)
+
+    def __init__(self, filterDefinitions):
+        super().__init__(filterDefinitions)
+        self._aliasMap = {alias: d.physical_filter for d in filterDefinitions for alias in d.alias}
+
+    def extract(self, gen2id, *args, **kwargs):
+        # Expect _aliasMap to be small, so try it first
+        gen2Filter = gen2id["filter"]
+        if gen2Filter in self._aliasMap:
+            return self._aliasMap[gen2Filter]
+        else:
+            return super().extract(gen2id, *args, **kwargs)
