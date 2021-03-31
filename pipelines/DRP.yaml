@@ -4,6 +4,7 @@ imports:
   - location: $PIPE_TASKS_DIR/pipelines/DRP.yaml
     exclude:
       - sourceTable
+      - objectTable
       - isr
   - location: $OBS_DECAM_DIR/pipelines/RunIsrWithCrosstalk.yaml
 # This DRP pipeline uses an obs_decam specific ISR configuration that
