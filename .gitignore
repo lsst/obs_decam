@@ -20,3 +20,4 @@ decam/CALIB/defects
 decam/CALIB/crosstalk
 decam/CALIB/calibRegistry*
 decam/crosstalk
+.vscode/
