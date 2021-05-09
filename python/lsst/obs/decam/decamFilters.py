@@ -45,13 +45,14 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
                      alias={'Y'}),
     FilterDefinition(physical_filter="VR DECam c0007 6300.0 2600.0",
                      band="VR",
-                     doc='A very broad-band filter, intended for "discovery", not "accurate photometry".'
-                         'For details, wee: http://www.ctio.noao.edu/noao/content/decam-vr-filter',
                      lambdaEff=630, lambdaMin=490, lambdaMax=765),
     FilterDefinition(physical_filter="N964 DECam c0008 9645.0 94.0",
                      band="N964",
                      lambdaEff=964),
     FilterDefinition(physical_filter="solid plate 0.0 0.0",
                      band="opaque",
-                     afw_name='SOLID', lambdaEff=0)
+                     afw_name='SOLID', lambdaEff=0),
+    FilterDefinition(physical_filter="N708 DECam c0012 7080.0 400.0",
+                     band="N708",
+                     lambdaEff=708),
 )
