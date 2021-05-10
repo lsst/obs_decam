@@ -6,7 +6,7 @@ imports:
       - sourceTable
       - objectTable
       - isr
-  - location: $OBS_DECAM_DIR/pipelines/RunIsrWithCrosstalk.yaml
+  - location: $AP_PIPE/pipelines/RunIsrWithCrosstalk.yaml
 # This DRP pipeline uses an obs_decam specific ISR configuration that
 # requires crosstalk sources to be pre-generated via the
 # RunIsrForCrosstalkSources.yaml pipeline.  This applies overscan
