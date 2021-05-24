@@ -1,6 +1,9 @@
 """
 DECam-specific overrides for CalibrateTask
 """
+import os.path
+
+obsConfigDir = os.path.join(os.path.dirname(__file__))
 
 # This sets the reference catalog name for Gen2.
 for refObjLoader in (config.astromRefObjLoader,
@@ -22,3 +25,5 @@ config.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
 # removed.
 # See Slack: https://lsstc.slack.com/archives/C2B6X08LS/p1586468459084600
 config.astrometry.wcsFitter.order = 4
+
+config.measurement.load(os.path.join(obsConfigDir, "hsm.py"))
