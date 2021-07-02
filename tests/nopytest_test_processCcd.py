@@ -54,7 +54,8 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
         argsList = [os.path.join(cls.datadir, "rawData"), "--output", cls.outPath, "--id"]
         argsList += ["%s=%s" % (key, val) for key, val in cls.dataId.items()]
         argsList += ["--calib", os.path.join(cls.datadir, "rawData/cpCalib")]
-        argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False"]
+        argsList += ["--config", "calibrate.doPhotoCal=False", "calibrate.doAstrometry=False",
+                     "isr.biasDataProductName=cpBias", "isr.flatDataProductName=cpFlat"]
         argsList.append('--doraise')
         disableImplicitThreading()  # avoid contention with other processes
         fullResult = ProcessCcdTask.parseAndRun(args=argsList, doReturnResults=True)
