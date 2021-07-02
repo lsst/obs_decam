@@ -4,9 +4,7 @@
 DecamCalibsParseTask
 ####################
 
-``DecamCalibsParseTask`` parses a calibration image filename to get the
-required information to put the file in the correct location and populate the
-calibration registry.
+``DecamCalibsParseTask`` is a deprecated Gen2 Task that parses DECam Community Pipeline or LSST Science Pipelines produced calibs for ingestion into a Gen2 Butler repository.
 
 Python API summary
 ==================
