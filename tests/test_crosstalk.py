@@ -76,13 +76,17 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
         del self.butler
 
     def runIsr(self, doCrosstalk):
-        """Run DecamCpIsrTask with or without crosstalk correction
+        """Run IsrTask with or without crosstalk correction
         """
         dataRef = self.butler.dataRef('raw', dataId=self.dataId)
         rawExposure = self.butler.get('raw', dataId=self.dataId)
         camera = dataRef.get('camera')
         config = getObsDecamConfig(IsrTask)
         config.doCrosstalk = doCrosstalk
+        # These configs are necessary because the testdata bias and flat data
+        # products are from the DECam Community Pipeline.
+        config.biasDataProductName = 'cpBias'
+        config.flatDataProductName = 'cpFlat'
         decamCpIsrTask = IsrTask(config=config)
         isrData = decamCpIsrTask.readIsrData(dataRef, rawExposure)
         isrResult = decamCpIsrTask.run(rawExposure, camera=camera, **isrData.getDict())

@@ -47,7 +47,8 @@ config.doAssembleIsrExposures = False
 config.doTrimToMatchCalib = True
 
 config.doBias = True
-config.connections.bias = "cpBias"
+# Set to "cpBias" to use gen2 community pipeline calibration products
+config.connections.bias = "bias"
 config.biasDataProductName = config.connections.bias
 
 config.doVariance = True
@@ -78,7 +79,8 @@ config.darkDataProductName = config.connections.dark
 config.doStrayLight = False
 
 config.doFlat = True
-config.connections.flat = "cpFlat"
+# Set to "cpFlat" to use gen2 community pipeline calibration products
+config.connections.flat = "flat"
 config.flatDataProductName = config.connections.flat
 config.flatScalingType = "USER"
 config.flatUserScale = 1.0
