@@ -22,11 +22,11 @@
 """Gen3 Butler Formatters for Dark Energy Camera raw data.
 """
 
+import logging
 import astro_metadata_translator
 
 import lsst.afw.fits
 import lsst.afw.image
-import lsst.log
 from lsst.obs.base import FitsRawFormatterBase
 
 from . import DarkEnergyCamera
@@ -81,7 +81,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
         ValueError
             Raised if detectorId is not found in any of the file HDUs
         """
-        log = lsst.log.Log.getLogger("DarkEnergyCameraRawFormatter")
+        log = logging.getLogger("DarkEnergyCameraRawFormatter")
         log.debug("Did not find detector=%s at expected HDU=%s in %s: scanning through all HDUs.",
                   detectorId, detector_to_hdu[detectorId], filename)
 
