@@ -146,10 +146,10 @@ class DecamCrosstalkTask(CrosstalkTask):
             try:
                 source_exposure = butler.get('raw', dataId={'visit': visit, 'ccd': sourceDet})
             except RuntimeError:
-                self.log.warn(f"Cannot access source {sourceDet}, SKIPPING IT")
+                self.log.warning("Cannot access source %s, SKIPPING IT", sourceDet)
             else:
-                self.log.info(f"Correcting victim {crosstalk._detectorName} "
-                              f"from crosstalk source {sourceDet}.")
+                self.log.info("Correcting victim %s from crosstalk source %s.",
+                              crosstalk._detectorName, sourceDet)
 
                 for amp in source_exposure.getDetector():
                     decamisr.overscanCorrection(source_exposure, amp)
@@ -254,7 +254,7 @@ def subtractCrosstalkIO(mef, sources, coeffs):
                     source_data = np.fliplr(source_data)
                 # Perform linear crosstalk correction
                 victim_data[:, :] = victim_data - coeffs[(victim, source)] * source_data
-                log.info('Correcting victim %s from crosstalk source %s for HDU %s' % (victim, source, ccd))
+                log.info('Correcting victim %s from crosstalk source %s for HDU %s', victim, source, ccd)
 
     for i in range(1, 63):
         mef[i].header['HISTORY'] = 'Crosstalk corrected on {0}'.format(
