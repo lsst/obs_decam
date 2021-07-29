@@ -30,12 +30,12 @@ and written by Thomas Erben (private communication, 2018)
 from collections import defaultdict
 from astropy.io import fits
 import datetime as dt
+import logging
 import os
 import argparse
 import re
 import numpy as np
 
-import lsst.log
 import lsst.pipe.base as pipeBase
 from lsst.ip.isr import CrosstalkConfig, CrosstalkTask, IsrTask
 from lsst.obs.decam import DecamMapper
@@ -84,7 +84,7 @@ class DecamCrosstalkConfig(CrosstalkConfig):
         crosstalk_file = self.getSourcesAndCoeffsFile()
         sources = defaultdict(list)
         coeffs = {}
-        log = lsst.log.Log.getLogger('obs.decam.DecamCrosstalkConfig')
+        log = logging.getLogger('obs.decam.DecamCrosstalkConfig')
         log.info('Reading crosstalk coefficient data')
         with open(crosstalk_file) as f:
             for line in f:
@@ -146,10 +146,10 @@ class DecamCrosstalkTask(CrosstalkTask):
             try:
                 source_exposure = butler.get('raw', dataId={'visit': visit, 'ccd': sourceDet})
             except RuntimeError:
-                self.log.warn(f"Cannot access source {sourceDet}, SKIPPING IT")
+                self.log.warning("Cannot access source %s, SKIPPING IT", sourceDet)
             else:
-                self.log.info(f"Correcting victim {crosstalk._detectorName} "
-                              f"from crosstalk source {sourceDet}.")
+                self.log.info("Correcting victim %s from crosstalk source %s.",
+                              crosstalk._detectorName, sourceDet)
 
                 for amp in source_exposure.getDetector():
                     decamisr.overscanCorrection(source_exposure, amp)
@@ -188,7 +188,8 @@ class DecamCrosstalkIO(pipeBase.Task):
     def runCrosstalkAlone(self):
         """Utility for crosstalk correction directly on a DECam MEF file.
         """
-        log = lsst.log.Log.getLogger('obs.decam.DecamCrosstalkIO')
+        # Override the logger attached to this Task.
+        log = logging.getLogger('obs.decam.DecamCrosstalkIO')
         parsed = self.parseCrosstalkIOArgs()
         filename = parsed['filename']
         outfile = parsed['outfile']
@@ -227,7 +228,7 @@ def subtractCrosstalkIO(mef, sources, coeffs):
     mef : `astropy.io.fits.hdu.hdulist.HDUList`
         New MEF image with crosstalk corrected data and updated header.
     """
-    log = lsst.log.Log.getLogger('obs.decam.subtractCrosstalkIO')
+    log = logging.getLogger('obs.decam.subtractCrosstalkIO')
     lowx = {}  # Lower x pixel index of given chip region
     highx = {}  # Upper x pixel index of given chip region
     extension = {}  # FITS extension of given chip position from CCDNUM header
@@ -254,7 +255,7 @@ def subtractCrosstalkIO(mef, sources, coeffs):
                     source_data = np.fliplr(source_data)
                 # Perform linear crosstalk correction
                 victim_data[:, :] = victim_data - coeffs[(victim, source)] * source_data
-                log.info('Correcting victim %s from crosstalk source %s for HDU %s' % (victim, source, ccd))
+                log.info('Correcting victim %s from crosstalk source %s for HDU %s', victim, source, ccd)
 
     for i in range(1, 63):
         mef[i].header['HISTORY'] = 'Crosstalk corrected on {0}'.format(
