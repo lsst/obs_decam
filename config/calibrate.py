@@ -13,7 +13,10 @@ for refObjLoader in (config.astromRefObjLoader,
     # Note the u-band results may not be useful without a color term
     refObjLoader.filterMap['u'] = 'g'
     refObjLoader.filterMap['Y'] = 'y'
+    refObjLoader.filterMap['N419'] = 'g'
+    refObjLoader.filterMap['N540'] = 'g'
     refObjLoader.filterMap['N708'] = 'i'
+    refObjLoader.filterMap['N964'] = 'z'
 
 # This sets up the reference catalog for Gen3.
 config.connections.astromRefCat = "ps1_pv3_3pi_20170110"
