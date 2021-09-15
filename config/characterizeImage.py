@@ -10,4 +10,7 @@ config.refObjLoader.ref_dataset_name = "ps1_pv3_3pi_20170110"
 # Note the u-band results may not be useful without a color term
 config.refObjLoader.filterMap['u'] = 'g'
 config.refObjLoader.filterMap['Y'] = 'y'
+config.refObjLoader.filterMap['N419'] = 'g'
+config.refObjLoader.filterMap['N540'] = 'g'
 config.refObjLoader.filterMap['N708'] = 'i'
+config.refObjLoader.filterMap['N964'] = 'z'
