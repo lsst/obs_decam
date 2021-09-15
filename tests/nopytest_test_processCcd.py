@@ -29,7 +29,6 @@ import warnings
 import lsst.utils.tests
 import lsst.afw.image as afwImage
 import lsst.geom as geom
-import lsst.pex.exceptions as pexExcept
 from lsst.pipe.tasks.processCcd import ProcessCcdTask
 from lsst.utils import getPackageDir
 from lsst.base import disableImplicitThreading
@@ -44,7 +43,7 @@ class ProcessCcdTestCase(lsst.utils.tests.TestCase):
         """Runs ProcessCcdTask so the test* methods can inspect the results."""
         try:
             cls.datadir = getPackageDir("testdata_decam")
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)

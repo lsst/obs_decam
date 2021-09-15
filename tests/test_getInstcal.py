@@ -28,7 +28,6 @@ import unittest
 import lsst.utils.tests
 from lsst.utils import getPackageDir
 
-import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.geom import arcseconds, radians
 
@@ -40,7 +39,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
         try:
             datadir = getPackageDir("testdata_decam")
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
