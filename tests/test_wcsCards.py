@@ -28,7 +28,6 @@ from lsst.utils import getPackageDir
 import lsst.utils.tests
 
 import lsst.daf.persistence as dafPersist
-import lsst.pex.exceptions as pexExcept
 
 
 class WcsCardsTestCase(lsst.utils.tests.TestCase):
@@ -37,7 +36,7 @@ class WcsCardsTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
         try:
             datadir = getPackageDir("testdata_decam")
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)

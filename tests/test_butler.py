@@ -25,7 +25,6 @@ import unittest
 import warnings
 
 import lsst.daf.persistence as dafPersist
-import lsst.pex.exceptions as pexExcept
 import lsst.utils.tests
 from lsst.ip.isr import Linearizer, LinearizeLookupTable
 from lsst.utils import getPackageDir
@@ -37,7 +36,7 @@ class ButlerTestCase(unittest.TestCase):
     def setUp(self):
         try:
             datadir = getPackageDir("testdata_decam")
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)

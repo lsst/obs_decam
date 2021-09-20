@@ -29,7 +29,6 @@ import lsst.afw.image as afwImage
 import lsst.utils.tests
 from lsst.utils import getPackageDir
 
-import lsst.pex.exceptions as pexExcept
 import lsst.daf.persistence as dafPersist
 from lsst.afw.image import RotType
 from lsst.geom import degrees, radians, arcseconds, SpherePoint
@@ -62,7 +61,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
         try:
             datadir = getPackageDir("testdata_decam")
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)

@@ -27,7 +27,6 @@ import unittest
 import lsst.utils.tests
 
 from lsst.utils import getPackageDir
-import lsst.pex.exceptions as pexExcept
 import lsst.geom as geom
 import lsst.daf.persistence as dafPersist
 from lsst.ip.isr.isrTask import IsrTask
@@ -55,7 +54,7 @@ class CrosstalkTestCase(lsst.utils.tests.TestCase):
     def setUp(self):
         try:
             datadir = getPackageDir('testdata_decam')
-        except pexExcept.NotFoundError:
+        except LookupError:
             message = "testdata_decam not setup. Skipping."
             warnings.warn(message)
             raise unittest.SkipTest(message)
