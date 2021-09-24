@@ -67,7 +67,7 @@ class DarkEnergyCamera(Instrument):
             shortNameFunc=lambda name: name.replace(" ", "_"),
         )
 
-    def register(self, registry):
+    def register(self, registry, update=False):
         camera = self.getCamera()
         # Combined with detector_max=100 (below), obsMax=2**25 causes the
         # number of bits in packed IDs to match the Gen2 ones.
@@ -85,7 +85,8 @@ class DarkEnergyCamera(Instrument):
                 {
                     "name": self.getName(), "detector_max": 100, "visit_max": obsMax, "exposure_max": obsMax,
                     "class_name": getFullTypeName(self),
-                }
+                },
+                update=update
             )
 
             for detector in camera:
@@ -98,10 +99,11 @@ class DarkEnergyCamera(Instrument):
                         "name_in_raft": detector.getName()[1:],
                         "raft": detector.getName()[0],
                         "purpose": str(detector.getType()).split(".")[-1],
-                    }
+                    },
+                    update=update
                 )
 
-            self._registerFilters(registry)
+            self._registerFilters(registry, update=update)
 
     def getRawFormatter(self, dataId):
         # local import to prevent circular dependency
