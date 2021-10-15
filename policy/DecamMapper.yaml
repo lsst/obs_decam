@@ -241,6 +241,14 @@ datasets:
     template: '%(visit)07d/icSrc/icSrc-%(visit)07d_%(ccdnum)02d.fits'
   src:
     template: '%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.fits'
+  source:
+    template: '%(visit)07d/src/src-%(visit)07d_%(ccdnum)02d.parq'
+  sourceTable:
+    template: '%(visit)07d/src/sourceTable-%(visit)07d_%(ccdnum)02d.parq'
+  sourceTable_visit:
+    template: '%(visit)07d/src/sourceTable-%(visit)07d.parq'
+  visitSummary:
+    template: '%(visit)07d/src/visitSummary-%(visit)07d.parq'
   icMatch:
     persistable: BaseCatalog
     python: lsst.afw.table.BaseCatalog
