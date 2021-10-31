@@ -57,10 +57,10 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
     FilterDefinition(physical_filter="N708 DECam c0012 7080.0 400.0",
                      band="N708",
                      lambdaEff=708),
-    FilterDefinition(physical_filter="N540 DECam c0014 5403.2 210.0",
-                     band="N540",
-                     lambdaEff=540),
     FilterDefinition(physical_filter="N419 DECam c0013 4194.0 75.0",
                      band="N419",
                      lambdaEff=419),
+    FilterDefinition(physical_filter="N540 DECam c0014 5403.2 210.0",
+                     band="N540",
+                     lambdaEff=540),
 )

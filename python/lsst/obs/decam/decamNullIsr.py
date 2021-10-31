@@ -23,6 +23,7 @@
 
 import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
+from lsst.utils.timer import timeMethod
 
 __all__ = ["DecamNullIsrConfig", "DecamNullIsrTask"]
 
@@ -52,7 +53,7 @@ class DecamNullIsrTask(pipeBase.Task):
     ConfigClass = DecamNullIsrConfig
     _DefaultName = "isr"
 
-    @pipeBase.timeMethod
+    @timeMethod
     def runDataRef(self, sensorRef):
         """Load a DECam community pipeline "instcal" exposure as a post-ISR CCD exposure
 

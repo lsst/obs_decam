@@ -226,6 +226,8 @@ class DecamMapper(CameraMapper):
         exp.setPhotoCalib(afwImage.makePhotoCalibFromCalibZeroPoint(10**(0.4 * md.getScalar("MAGZERO")), 0))
         visitInfo = self.makeRawVisitInfo(md=md)
         exp.getInfo().setVisitInfo(visitInfo)
+        if 'EXPID' in md:
+            exp.info.id = md['EXPID']
 
         for kw in ('LTV1', 'LTV2'):
             md.remove(kw)
@@ -251,7 +253,7 @@ class DecamMapper(CameraMapper):
             The standardized Exposure.
         """
         return self._standardizeExposure(self.exposures['raw'], item, dataId,
-                                         trimmed=False)
+                                         trimmed=False, setExposureId=True)
 
     def _createInitialSkyWcs(self, exposure):
         # DECam has a coordinate system flipped on X with respect to our

@@ -32,7 +32,7 @@ from lsst.obs.base import Instrument
 from lsst.obs.base.gen2to3 import BandToPhysicalFilterKeyHandler, TranslatorFactory
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
-from lsst.daf.butler.core.utils import getFullTypeName
+from lsst.utils.introspection import get_full_type_name
 from lsst.utils import getPackageDir
 
 
@@ -67,7 +67,7 @@ class DarkEnergyCamera(Instrument):
             shortNameFunc=lambda name: name.replace(" ", "_"),
         )
 
-    def register(self, registry):
+    def register(self, registry, update=False):
         camera = self.getCamera()
         # Combined with detector_max=100 (below), obsMax=2**25 causes the
         # number of bits in packed IDs to match the Gen2 ones.
@@ -84,8 +84,9 @@ class DarkEnergyCamera(Instrument):
                 "instrument",
                 {
                     "name": self.getName(), "detector_max": 100, "visit_max": obsMax, "exposure_max": obsMax,
-                    "class_name": getFullTypeName(self),
-                }
+                    "class_name": get_full_type_name(self),
+                },
+                update=update
             )
 
             for detector in camera:
@@ -98,10 +99,11 @@ class DarkEnergyCamera(Instrument):
                         "name_in_raft": detector.getName()[1:],
                         "raft": detector.getName()[0],
                         "purpose": str(detector.getType()).split(".")[-1],
-                    }
+                    },
+                    update=update
                 )
 
-            self._registerFilters(registry)
+            self._registerFilters(registry, update=update)
 
     def getRawFormatter(self, dataId):
         # local import to prevent circular dependency
