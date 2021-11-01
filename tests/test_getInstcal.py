@@ -69,7 +69,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
         self.assertEqual(visitInfo.getExposureTime(), visit229388_info['exposureTime'])
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
-        self.assertEqual(visitInfo.getExposureId(), int("%07d%02d" % (229388, 1)))
+        self.assertEqual(exp.info.id, int("%07d%02d" % (229388, 1)))
         self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'],
                                      maxDiff=0.0001*radians)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'],
@@ -98,8 +98,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         dataId = {'visit': 229388, 'ccdnum': 62}
         exp = self.butler.get("instcal", dataId, immediate=True)
         self.assertEqual(exp.getDetector().getName(), "N31")
-        visitInfo = exp.getInfo().getVisitInfo()
-        self.assertEqual(visitInfo.getExposureId(), int("%07d%02d" % (229388, 62)))
+        self.assertEqual(exp.info.id, int("%07d%02d" % (229388, 62)))
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):

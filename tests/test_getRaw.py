@@ -100,7 +100,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(visitInfo.getDate(), visit229388_info['dateAvg'])
         self.assertEqual(visitInfo.getExposureTime(), visit229388_info['exposureTime'])
         self.assertEqual(visitInfo.getDarkTime(), visit229388_info['darkTime'])
-        self.assertEqual(visitInfo.getExposureId(), int("%07d%02d" % (229388, 1)))
+        self.assertEqual(exp.info.id, int("%07d%02d" % (229388, 1)))
         self.assertAnglesAlmostEqual(visitInfo.getEra(), visit229388_info['era'],
                                      maxDiff=0.0001*radians)
         self.assertSpherePointsAlmostEqual(visitInfo.getBoresightRaDec(), visit229388_info['boresightRaDec'],
