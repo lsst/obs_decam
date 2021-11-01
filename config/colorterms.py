@@ -8,6 +8,15 @@ from lsst.pipe.tasks.colorterms import Colorterm, ColortermDict
 # A Jupyter notebook is available at https://github.com/MerianSurvey/caterpillar/blob/main/notebook/photocal/merian_filter_color_terms.ipynb 
 # to reproduce these values.
 
+# In obs_subaru, colorterms.py is also used in:
+# - config/jointcal.py
+# - config/skyAnalysis.py
+# - config/compareCoaddAnalysis.py 
+# - config/coaddAnalysis.py
+# - config/visitAnalysis.py
+# - config/fgcmBuildStarsTable.py and config/fgcmBuildStars.py
+# These files are not available for obs_decam yet.
+
 config.data = {
     "decam*": ColortermDict(data={
         'g': Colorterm(primary="g", secondary="g"),
