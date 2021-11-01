@@ -5,6 +5,8 @@ from lsst.pipe.tasks.colorterms import Colorterm, ColortermDict
 # Color terms for u, Y, N964, and N419 bands are not available now.
 
 # The values for DECam g, r, & z-band are calculated independently and are different with the values from: https://www.legacysurvey.org/dr9/description/
+# A Jupyter notebook is available at https://github.com/MerianSurvey/caterpillar/blob/main/notebook/photocal/merian_filter_color_terms.ipynb 
+# to reproduce these values.
 
 config.data = {
     "decam*": ColortermDict(data={
