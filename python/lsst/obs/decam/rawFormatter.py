@@ -81,7 +81,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
         ValueError
             Raised if detectorId is not found in any of the file HDUs
         """
-        log = logging.getLogger("DarkEnergyCameraRawFormatter")
+        log = logging.getLogger("lsst.obs.decam.DarkEnergyCameraRawFormatter")
         log.debug("Did not find detector=%s at expected HDU=%s in %s: scanning through all HDUs.",
                   detectorId, detector_to_hdu[detectorId], filename)
 
