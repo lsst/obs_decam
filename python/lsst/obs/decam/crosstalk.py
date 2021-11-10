@@ -84,7 +84,7 @@ class DecamCrosstalkConfig(CrosstalkConfig):
         crosstalk_file = self.getSourcesAndCoeffsFile()
         sources = defaultdict(list)
         coeffs = {}
-        log = logging.getLogger('obs.decam.DecamCrosstalkConfig')
+        log = logging.getLogger('lsst.obs.decam.DecamCrosstalkConfig')
         log.info('Reading crosstalk coefficient data')
         with open(crosstalk_file) as f:
             for line in f:
@@ -189,7 +189,7 @@ class DecamCrosstalkIO(pipeBase.Task):
         """Utility for crosstalk correction directly on a DECam MEF file.
         """
         # Override the logger attached to this Task.
-        log = logging.getLogger('obs.decam.DecamCrosstalkIO')
+        log = logging.getLogger('lsst.obs.decam.DecamCrosstalkIO')
         parsed = self.parseCrosstalkIOArgs()
         filename = parsed['filename']
         outfile = parsed['outfile']
@@ -228,7 +228,7 @@ def subtractCrosstalkIO(mef, sources, coeffs):
     mef : `astropy.io.fits.hdu.hdulist.HDUList`
         New MEF image with crosstalk corrected data and updated header.
     """
-    log = logging.getLogger('obs.decam.subtractCrosstalkIO')
+    log = logging.getLogger('lsst.obs.decam.subtractCrosstalkIO')
     lowx = {}  # Lower x pixel index of given chip region
     highx = {}  # Upper x pixel index of given chip region
     extension = {}  # FITS extension of given chip position from CCDNUM header
