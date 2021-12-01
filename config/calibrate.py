@@ -30,4 +30,16 @@ config.photoCal.photoCatName = "ps1_pv3_3pi_20170110"
 # See Slack: https://lsstc.slack.com/archives/C2B6X08LS/p1586468459084600
 config.astrometry.wcsFitter.order = 4
 
+# Photometric calibration: use color terms
+config.photoCal.applyColorTerms = True
+colors = config.photoCal.match.referenceSelection.colorLimits
+# The following two color limits are adopted from obs_subaru for HSC SSP survey.
+colors["g-r"] = ColorLimit(primary="g_flux", secondary="r_flux", minimum=0.0)
+colors["r-i"] = ColorLimit(primary="r_flux", secondary="i_flux", maximum=0.5)
+# The following magnitude limit is also adopted from obs_subaru for HSC SSP survey.
+config.photoCal.match.referenceSelection.doMagLimit = True
+config.photoCal.match.referenceSelection.magLimit.fluxField = "i_flux"
+config.photoCal.match.referenceSelection.magLimit.maximum = 22.0
+config.photoCal.colorterms.load(os.path.join(obsConfigDir, 'colorterms.py'))
+
 config.measurement.load(os.path.join(obsConfigDir, "hsm.py"))
