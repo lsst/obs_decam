@@ -137,7 +137,8 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
 
     def readImage(self):
         index, metadata = self._determineHDU(self.dataId['detector'])
-        return lsst.afw.image.ImageI(self.fileDescriptor.location.path, index)
+        reader = lsst.afw.image.ImageFitsReader(self.fileDescriptor.location.path, hdu=index)
+        return reader.read()
 
 
 class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
