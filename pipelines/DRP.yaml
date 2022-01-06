@@ -17,6 +17,7 @@ tasks:
       doBias: false
       doVariance: false
       doLinearize: false
+      doCrosstalk: false
       doDefect: false
       doNanMasking: false
       doDark: false
