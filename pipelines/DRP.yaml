@@ -36,43 +36,6 @@ tasks:
       photoCal.match.referenceSelection.magLimit.maximum: 22.0
   jointcal:
     class: lsst.jointcal.JointcalTask
-    config:
-      python: |
-        # These overrides were copied from the tests/config/config-gen3.yaml file
-        # on 22 Sept 2021.  This is necessary for processing in containers to succeed
-        # because the build system strips out the test directories for space concerns.
-        #
-        # TODO DM-29008: When that ticket is merged these overrides will no longer
-        # be needed at all since that will fix higher level issues with how config
-        # overrides are imported in general.
-        config.sourceSelector['science'].flags.bad = ['pixelFlags_edge',
-                                                      'pixelFlags_saturated',
-                                                      'pixelFlags_interpolatedCenter',
-                                                      'pixelFlags_interpolated',
-                                                      'pixelFlags_crCenter',
-                                                      'pixelFlags_bad',
-                                                      'hsmPsfMoments_flag',
-                                                      'apFlux_12_0_flag',
-                                                     ]
-        config.sourceSelector['science'].doUnresolved = False
-        config.sourceSelector['science'].signalToNoise.fluxField = 'apFlux_12_0_instFlux'
-        config.sourceSelector['science'].signalToNoise.errField = 'apFlux_12_0_instFluxErr'
-        config.sourceSelector['science'].isolated.parentName = 'parentSourceId'
-        config.sourceSelector['science'].isolated.nChildName = 'deblend_nChild'
-        config.sourceFluxType = 'apFlux_12_0'
-        # TODO DM-27843: workaround for gen3 not supporting anyFilterMapsToThis
-        config.astrometryRefObjLoader.filterMap = {'u': 'phot_g_mean',
-                                                   'g': 'phot_g_mean',
-                                                   'r': 'phot_g_mean',
-                                                   'i': 'phot_g_mean',
-                                                   'z': 'phot_g_mean',
-                                                   'Y': 'phot_g_mean',
-                                                   'N419': 'phot_g_mean',
-                                                   'N540': 'phot_g_mean',
-                                                   'N708': 'phot_g_mean',
-                                                   'N964': 'phot_g_mean',
-                                                  }
-        config.astrometryRefObjLoader.anyFilterMapsToThis = None
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
     config:
