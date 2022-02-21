@@ -97,6 +97,8 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             myLinearity.fitParams[ampName] = np.array([])
             myLinearity.fitParamsErr[ampName] = np.array([])
             myLinearity.fitChiSq[ampName] = np.nan
+            myLinearity.fitResiduals[ampName] = np.array([])
+            myLinearity.linearFit[ampName] = np.array([])
         calibDate = '1970-01-01T00:00:00'
         myLinearity.updateMetadata(camera=camera, detector=detector,
                                    CALIBDATE=calibDate, setCalibId=True)
