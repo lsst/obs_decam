@@ -1,7 +1,7 @@
-# Extinction coefficients for DECam filters for conversion from E(B-V) to extinction, A_filter.
+# Extinction coefficients for DECam filters for conversion from E(B-V) to extinction, A_band.
 # Numbers initially provided by Song Huang (NAOJ).
 #
-# Band, A_filter/E(B-V)
+# Band, A_band/E(B-V)
 # Values for N419 and N964 filters are not currently available.
 config.extinctionCoeffs = {
     "u": 3.994,
