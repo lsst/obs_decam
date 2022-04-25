@@ -54,7 +54,7 @@ config.biasDataProductName = config.connections.bias
 config.doVariance = True
 config.gain = float("NaN")
 config.readNoise = 0.0
-config.doEmpiricalReadNoise = False
+config.doEmpiricalReadNoise = True
 
 config.doLinearize = True
 
