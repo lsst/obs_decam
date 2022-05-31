@@ -60,7 +60,7 @@ class GetInstcalTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(exp.getWidth(), self.size[0])
         self.assertEqual(exp.getHeight(), self.size[1])
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().getCanonicalName(), self.filter)
+        self.assertEqual(exp.getFilterLabel().bandLabel, self.filter)
         self.assertTrue(exp.hasWcs())
         magZero = 2.5 * math.log10(exp.getPhotoCalib().getInstFluxAtZeroMagnitude())
         self.assertAlmostEqual(magZero, 28.957)

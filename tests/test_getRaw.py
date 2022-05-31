@@ -92,7 +92,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertEqual(exp.getWidth(), self.size[0])
         self.assertEqual(exp.getHeight(), self.size[1])
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().getCanonicalName(), self.filter)
+        self.assertEqual(exp.getFilterLabel().bandLabel, self.filter)
         self.assertTrue(exp.hasWcs())
 
         # Metadata which should have been copied from zeroth extension.
@@ -141,7 +141,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         print("detector id: %s" % exp.getDetector().getId())
         print("filter: %s" % self.filter)
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().getCanonicalName(), self.filter)
+        self.assertEqual(exp.getFilterLabel().bandLabel, self.filter)
         self.assertTrue(exp.hasWcs())
 
     def testFringe(self):
@@ -151,7 +151,7 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         print("detector id: %s" % exp.getDetector().getId())
         print("filter: %s" % self.filter)
         self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().getCanonicalName(), self.filter)
+        self.assertEqual(exp.getFilterLabel().bandLabel, self.filter)
 
     def testDefect(self):
         """Test retrieval of defect list"""
