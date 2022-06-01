@@ -28,7 +28,7 @@ import os
 from functools import lru_cache
 
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
-from lsst.obs.base import Instrument
+from lsst.obs.base import Instrument, VisitSystem
 from lsst.obs.base.gen2to3 import BandToPhysicalFilterKeyHandler, TranslatorFactory
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
@@ -85,6 +85,8 @@ class DarkEnergyCamera(Instrument):
                 {
                     "name": self.getName(), "detector_max": 100, "visit_max": obsMax, "exposure_max": obsMax,
                     "class_name": get_full_type_name(self),
+                    # Some schemas support default visit_system
+                    "visit_system": VisitSystem.ONE_TO_ONE.value,
                 },
                 update=update
             )
