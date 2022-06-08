@@ -34,7 +34,6 @@ from lsst.obs.base import CameraMapper
 from lsst.obs.base.utils import createInitialSkyWcs, InitialSkyWcsError
 from lsst.daf.persistence import ButlerLocation, Storage, Policy
 from .makeDecamRawVisitInfo import MakeDecamRawVisitInfo
-from .decamFilters import DECAM_FILTER_DEFINITIONS
 from ._instrument import DarkEnergyCamera
 
 np.seterr(divide="ignore")
@@ -63,8 +62,6 @@ class DecamMapper(CameraMapper):
         policy = Policy(policyFile)
 
         super(DecamMapper, self).__init__(policy, os.path.dirname(policyFile), **kwargs)
-
-        DECAM_FILTER_DEFINITIONS.defineFilters()
 
         # The data ID key ccdnum is not directly used in the current policy
         # template of the raw and instcal et al. datasets, so is not in its
