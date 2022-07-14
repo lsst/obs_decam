@@ -124,6 +124,11 @@ class DarkEnergyCamera(Instrument):
                         gen2keys=("filter",),
                         consume=("filter",),
                         datasetTypeName="cpFlat")
+        factory.addRule(_DecamBandToPhysicalFilterKeyHandler(self.filterDefinitions),
+                        instrument=self.getName(),
+                        gen2keys=("filter",),
+                        consume=("filter",),
+                        datasetTypeName="fringe")
         return factory
 
 
