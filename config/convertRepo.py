@@ -7,6 +7,7 @@ config.ccdKey = "ccdnum"
 config.storageClasses['cpBias'] = "ExposureF"
 config.storageClasses['cpFlat'] = "ExposureF"
 config.storageClasses['cpIllumcor'] = "ExposureF"
+config.storageClasses['fringe'] = "ExposureF"
 
 # And define the specialist formatter
 config.formatterClasses['cpBias'] = "lsst.obs.decam.DarkEnergyCameraCPCalibFormatter"
