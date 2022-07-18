@@ -29,6 +29,7 @@ import lsst.utils.tests
 from lsst.daf.butler import Butler, DataCoordinate
 from lsst.obs.base.ingest_tests import IngestTestBase
 import lsst.obs.decam
+import lsst.afw.cameraGeom.testUtils
 
 testDataPackage = "testdata_decam"
 try:
