@@ -8,8 +8,7 @@ import os.path
 import numpy as np
 import astropy.io.fits as fits
 
-from lsst.obs.decam import DecamMapper
-from lsst.daf.persistence import Butler
+import lsst.obs.decam
 from lsst.ip.isr import Linearizer
 from lsst.utils import getPackageDir
 
@@ -36,8 +35,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
 
     This script generates LSST linearity stand-alone LookupTables, as
     well as middleware gen-3 `ip_isr` Linearizers.  These products are
-    written to ``DecamMapper.getLinearizerDir()`` for gen2 products,
-    and to ${OBS_DECAM_DIR}/decam/calib/linearizer/ for gen3 products.
+    written to ${OBS_DECAM_DIR}/decam/calib/linearizer/ for gen3 products.
 
     The input file format is one table per CCD, with the HDU indexed
     by amplifier number.  Each table has 3 columns: ADU, ADU_LINEAR_A,
@@ -53,18 +51,10 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
     and column offsets.
     """
     print("Making DECam linearizers from %r" % (fromFile,))
-    butler = Butler(mapper=DecamMapper)
-    linearizerDir = DecamMapper.getLinearizerDir()
-    if os.path.exists(linearizerDir):
-        if not force:
-            print("Output directory %r exists; use --force to replace" % (linearizerDir,))
-            sys.exit(1)
-        print("Replacing data in linearizer directory %r" % (linearizerDir,))
-    else:
-        print("Creating linearizer directory %r" % (linearizerDir,))
-        os.makedirs(linearizerDir)
 
-    camera = DecamMapper().camera
+    instrument = lsst.obs.decam.DarkEnergyCamera()
+    camera = instrument.getCamera()
+
     fromHDUs = fits.open(fromFile)[1:]  # HDU 0 has no data
     assert len(fromHDUs) == len(camera)
     for ccdind, (detector, hdu) in enumerate(zip(camera, fromHDUs)):
@@ -84,8 +74,6 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             lsstTable[i, :] = fromData["ADU_LINEAR_" + ampName] - uncorr
             if verbose:
                 print("LSST  table for %s=%s..." % (ampName, lsstTable[i, 0:5],))
-        linearizer = lsstTable
-        butler.put(linearizer, "linearizer", dataId=dict(ccdnum=ccdnum))
 
         # Generate gen3 files into local directory.
         myLinearity = Linearizer(table=lsstTable)
