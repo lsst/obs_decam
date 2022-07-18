@@ -3,12 +3,9 @@ import os
 import lsst.sconsUtils
 
 env = lsst.sconsUtils.env.Clone()
-tests = lsst.sconsUtils.scripts.BasicSConscript.tests(
-    pyList=[],
-)
+tests = lsst.sconsUtils.scripts.BasicSConscript.tests(pyList=[])
 
 env.Depends(tests, "../decam/linearizer")
-env.Depends(tests, "../decam/CALIB/calibRegistry.sqlite3")
 env.Depends(tests, "../decam/crosstalk")
 
 if "DAF_BUTLER_PLUGINS" in os.environ:
