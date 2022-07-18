@@ -4,8 +4,8 @@
 DecamCrosstalkTask
 ##################
 
-``DecamCrosstalkTask`` helps apply crosstalk corrections to DECam images.
-Only the `prepCrosstalk` method is used, and the rest of the crosstalk correction is handled in :lsst-task:`~lsst.ip.isr.crosstalk.CrosstalkTask`.
+``DecamCrosstalkTask`` is a deprecated task that was used with gen2.
+Please use :lsst-task:`~lsst.ip.isr.crosstalk.CrosstalkTask` instead, which supports all DECam crosstalk corrections.
 
 Python API summary
 ==================
