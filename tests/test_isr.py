@@ -37,10 +37,18 @@ from lsst.ctrl.mpexec import SimplePipelineExecutor
 
 from lsst.daf.butler.cli.cliLog import CliLog
 
+
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
 EXPOSURE = 229388
 DETECTOR = 1
+
+
+test_data_package = "testdata_decam"
+try:
+    test_data_directory = lsst.utils.getPackageDir(test_data_package)
+except LookupError:
+    test_data_directory = None
 
 
 def _run_simple_isr_pipeline(repo, output_collection, do_crosstalk=False):
@@ -85,6 +93,7 @@ tasks:
     return len(quanta)
 
 
+@unittest.skipIf(test_data_directory is None, "testdata_decam must be set up")
 class DecamIsrTestCase(lsst.utils.tests.TestCase):
     """DECam ISR Tests."""
     @classmethod
@@ -111,18 +120,13 @@ class DecamIsrTestCase(lsst.utils.tests.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        try:
-            cls.data_dir = lsst.utils.getPackageDir("testdata_decam")
-        except LookupError:
-            raise unittest.skipTest("testdata_decam not setup")
-
         CliLog.initLog(longlog=False)
 
         cls.test_dir = tempfile.mkdtemp(dir=ROOT, prefix="TestObsDecam-")
 
         cls._import_repository(
-            os.path.join(cls.data_dir, 'repo'),
-            os.path.join(cls.data_dir, 'repo', 'exports.yaml')
+            os.path.join(test_data_directory, 'repo'),
+            os.path.join(test_data_directory, 'repo', 'exports.yaml')
         )
 
         cls.basic_collection = 'isr_basic'

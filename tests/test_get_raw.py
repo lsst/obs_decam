@@ -24,8 +24,8 @@ import os
 import unittest
 
 from lsst.daf.base import DateTime
+import lsst.utils
 import lsst.utils.tests
-from lsst.utils import getPackageDir
 
 from lsst.daf.butler import Butler
 from lsst.afw.image import RotType
@@ -57,17 +57,20 @@ visit229388_info = {
     "weath_humidity": 23.0}
 
 
+test_data_package = "testdata_decam"
+try:
+    test_data_directory = lsst.utils.getPackageDir(test_data_package)
+except LookupError:
+    test_data_directory = None
+
+
+@unittest.skipIf(test_data_directory is None, "testdata_decam must be set up")
 class GetRawTestCase(lsst.utils.tests.TestCase):
     """Testing butler raw image retrieval"""
 
     @classmethod
     def setUpClass(cls):
-        try:
-            cls.data_dir = getPackageDir("testdata_decam")
-        except LookupError:
-            raise unittest.skipTest("testdata_decam not setup")
-
-        cls.repo = os.path.join(cls.data_dir, 'repo')
+        cls.repo = os.path.join(test_data_directory, 'repo')
 
     def test_raw(self):
         """Test retrieval of raw image."""
