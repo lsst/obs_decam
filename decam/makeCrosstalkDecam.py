@@ -6,9 +6,15 @@ import numpy as np
 import os.path
 import sys
 
+import lsst.obs.decam
 import lsst.ip.isr as ipIsr
 from lsst.daf.base import PropertyList
-from lsst.obs.decam import DecamMapper
+from lsst.utils import getPackageDir
+
+
+def getCrosstalkDir():
+    """Get crosstalk directory in obs package for outputting data."""
+    return os.path.join(getPackageDir('obs_decam'), 'decam', 'crosstalk')
 
 
 def makeDetectorCrosstalk(dataDict, force=False):
@@ -26,7 +32,7 @@ def makeDetectorCrosstalk(dataDict, force=False):
     decamCT.updateMetadata(setDate=False, CALIBDATE='1970-01-01T00:00:00')
 
     detName = dataDict['DETECTOR_NAME']
-    outDir = os.path.join(DecamMapper.getCrosstalkDir(), detName.lower())
+    outDir = os.path.join(getCrosstalkDir(), detName.lower())
     if os.path.exists(outDir):
         if not force:
             print("Output directory %r exists; use --force to replace" % (outDir, ))
@@ -55,10 +61,16 @@ def readFile(crosstalkInfile):
     RuntimeError :
         Raised if the detector is not known.
     """
+    instrument = lsst.obs.decam.DarkEnergyCamera()
+    camera = instrument.getCamera()
+
     ampIndexMap = {'A': 0, 'B': 1}
-    detMap = {f"ccd{key:02d}": value for key, value in DecamMapper.detectorNames.items()}
+    detMap = {}
+    detSerialMap = {}
+    for detector in camera:
+        detMap[f"ccd{detector.getId():02d}"] = detector.getName()
+        detSerialMap[detector.getName()] = detector.getId()
     detMap['ccd61'] = 'N30'
-    detSerialMap = {value: key for key, value in DecamMapper.detectorNames.items()}
     detSerialMap['N30'] = 61
 
     outDict = dict()
@@ -131,7 +143,7 @@ if __name__ == "__main__":
 
     outDict = readFile(crosstalkInfile=cmd.crosstalkInfile)
 
-    crosstalkDir = DecamMapper.getCrosstalkDir()
+    crosstalkDir = getCrosstalkDir()
     if os.path.exists(crosstalkDir):
         if not cmd.force:
             print("Output directory %r exists; use --force to replace" % (crosstalkDir, ))
