@@ -29,21 +29,10 @@ def getLinearizerInFile():
     raise RuntimeError("Found %s linearity tables; need just one" % (len(linearizerInFiles),))
 
 linearizerInFile = getLinearizerInFile()
-# I would rather get this from DecamMapper, but could not figure out how to import it
 linearizerOutDir = "linearizer"
 command = "%s decam/makeLinearizer.py $SOURCE --force" % (python,)
 
 makeLinearizer = env.Command(linearizerOutDir, linearizerInFile, command)
-
-
-# Ingest defects
-pipe_tasks_dir = lsst.sconsUtils.env.ProductDir('pipe_tasks')
-data_dir = lsst.sconsUtils.env.ProductDir('obs_decam_data')
-command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {data_dir}/decam/defects "+
-            "--calib decam/CALIB --config clobber=True")
-commandInst = env.Command('CALIB/calibRegistry.sqlite3', [], command)
-env.Depends(commandInst, lsst.sconsUtils.targets["python"])
-
 
 # Create crosstalk calibration tables by parsing the ascii table
 def getCrosstalkInFile():
@@ -61,12 +50,3 @@ command = "%s decam/makeCrosstalkDecam.py $SOURCE --force" % (python,)
 
 makeCrosstalk = env.Command(crosstalkOutDir, crosstalkInFile, command)
 env.Depends(makeCrosstalk, "makeCrosstalkDecam.py")
-
-# Ingest crosstalk calibration tables into decam/CALIB with
-# ingestCuratedCalibs.py so they can be found by butlers using this
-# build of obs_decam.
-decam_dir = lsst.sconsUtils.env.ProductDir('obs_decam')
-command = (f"{python} {pipe_tasks_dir}/bin/ingestCuratedCalibs.py decam/CALIB/ {decam_dir}/decam/crosstalk "+
-           "--calib decam/CALIB --config clobber=True")
-commandCrosstalkIng = env.Command('CALIB/calibRegistry.sqlite3', [], command)
-env.Depends(commandCrosstalkIng, [makeCrosstalk, lsst.sconsUtils.targets["python"]])
