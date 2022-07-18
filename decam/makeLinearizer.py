@@ -98,7 +98,7 @@ def makeLinearizerDecam(fromFile, force=False, verbose=False):
             print("Output directory %r exists; use --force to replace" % (outDir, ))
             sys.exit(1)
         else:
-            os.makedirs(outDir)
+            os.makedirs(outDir, exist_ok=True)
 
         filename = calibDate + ".yaml"
         myLinearity.writeText(os.path.join(outDir, filename))
