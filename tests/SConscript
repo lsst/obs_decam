@@ -4,7 +4,6 @@ import lsst.sconsUtils
 
 env = lsst.sconsUtils.env.Clone()
 tests = lsst.sconsUtils.scripts.BasicSConscript.tests(
-    pySingles=['nopytest_test_processCcd.py'],
     pyList=[],
 )
 
