@@ -21,17 +21,19 @@
 #
 
 import os
-import warnings
 import unittest
 
 from lsst.daf.base import DateTime
-import lsst.afw.image as afwImage
+import lsst.utils
 import lsst.utils.tests
-from lsst.utils import getPackageDir
 
-import lsst.daf.persistence as dafPersist
+from lsst.daf.butler import Butler
 from lsst.afw.image import RotType
 from lsst.geom import degrees, radians, arcseconds, SpherePoint
+
+
+EXPOSURE = 229388
+DETECTOR = 1
 
 
 # Desired VisitInfo values for visit 229388, shared between test_getRaw.py and
@@ -55,44 +57,31 @@ visit229388_info = {
     "weath_humidity": 23.0}
 
 
+test_data_package = "testdata_decam"
+try:
+    test_data_directory = lsst.utils.getPackageDir(test_data_package)
+except LookupError:
+    test_data_directory = None
+
+
+@unittest.skipIf(test_data_directory is None, "testdata_decam must be set up")
 class GetRawTestCase(lsst.utils.tests.TestCase):
     """Testing butler raw image retrieval"""
 
-    def setUp(self):
-        try:
-            datadir = getPackageDir("testdata_decam")
-        except LookupError:
-            message = "testdata_decam not setup. Skipping."
-            warnings.warn(message)
-            raise unittest.SkipTest(message)
+    @classmethod
+    def setUpClass(cls):
+        cls.repo = os.path.join(test_data_directory, 'repo')
 
-        self.repoPath = os.path.join(datadir, "rawData")
-        calibPath = os.path.join(datadir, "rawData/cpCalib")
-        self.butler = dafPersist.Butler(root=self.repoPath, calibRoot=calibPath)
-        self.size = (2160, 4146)
-        self.dataId = {'visit': 229388, 'ccdnum': 1}
-        self.filter = "z"
+    def test_raw(self):
+        """Test retrieval of raw image."""
+        butler = Butler(self.repo, instrument='DECam', collections='DECam/raw/all')
 
-    def tearDown(self):
-        del self.butler
+        exp = butler.get('raw', exposure=EXPOSURE, detector=DETECTOR)
 
-    def testPackageName(self):
-        name = dafPersist.Butler.getMapperClass(root=self.repoPath).packageName
-        self.assertEqual(name, "obs_decam")
-
-    def testRaw(self):
-        """Test retrieval of raw image"""
-        exp = self.butler.get("raw", self.dataId)
-
-        print("dataId: %s" % self.dataId)
-        print("width: %s" % exp.getWidth())
-        print("height: %s" % exp.getHeight())
-        print("detector id: %s" % exp.getDetector().getId())
-
-        self.assertEqual(exp.getWidth(), self.size[0])
-        self.assertEqual(exp.getHeight(), self.size[1])
-        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().bandLabel, self.filter)
+        self.assertEqual(exp.getWidth(), 2160)
+        self.assertEqual(exp.getHeight(), 4146)
+        self.assertEqual(exp.getDetector().getId(), DETECTOR)
+        self.assertEqual(exp.getFilter().bandLabel, 'z')
         self.assertTrue(exp.hasWcs())
 
         # Metadata which should have been copied from zeroth extension.
@@ -117,48 +106,6 @@ class GetRawTestCase(lsst.utils.tests.TestCase):
         self.assertAlmostEqual(weather.getAirTemperature(), visit229388_info['weath_airTemperature'])
         self.assertAlmostEqual(weather.getAirPressure(), visit229388_info['weath_airPressure'])
         self.assertAlmostEqual(weather.getHumidity(), visit229388_info['weath_humidity'])
-
-    def testRawMetadata(self):
-        """Test retrieval of metadata"""
-        md = self.butler.get("raw_md", self.dataId)
-        print("EXPNUM(visit): %s" % md.getScalar('EXPNUM'))
-        print("ccdnum: %s" % md.getScalar('CCDNUM'))
-        self.assertEqual(md.getScalar('EXPNUM'), self.dataId["visit"])
-        self.assertEqual(md.getScalar('CCDNUM'), self.dataId["ccdnum"])
-
-    def testBias(self):
-        """Test retrieval of bias image"""
-        exp = self.butler.get("cpBias", self.dataId)
-        print("dataId: %s" % self.dataId)
-        print("detector id: %s" % exp.getDetector().getId())
-        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertTrue(exp.hasWcs())
-
-    def testFlat(self):
-        """Test retrieval of flat image"""
-        exp = self.butler.get("cpFlat", self.dataId)
-        print("dataId: %s" % self.dataId)
-        print("detector id: %s" % exp.getDetector().getId())
-        print("filter: %s" % self.filter)
-        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().bandLabel, self.filter)
-        self.assertTrue(exp.hasWcs())
-
-    def testFringe(self):
-        """Test retrieval of fringe image"""
-        exp = self.butler.get("fringe", self.dataId)
-        print("dataId: %s" % self.dataId)
-        print("detector id: %s" % exp.getDetector().getId())
-        print("filter: %s" % self.filter)
-        self.assertEqual(exp.getDetector().getId(), self.dataId["ccdnum"])
-        self.assertEqual(exp.getFilter().bandLabel, self.filter)
-
-    def testDefect(self):
-        """Test retrieval of defect list"""
-        defectList = self.butler.get("defects", self.dataId)
-        self.assertEqual(len(defectList), 395)
-        for d in defectList:
-            self.assertIsInstance(d, afwImage.DefectBase)
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):

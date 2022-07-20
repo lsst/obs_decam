@@ -47,7 +47,7 @@ config.doTrimToMatchCalib = True
 
 config.doBias = True
 # Set to "cpBias" to use gen2 community pipeline calibration products
-config.connections.bias = "bias"
+config.connections.bias = "cpBias"
 config.biasDataProductName = config.connections.bias
 
 config.doVariance = True
@@ -58,9 +58,10 @@ config.doEmpiricalReadNoise = True
 config.doLinearize = True
 
 config.doCrosstalkBeforeAssemble = True
-config.doCrosstalk = True
-config.crosstalk.minPixelToMask=45000.0
-config.crosstalk.crosstalkMaskPlane="CROSSTALK"
+config.doCrosstalk = False
+config.crosstalk.minPixelToMask = 45000.0
+config.crosstalk.crosstalkMaskPlane = "CROSSTALK"
+config.connections.crosstalkSources = "overscanRaw"
 
 config.doWidenSaturationTrails = True
 
@@ -78,7 +79,7 @@ config.doStrayLight = False
 
 config.doFlat = True
 # Set to "cpFlat" to use gen2 community pipeline calibration products
-config.connections.flat = "flat"
+config.connections.flat = "cpFlat"
 config.flatDataProductName = config.connections.flat
 config.flatScalingType = "USER"
 config.flatUserScale = 1.0

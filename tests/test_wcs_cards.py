@@ -19,41 +19,44 @@
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
-
 import os
 import unittest
-import warnings
 
-from lsst.utils import getPackageDir
+import lsst.utils
 import lsst.utils.tests
 
-import lsst.daf.persistence as dafPersist
+from lsst.daf.butler import Butler
 
 
+EXPOSURE = 229388
+DETECTOR = 1
+
+
+test_data_package = "testdata_decam"
+try:
+    test_data_directory = lsst.utils.getPackageDir(test_data_package)
+except LookupError:
+    test_data_directory = None
+
+
+@unittest.skipIf(test_data_directory is None, "testdata_decam must be set up")
 class WcsCardsTestCase(lsst.utils.tests.TestCase):
     """Test wcs keywords in the metadata"""
 
-    def setUp(self):
-        try:
-            datadir = getPackageDir("testdata_decam")
-        except LookupError:
-            message = "testdata_decam not setup. Skipping."
-            warnings.warn(message)
-            raise unittest.SkipTest(message)
-        self.butler = dafPersist.Butler(root=os.path.join(datadir, "rawData"))
-        self.dataId = {'visit': 229388, 'ccdnum': 1}
+    @classmethod
+    def setUpClass(cls):
+        cls.repo = os.path.join(test_data_directory, 'repo')
 
-    def tearDown(self):
-        del self.butler
-
-    def testRawWcs(self):
+    def test_raw_wcs(self):
         """Test wcs keywords are removed from the metadata of the raw Exposure"""
-        exp = self.butler.get("raw", self.dataId, immediate=True)
-        self.assertFalse(exp.getMetadata().exists('CTYPE1'))
-        self.assertFalse(exp.getMetadata().exists('CD1_2'))
-        self.assertFalse(exp.getMetadata().exists('CRPIX2'))
-        self.assertFalse(exp.getMetadata().exists('PV1_4'))
-        self.assertFalse(exp.getMetadata().exists('PV2_10'))
+        butler = Butler(self.repo, instrument='DECam', collections='DECam/raw/all')
+
+        md = butler.get('raw.metadata', exposure=EXPOSURE, detector=DETECTOR)
+        self.assertFalse(md.exists('CTYPE1'))
+        self.assertFalse(md.exists('CD1_2'))
+        self.assertFalse(md.exists('CRPIX2'))
+        self.assertFalse(md.exists('PV1_4'))
+        self.assertFalse(md.exists('PV2_10'))
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):

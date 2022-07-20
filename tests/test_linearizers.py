@@ -1,6 +1,6 @@
 #
 # LSST Data Management System
-# Copyright 2008-2015 AURA/LSST.
+# Copyright 2022 AURA/LSST.
 #
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
@@ -19,32 +19,35 @@
 # the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
-
-import os
 import unittest
+import os
 
+import lsst.utils
 import lsst.utils.tests
-import lsst.daf.persistence as dafPersist
+import lsst.daf.butler
 
 
-ROOT = os.path.abspath(os.path.dirname(__file__))
+test_data_package = "testdata_decam"
+try:
+    test_data_directory = lsst.utils.getPackageDir(test_data_package)
+except LookupError:
+    test_data_directory = None
 
 
-class GetIdTestCase(lsst.utils.tests.TestCase):
-    """Testing butler exposure id retrieval"""
+@unittest.skipIf(test_data_directory is None, "testdata_decam must be set up")
+class DecamLinearizersTestCase(lsst.utils.tests.TestCase):
+    """DECam linearizer tests."""
+    @classmethod
+    def setUpClass(cls):
+        cls.repo = os.path.join(test_data_directory, 'repo')
 
-    def setUp(self):
-        self.butler = dafPersist.Butler(inputs=os.path.join(ROOT, 'getIdRepo'))
+    def test_linearizers_existence(self):
+        """Test existence of linearizers."""
+        butler = lsst.daf.butler.Butler(self.repo, instrument='DECam')
 
-    def tearDown(self):
-        del self.butler
+        datasets = set(butler.registry.queryDatasets('linearizer', collections=...))
 
-    def testId(self):
-        """Test retrieval of exposure ids"""
-        bits = self.butler.get("ccdExposureId_bits")
-        self.assertEqual(bits, 32)
-        id = self.butler.get("ccdExposureId", visit=229388, ccdnum=13, filter="z")
-        self.assertEqual(id, 22938813)
+        self.assertEqual(len(datasets), 62)
 
 
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
