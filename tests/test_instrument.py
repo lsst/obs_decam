@@ -48,19 +48,6 @@ class TestDarkEnergyCamera(InstrumentTests, lsst.utils.tests.TestCase):
         self.instrument = lsst.obs.decam.DarkEnergyCamera()
 
 
-class TestDecamTranslators(lsst.utils.tests.TestCase):
-    def setUp(self):
-        super().setUp()
-        self.filters = lsst.obs.decam.DarkEnergyCamera().filterDefinitions
-
-    def testDecamBandToPhysicalFilter(self):
-        translator = lsst.obs.decam._instrument._DecamBandToPhysicalFilterKeyHandler(self.filters)
-        self.assertEqual(translator.extract({"filter": "g"}), "g DECam SDSS c0001 4720.0 1520.0")
-        self.assertEqual(translator.extract({"filter": "y"}), "Y DECam c0005 10095.0 1130.0")
-        self.assertEqual(translator.extract({"filter": "Y"}), "Y DECam c0005 10095.0 1130.0")
-        self.assertEqual(translator.extract({"filter": "fake"}), "fake")
-
-
 class MemoryTester(lsst.utils.tests.MemoryTestCase):
     pass
 
