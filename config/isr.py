@@ -25,13 +25,6 @@ config.doOverscan = True
 config.overscan.fitType = "MEDIAN_PER_ROW"
 config.overscan.order = 1
 config.overscan.numSigmaClip = 3.0
-config.overscanNumLeadingColumnsToSkip = 0
-config.overscanNumTrailingColumnsToSkip = 0
-config.overscanMaxDev = 1000.0
-config.overscanBiasJump = True
-config.overscanBiasJumpKeyword = "FPA"
-config.overscanBiasJumpDevices = ["DECAM_BKP3", "DECAM_BKP5", "DECAM_BKP1", "DECAM_BKP4"]
-config.overscanBiasJumpLocation = 2098
 
 config.doAssembleCcd = True
 # Use default ISR assembleCcdTask
