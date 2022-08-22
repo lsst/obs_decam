@@ -6,8 +6,6 @@ config.measurement.load(os.path.join(os.path.dirname(__file__), "convolvedFluxes
 config.measurement.load(os.path.join(os.path.dirname(__file__), "hsm.py"))
 config.load(os.path.join(os.path.dirname(__file__), "cmodel.py"))
 
-# Set reference catalog for Gen2.
-config.match.refObjLoader.ref_dataset_name = "ps1_pv3_3pi_20170110"
 # Set reference catalog for Gen3.
 config.connections.refCat = "ps1_pv3_3pi_20170110"
 
