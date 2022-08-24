@@ -38,16 +38,8 @@ Task reference
 .. .. lsst-pipelinetasks::
 ..    :root: lsst.obs.decam
 ..    :toctree: tasks
-..
-.. .. _lsst.verify-command-line-tasks:
-..
-.. Command-line tasks
-.. ------------------
-..
-.. .. lsst-cmdlinetasks::
-..    :root: lsst.obs.decam
-..
-.. .. _lsst.obs.decam-tasks:
+
+.. _lsst.obs.decam-tasks:
 
 Tasks
 -----
