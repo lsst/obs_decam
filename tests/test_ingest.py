@@ -27,6 +27,7 @@ import os
 import lsst.utils.tests
 
 from lsst.daf.butler import Butler, DataCoordinate
+from lsst.pipe.base import ObservationDimensionPacker
 from lsst.obs.base.ingest_tests import IngestTestBase
 import lsst.obs.decam
 import lsst.afw.cameraGeom.testUtils
@@ -121,11 +122,17 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
         run ingest again just to get a useful to repo to test against.
         """
         butler = Butler(self.root)
-        # Test that packing visit+detector data IDs into integers yields
+        # Test that packing exposure+detector data IDs into integers yields
         # results consistent with what we have historically gotten (from Gen2).
+        # We expect the default configuration of ObservationDimensionPacker to
+        # work for obs_decam (via the bounds on exposure and detector IDs
+        # registered with the butler), and hence it should not need config
+        # overrides for tasks that generate catalog IDs.
+        config = ObservationDimensionPacker.ConfigClass()
         for dataId in self.dataIds:
             expandedDataId = butler.registry.expandDataId(dataId)
-            packed, bits = expandedDataId.pack("exposure_detector", returnMaxBits=True)
+            packer = ObservationDimensionPacker(expandedDataId, config, is_exposure=True)
+            packed, bits = packer.pack(expandedDataId, returnMaxBits=True)
             self.assertEqual(packed, int(f"{dataId['exposure']}{dataId['detector']:02}"))
             self.assertEqual(bits, 32)
 
