@@ -141,7 +141,6 @@ class DecamIsrTestCase(lsst.utils.tests.TestCase):
         """Test basic ISR."""
         butler = lsst.daf.butler.Butler(self.repo, instrument='DECam', collections=self.basic_collection)
 
-        self.assertTrue(butler.datasetExists('postISRCCD', exposure=EXPOSURE, detector=DETECTOR))
         exp = butler.get('postISRCCD', exposure=EXPOSURE, detector=DETECTOR)
         self.assertIsInstance(exp, lsst.afw.image.ExposureF)
 
