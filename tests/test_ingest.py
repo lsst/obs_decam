@@ -67,12 +67,12 @@ class DecamIngestTestCase(DecamTestBase, lsst.utils.tests.TestCase):
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=229388,
-                universe=butler.registry.dimensions
+                universe=butler.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=229388,
-                    universe=butler.registry.dimensions
+                    universe=butler.dimensions
                 )
             ]
         }
@@ -103,12 +103,12 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
-                universe=butler.registry.dimensions
+                universe=butler.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=415282,
-                    universe=butler.registry.dimensions
+                    universe=butler.dimensions
                 )
             ]
         }
@@ -156,12 +156,12 @@ class DecamIngestShuffledFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCa
             DataCoordinate.standardize(
                 instrument="DECam",
                 visit=415282,
-                universe=butler.registry.dimensions
+                universe=butler.dimensions
             ): [
                 DataCoordinate.standardize(
                     instrument="DECam",
                     exposure=415282,
-                    universe=butler.registry.dimensions
+                    universe=butler.dimensions
                 )
             ]
         }
