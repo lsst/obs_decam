@@ -7,24 +7,9 @@ from lsst.meas.astrom import MatchOptimisticBConfig
 
 obsConfigDir = os.path.dirname(__file__)
 
-# Cosmic rays
-# These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
-config.repair.cosmicray.nCrPixelMax = 100000
-config.repair.cosmicray.cond3_fac2 = 0.4
-
 # PSF determination
 # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
 config.measurePsf.reserve.fraction = 0.2
-config.measurePsf.starSelector["objectSize"].sourceFluxField = "base_PsfFlux_instFlux"
-config.measurePsf.starSelector["objectSize"].widthMin = 0.9
-config.measurePsf.starSelector["objectSize"].fluxMin = 4000
-
-# Set to match defaults currently used in HSC production runs (e.g. S15B)
-config.catalogCalculation.plugins['base_ClassificationExtendedness'].fluxRatio = 0.95
-
-# Detection
-# This config matches obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
-config.detection.isotropicGrow = True
 
 # Activate calibration of measurements: required for aperture corrections
 config.load(os.path.join(obsConfigDir, "cmodel.py"))
@@ -36,10 +21,6 @@ config.measurement.load(os.path.join(obsConfigDir, "hsm.py"))
 if "ext_shapeHSM_HsmShapeRegauss" in config.measurement.plugins:
     # no deblending has been done
     config.measurement.plugins["ext_shapeHSM_HsmShapeRegauss"].deblendNChild = ""
-
-# Deblender
-config.deblend.maskLimits["NO_DATA"] = 0.25  # Ignore sources that are in the vignetted region
-config.deblend.maxFootprintArea = 10000
 
 config.measurement.plugins.names |= ["base_Jacobian", "base_FPPosition"]
 config.measurement.plugins["base_Jacobian"].pixelScale = 0.263
