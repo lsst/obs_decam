@@ -35,13 +35,6 @@ Ingest raw images
 Ingest raw science and calibration (bias and flat) frames, which creates the ``DECam/raw/all`` collection.
 Next, run overscan correction on all the raws via the ``RunIsrForCrosstalkSources.yaml`` pipeline so they may be used as crosstalk sources during ISR (this is a DECam-specific step).
 
-.. note::
-   Until `DM-30651 <https://jira.lsstcorp.org/browse/DM-30651>`__ is resolved, consider including the following configurations during the overscan crosstalk prep step.
-
-   When running the ``RunIsrForCrosstalkSources.yaml`` pipeline, append:
-
-   ``-c overscan:overscan.fitType='MEDIAN_PER_ROW'``.
-
 .. prompt:: bash
 
    butler ingest-raws REPO /path/to/raw/science/*.fits.fz --transfer link
@@ -65,17 +58,6 @@ Next, build nightly (or similar) bias and flat frames using :py:mod:`lsst.cp.pip
 This example assumes the user has a single night of observations with bias frames numbered 1-6 and flat frames numbered 7-12, and wants to create nightly calib products valid for 24 hours.
 Note the bias building pipeline is camera-agnostic, but the flat-building pipeline has a prerequisite DECam-specific step which correctly handles inter-chip crosstalk.
 
-.. note::
-   Until `DM-30651 <https://jira.lsstcorp.org/browse/DM-30651>`__ is resolved, consider including the following configurations during bias and flat building.
-
-   When running the ``cpBias.yaml`` pipeline, append:
-
-   ``-c isr:overscan.fitType='MEDIAN_PER_ROW'``.
-
-   When running the ``cpFlat.yaml`` pipeline, append:
-
-   ``-c isr:overscan.fitType='MEDIAN_PER_ROW' -c cpFlatNorm:level='AMP'``.
-
 .. prompt:: bash
 
    pipetask run -d "exposure IN (1, 2, 3, 4, 5, 6)" -b REPO -i DECam/raw/all,DECam/calib -o u/username/bias-construction-night1 -p $CP_PIPE_DIR/pipelines/cpBias.yaml --register-dataset-types
@@ -87,9 +69,6 @@ Science time!
 -------------
 
 Now you can proceed with running ISR and other "processCcd" tasks via a Gen3 pipeline.
-
-.. note::
-   Until `DM-30651 <https://jira.lsstcorp.org/browse/DM-30651>`__ is resolved, consider configuring ``-c isr:overscan.fitType='MEDIAN_PER_ROW'`` as above when running ISR.
 
 Some useful pipelines can be found in the ``pipelines/DarkEnergyCamera`` directory of the :py:mod:`lsst.ap.pipe` package.
 These and other pipelines may move to ``recipes/DarkEnergyCamera`` as `RFC-775 <https://jira.lsstcorp.org/browse/RFC-775>`__ is implemented.
