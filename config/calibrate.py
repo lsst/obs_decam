@@ -38,10 +38,6 @@ for matchConfig in (config.astrometry,
         matchConfig.matcher.maxMatchDistArcSec = 2.0
         matchConfig.sourceSelector.active.excludePixelFlags = False
 
-# Demand astrometry and photoCal succeed
-config.requireAstrometry = True
-config.requirePhotoCal = True
-
 config.measurement.load(os.path.join(obsConfigDir, "apertures.py"))
 config.measurement.load(os.path.join(obsConfigDir, "kron.py"))
 config.measurement.load(os.path.join(obsConfigDir, "hsm.py"))
