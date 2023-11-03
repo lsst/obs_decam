@@ -30,11 +30,7 @@ config.astrometry.wcsFitter.order = 4
 
 for matchConfig in (config.astrometry,
                     ):
-    matchConfig.sourceFluxType = 'Psf'
-    matchConfig.sourceSelector.active.sourceFluxType = 'Psf'
     if isinstance(matchConfig.matcher, MatchOptimisticBConfig):
-        matchConfig.matcher.allowedNonperpDeg = 0.2
-        matchConfig.matcher.maxMatchDistArcSec = 2.0
         matchConfig.sourceSelector.active.excludePixelFlags = False
 
 config.measurement.load(os.path.join(obsConfigDir, "apertures.py"))
