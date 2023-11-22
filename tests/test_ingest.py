@@ -125,7 +125,8 @@ class DecamIngestFullFileTestCase(DecamTestBase, lsst.utils.tests.TestCase):
         # results consistent with what we have historically gotten (from Gen2).
         for dataId in self.dataIds:
             expandedDataId = butler.registry.expandDataId(dataId)
-            packed, bits = expandedDataId.pack("exposure_detector", returnMaxBits=True)
+            packer = self.instrumentClass.make_default_dimension_packer(expandedDataId, is_exposure=True)
+            packed, bits = packer.pack(expandedDataId, returnMaxBits=True)
             self.assertEqual(packed, int(f"{dataId['exposure']}{dataId['detector']:02}"))
             self.assertEqual(bits, 32)
 
