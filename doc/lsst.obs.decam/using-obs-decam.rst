@@ -70,5 +70,4 @@ Science time!
 
 Now you can proceed with running ISR and other "processCcd" tasks via a Gen3 pipeline.
 
-Some useful pipelines can be found in the ``pipelines/DarkEnergyCamera`` directory of the :py:mod:`lsst.ap.pipe` package.
-These and other pipelines may move to ``recipes/DarkEnergyCamera`` as `RFC-775 <https://jira.lsstcorp.org/browse/RFC-775>`__ is implemented.
+Some useful pipelines can be found in the ``pipelines/DECam`` directory of the :py:mod:`lsst.ap.pipe` and :py:mod:`lsst.drp.pipe` packages.
