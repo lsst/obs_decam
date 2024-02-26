@@ -27,6 +27,7 @@ __all__ = ("DarkEnergyCamera",)
 import os
 from functools import lru_cache
 
+from astro_metadata_translator import DecamTranslator
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument, VisitSystem
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
@@ -39,6 +40,7 @@ class DarkEnergyCamera(Instrument):
     filterDefinitions = DECAM_FILTER_DEFINITIONS
     policyName = "decam"
     obsDataPackage = "obs_decam_data"
+    translatorClass = DecamTranslator
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
