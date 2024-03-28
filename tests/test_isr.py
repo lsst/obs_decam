@@ -85,7 +85,6 @@ tasks:
     executor = SimplePipelineExecutor.from_pipeline(
         pipeline,
         where=f"exposure={EXPOSURE} and detector={DETECTOR}",
-        root=repo,
         butler=butler
     )
 
