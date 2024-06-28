@@ -115,7 +115,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
         ValueError
             Raised if detectorId is not found in any of the file HDUs
         """
-        filename = self.fileDescriptor.location.path
+        filename = self._reader_uri.ospath
         try:
             index = detector_to_hdu[detectorId]
             metadata = lsst.afw.fits.readMetadata(filename, index)
@@ -132,13 +132,13 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
             return self._scanHdus(filename, detectorId)
 
     def readMetadata(self):
-        index, metadata = self._determineHDU(self.dataId['detector'])
+        index, metadata = self._determineHDU(self.data_id['detector'])
         astro_metadata_translator.fix_header(metadata)
         return metadata
 
     def readImage(self):
-        index, metadata = self._determineHDU(self.dataId['detector'])
-        return lsst.afw.image.ImageI(self.fileDescriptor.location.path, index)
+        index, metadata = self._determineHDU(self.data_id['detector'])
+        return lsst.afw.image.ImageI(self._reader_uri.ospath, index)
 
 
 class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
@@ -148,7 +148,7 @@ class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
 
     def _determineHDU(self, detectorId):
         """The HDU to read is the same as the detector number."""
-        filename = self.fileDescriptor.location.path
+        filename = self._reader_uri.ospath
         metadata = lsst.afw.fits.readMetadata(filename, detectorId)
         if metadata['CCDNUM'] != detectorId:
             msg = f"Found CCDNUM={metadata['CCDNUM']} instead of {detectorId} in {filename} HDU={detectorId}."
@@ -156,5 +156,5 @@ class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
         return detectorId, metadata
 
     def readImage(self):
-        index, metadata = self._determineHDU(self.dataId['detector'])
-        return lsst.afw.image.ImageF(self.fileDescriptor.location.path, index)
+        index, metadata = self._determineHDU(self.data_id['detector'])
+        return lsst.afw.image.ImageF(self._reader_uri.ospath, index)
