@@ -48,7 +48,9 @@ class WcsCardsTestCase(lsst.utils.tests.TestCase):
         cls.repo = os.path.join(test_data_directory, 'repo')
 
     def test_raw_wcs(self):
-        """Test wcs keywords are removed from the metadata of the raw Exposure"""
+        """Test wcs keywords are removed from the metadata of the raw
+        Exposure.
+        """
         butler = Butler(self.repo, instrument='DECam', collections='DECam/raw/all')
 
         md = butler.get('raw.metadata', exposure=EXPOSURE, detector=DETECTOR)

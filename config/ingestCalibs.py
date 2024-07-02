@@ -1,4 +1,5 @@
 from lsst.obs.decam.ingestCalibs import DecamCalibsParseTask
+
 config.parse.retarget(DecamCalibsParseTask)
 
 # S30 and N30 are not included because they are not functional.

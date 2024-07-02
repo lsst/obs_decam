@@ -1,4 +1,5 @@
-# Extinction coefficients for DECam filters for conversion from E(B-V) to extinction, A_band.
+# Extinction coefficients for DECam filters for conversion from E(B-V)
+# to extinction, A_band.
 # Numbers initially provided by Song Huang (NAOJ).
 #
 # Band, A_band/E(B-V)

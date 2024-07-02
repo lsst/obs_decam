@@ -120,14 +120,15 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
             index = detector_to_hdu[detectorId]
             metadata = lsst.afw.fits.readMetadata(filename, index)
             if metadata['CCDNUM'] != detectorId:
-                # the detector->HDU mapping is different in this file: try scanning
+                # detector->HDU mapping is different in this file: try scanning
                 return self._scanHdus(filename, detectorId)
             else:
                 fitsData = lsst.afw.fits.Fits(filename, 'r')
                 fitsData.setHdu(index)
                 return index, metadata
         except lsst.afw.fits.FitsError:
-            # if the file doesn't contain all the HDUs of "normal" files, try scanning
+            # If the file doesn't contain all the HDUs of "normal" files,
+            # try scanning.
             return self._scanHdus(filename, detectorId)
 
     def readMetadata(self):
