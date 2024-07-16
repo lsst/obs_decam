@@ -208,8 +208,8 @@ class DecamIsrTestCase(lsst.utils.tests.TestCase):
         chunk_diff = chunk1.clone()
         chunk_diff -= chunk2
 
-        # Check that the difference of the two image chunks is nonzero
-        # (the non-crosstalk-corrected and crosstalk-corrected images should differ)
+        # Check that the difference of the two image chunks is nonzero (the
+        # non-crosstalk-corrected and crosstalk-corrected images should differ)
         all_zeros = not chunk_diff.getArray().any()
         self.assertFalse(all_zeros)
 

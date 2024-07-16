@@ -1,0 +1,8 @@
+extend = "../pyproject.toml"
+# Ignore undefined "config", as config files are loaded with `eval`.
+builtins = ["config"]
+
+[lint.pycodestyle]
+# The camera definition file has many lines >80chars; allow them to remain
+# as-is, so we don't have to deal with reformatting the whole file.
+max-doc-length = 110

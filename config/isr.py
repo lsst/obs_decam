@@ -1,20 +1,14 @@
-"""
-DECam-specific overrides of IsrTask
-"""
-import os.path
-
-
 config.datasetType = "raw"
 config.fallbackFilterName = None
 config.expectWcs = True
 config.fwhm = 1.0
 
-config.doSaturation=True
+config.doSaturation = True
 config.saturatedMaskName = "SAT"
 config.saturation = float("NaN")
 config.growSaturationFootprintSize = 1
 
-config.doSuspect=True
+config.doSuspect = True
 config.suspectMaskName = "SUSPECT"
 config.numEdgeSuspect = 35
 
@@ -52,8 +46,8 @@ config.doLinearize = True
 
 config.doCrosstalkBeforeAssemble = True
 config.doCrosstalk = True
-config.crosstalk.minPixelToMask=45000.0
-config.crosstalk.crosstalkMaskPlane="CROSSTALK"
+config.crosstalk.minPixelToMask = 45000.0
+config.crosstalk.crosstalkMaskPlane = "CROSSTALK"
 
 config.doWidenSaturationTrails = True
 
@@ -61,7 +55,7 @@ config.doBrighterFatter = False
 
 config.doDefect = True
 config.doSaturationInterpolation = True
-config.numEdgeSuspect=35
+config.numEdgeSuspect = 35
 
 config.doDark = False
 config.connections.dark = "dark"
@@ -82,7 +76,7 @@ config.normalizeGains = False
 
 config.doFringe = True
 config.fringeAfterFlat = True
-config.fringe.filters = ['z DECam SDSS c0004 9260.0 1520.0', 'Y DECam c0005 10095.0 1130.0']
+config.fringe.filters = ["z DECam SDSS c0004 9260.0 1520.0", "Y DECam c0005 10095.0 1130.0"]
 
 config.doNanInterpAfterFlat = False
 
@@ -103,5 +97,8 @@ config.doUseAtmosphereTransmission = False
 config.doIlluminationCorrection = False
 # config.doIlluminationCorrection = True
 config.illuminationCorrectionDataProductName = "cpIllumcor"
-config.illumFilters = ['g DECam SDSS c0001 4720.0 1520.0', 'r DECam SDSS c0002 6415.0 1480.0',
-                       'i DECam SDSS c0003 7835.0 1470.0']
+config.illumFilters = [
+    "g DECam SDSS c0001 4720.0 1520.0",
+    "r DECam SDSS c0002 6415.0 1480.0",
+    "i DECam SDSS c0003 7835.0 1470.0",
+]
