@@ -115,7 +115,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
         ValueError
             Raised if detectorId is not found in any of the file HDUs
         """
-        filename = self._reader_uri.ospath
+        filename = self._reader_path
         try:
             index = detector_to_hdu[detectorId]
             metadata = lsst.afw.fits.readMetadata(filename, index)
@@ -138,7 +138,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
 
     def readImage(self):
         index, metadata = self._determineHDU(self.data_id['detector'])
-        return lsst.afw.image.ImageI(self._reader_uri.ospath, index)
+        return lsst.afw.image.ImageI(self._reader_path, index)
 
 
 class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
@@ -148,7 +148,7 @@ class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
 
     def _determineHDU(self, detectorId):
         """The HDU to read is the same as the detector number."""
-        filename = self._reader_uri.ospath
+        filename = self._reader_path
         metadata = lsst.afw.fits.readMetadata(filename, detectorId)
         if metadata['CCDNUM'] != detectorId:
             msg = f"Found CCDNUM={metadata['CCDNUM']} instead of {detectorId} in {filename} HDU={detectorId}."
@@ -157,4 +157,4 @@ class DarkEnergyCameraCPCalibFormatter(DarkEnergyCameraRawFormatter):
 
     def readImage(self):
         index, metadata = self._determineHDU(self.data_id['detector'])
-        return lsst.afw.image.ImageF(self._reader_uri.ospath, index)
+        return lsst.afw.image.ImageF(self._reader_path, index)
