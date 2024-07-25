@@ -23,10 +23,12 @@
 HDU a given detector is in in a multi-extension FITS file.
 """
 
+import contextlib
 import astro_metadata_translator
 import unittest
 import os
 
+import lsst.afw.geom
 import lsst.utils.tests
 import lsst.obs.decam
 import lsst.daf.butler
@@ -38,67 +40,91 @@ try:
 except LookupError:
     testDataDirectory = None
 
+storageClass = lsst.daf.butler.StorageClassFactory().getStorageClass("ExposureI")
+
 
 def _clean_metadata_provenance(hdr):
     """Remove metadata fix up provenance."""
     for k in hdr:
         if k.startswith("HIERARCH ASTRO METADATA"):
+            print("DELETING A KEY>>>> ", k)
             del hdr[k]
+
+    # Strip WCS for consistency (the formatter returns stripped headers).
+    with contextlib.suppress(TypeError):
+        lsst.afw.geom.stripWcsMetadata(hdr)
+
+
+def make_dataset_ref(detector: int) -> lsst.daf.butler.DatasetRef:
+    universe = lsst.daf.butler.DimensionUniverse()
+    dataset_type = lsst.daf.butler.DatasetType(
+        "raw",
+        ("instrument", "detector"),
+        storageClass,
+        universe=universe,
+    )
+    data_id = lsst.daf.butler.DataCoordinate.standardize(
+        instrument="HSC", detector=detector, universe=universe
+    )
+    return lsst.daf.butler.DatasetRef(dataset_type, data_id, "test")
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
 class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
+    maxDiff = None
+
     def setUp(self):
         path = 'rawData/2013-09-01/z/decam0229388.fits.fz'
         self.filename = os.path.join(testDataDirectory, path)
         location = lsst.daf.butler.Location(testDataDirectory, path)
-        self.fileDescriptor = lsst.daf.butler.FileDescriptor(location, None)
+        self.fileDescriptor = lsst.daf.butler.FileDescriptor(location, storageClass)
 
-    def check_readMetadata(self, dataId, expected):
-        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(self.fileDescriptor, dataId)
-        metadata = formatter.readMetadata()
+    def check_readMetadata(self, detector, expected):
+        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(
+            self.fileDescriptor, ref=make_dataset_ref(detector)
+        )
+        metadata = formatter.read(component="metadata")
 
         # Remove provenance
         _clean_metadata_provenance(metadata)
         _clean_metadata_provenance(expected)
 
-        self.assertEqual(metadata, expected)
+        self.assertEqual(metadata.toDict(), expected.toDict())
 
     def test_readMetadata(self):
-        dataId = {'detector': 25}
         # detector 25 is in HDU 1
         expected = lsst.afw.fits.readMetadata(self.filename, 1)
         self.assertEqual(expected['CCDNUM'], 25)  # sanity check
-        self.check_readMetadata(dataId, expected)
+        self.check_readMetadata(25, expected)
 
-        dataId = {'detector': 1}
         # detector 1 is in HDU 2
         expected = lsst.afw.fits.readMetadata(self.filename, 2)
         astro_metadata_translator.fix_header(expected)
         self.assertEqual(expected['CCDNUM'], 1)  # sanity check
-        self.check_readMetadata(dataId, expected)
+        self.check_readMetadata(1, expected)
 
     def test_readMetadata_raises(self):
-        dataId = {'detector': 70}
-        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(self.fileDescriptor, dataId)
+        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(
+            self.fileDescriptor, ref=make_dataset_ref(70)
+        )
         with self.assertRaisesRegex(ValueError, "detectorId=70"):
-            formatter.readMetadata()
+            formatter.read(component="metadata")
 
-    def check_readImage(self, dataId, expected):
-        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(self.fileDescriptor, dataId)
-        image = formatter.readImage()
+    def check_readImage(self, detector, expected):
+        formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(
+            self.fileDescriptor, ref=make_dataset_ref(detector)
+        )
+        image = formatter.read(component="image")
         self.assertImagesEqual(image, expected)
 
     def test_readImage(self):
-        dataId = {'detector': 25}
         # detector 25 is in HDU 1
         expected = lsst.afw.image.ImageI(self.filename, 1)
-        self.check_readImage(dataId, expected)
+        self.check_readImage(25, expected)
 
-        dataId = {'detector': 1}
         # detector 1 is in HDU 2
         expected = lsst.afw.image.ImageI(self.filename, 2)
-        self.check_readImage(dataId, expected)
+        self.check_readImage(1, expected)
 
     def test_readMetadata_full_file(self):
         """Test reading a file with all HDUs, and with all HDUs in a shuffled
@@ -107,22 +133,29 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
 
         full_file = 'rawData/raw/c4d_150227_012718_ori-stripped.fits.fz'
         full_location = lsst.daf.butler.Location(testDataDirectory, full_file)
-        full_fileDescriptor = lsst.daf.butler.FileDescriptor(full_location, None)
+        full_fileDescriptor = lsst.daf.butler.FileDescriptor(full_location, storageClass)
 
         shuffled_file = 'rawData/raw/c4d_150227_012718_ori-stripped-shuffled.fits.fz'
         shuffled_location = lsst.daf.butler.Location(testDataDirectory, shuffled_file)
-        shuffled_fileDescriptor = lsst.daf.butler.FileDescriptor(shuffled_location, None)
+        shuffled_fileDescriptor = lsst.daf.butler.FileDescriptor(shuffled_location, storageClass)
 
         for detector in range(1, 63):
-            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(full_fileDescriptor, detector)
-            full_index, full_metadata = formatter._determineHDU(detector)
-            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(shuffled_fileDescriptor, detector)
-            shuffled_index, shuffled_metadata = formatter._determineHDU(detector)
+            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(
+                full_fileDescriptor, ref=make_dataset_ref(detector)
+            )
+            full_metadata = formatter.read(component="metadata")
 
-            # The shuffled file should have different indices,
-            self.assertNotEqual(full_index, shuffled_index)
-            # but the metadata should be the same in both files.
-            self.assertEqual(shuffled_metadata, full_metadata)
+            formatter = lsst.obs.decam.DarkEnergyCameraRawFormatter(
+                shuffled_fileDescriptor, ref=make_dataset_ref(detector)
+            )
+            shuffled_metadata = formatter.read(component="metadata")
+
+            # Remove provenance
+            _clean_metadata_provenance(full_metadata)
+            _clean_metadata_provenance(shuffled_metadata)
+
+            # the metadata should be the same in both files.
+            self.assertEqual(shuffled_metadata.toDict(), full_metadata.toDict())
 
 
 @unittest.skipIf(testDataDirectory is None, "testdata_decam must be set up")
@@ -133,32 +166,33 @@ class DarkEnergyCameraCPCalibFormatterTestCase(lsst.utils.tests.TestCase):
         path = 'hits2015-zeroed/c4d_150218_191721_zci_v1.fits.fz'
         self.biasFile = os.path.join(testDataDirectory, path)
         location = lsst.daf.butler.Location(testDataDirectory, path)
-        self.biasDescriptor = lsst.daf.butler.FileDescriptor(location, None)
+        self.biasDescriptor = lsst.daf.butler.FileDescriptor(location, storageClass)
 
         path = 'hits2015-zeroed/c4d_150218_200522_fci_g_v1.fits.fz'
         self.flatFile = os.path.join(testDataDirectory, path)
         location = lsst.daf.butler.Location(testDataDirectory, path)
-        self.flatDescriptor = lsst.daf.butler.FileDescriptor(location, None)
+        self.flatDescriptor = lsst.daf.butler.FileDescriptor(location, storageClass)
 
-    def check_readMetadata(self, dataId, expected, fileDescriptor):
-        formatter = lsst.obs.decam.DarkEnergyCameraCPCalibFormatter(fileDescriptor, dataId)
-        metadata = formatter.readMetadata()
-        self.assertEqual(metadata['CCDNUM'], dataId['detector'], dataId)
+    def check_readMetadata(self, detector, expected, fileDescriptor):
+        formatter = lsst.obs.decam.DarkEnergyCameraCPCalibFormatter(
+            fileDescriptor, ref=make_dataset_ref(detector)
+        )
+        metadata = formatter.read(component="metadata")
+        self.assertEqual(metadata['CCDNUM'], detector, f"detector={detector}")
 
         # Remove provenance
         _clean_metadata_provenance(metadata)
         _clean_metadata_provenance(expected)
 
-        self.assertEqual(metadata, expected, msg=dataId)
+        self.assertEqual(metadata.toDict(), expected.toDict(), msg=f"Detector {detector}")
 
     def test_readMetadata(self):
         for i in range(1, 63):
-            dataId = {'detector': i}
             expected = lsst.afw.fits.readMetadata(self.biasFile, i)
-            self.check_readMetadata(dataId, expected, self.biasDescriptor)
+            self.check_readMetadata(i, expected, self.biasDescriptor)
 
             expected = lsst.afw.fits.readMetadata(self.flatFile, i)
-            self.check_readMetadata(dataId, expected, self.flatDescriptor)
+            self.check_readMetadata(i, expected, self.flatDescriptor)
 
 
 def setup_module(module):
