@@ -22,3 +22,4 @@ decam/CALIB/calibRegistry*
 decam/crosstalk
 decam/linearity
 .vscode/
+python/*.dist-info/
