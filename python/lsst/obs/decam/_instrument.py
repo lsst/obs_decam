@@ -30,6 +30,7 @@ from functools import lru_cache
 from astro_metadata_translator import DecamTranslator
 from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument, VisitSystem
+from lsst.obs.base.instrument_ref_cat_data import ColortermModel, InstrumentRefCatLibrary
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
 from lsst.utils.introspection import get_full_type_name
@@ -112,3 +113,18 @@ class DarkEnergyCamera(Instrument):
         # local import to prevent circular dependency
         from .rawFormatter import DarkEnergyCameraRawFormatter
         return DarkEnergyCameraRawFormatter
+
+    def get_ref_cat_filter_map(self, ref_cat: str) -> str | dict[str, str]:
+        # Docstring inherited.
+        return self._get_ref_cat_library().find(ref_cat).filter_map
+
+    def get_ref_cat_colorterm(self, ref_cat: str, physical_filter: str) -> ColortermModel:
+        # Docstring inherited.
+        return self._get_ref_cat_library().find(ref_cat).colorterms[physical_filter]
+
+    def _get_ref_cat_library(self) -> InstrumentRefCatLibrary:
+        if self._ref_cat_library is None:
+            filename = os.path.join(getPackageDir("obs_decam"), self.policyName, "refcats.json")
+            with open(filename, "r") as f:
+                self._ref_cat_library = InstrumentRefCatLibrary.model_validate_json(f.read())
+        return self._ref_cat_library
