@@ -6,6 +6,9 @@ assert type(config) is lsst.afw.cameraGeom.cameraConfig.CameraConfig, (
 # Plate scale of the camera in arcsec/mm
 config.plateScale = 17.575
 
+# We should add a flip in the X axis between FOCAL_PLANE and FIELD_ANGLE.
+config.focalPlaneParity = True
+
 # Name of native coordinate system
 config.transformDict.nativeSys = 'FocalPlane'
 
