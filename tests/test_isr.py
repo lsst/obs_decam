@@ -33,7 +33,7 @@ import lsst.afw.image
 import lsst.geom as geom
 
 from lsst.pipe.base import Pipeline
-from lsst.ctrl.mpexec import SimplePipelineExecutor
+from lsst.pipe.base.simple_pipeline_executor import SimplePipelineExecutor
 
 from lsst.daf.butler.cli.cliLog import CliLog
 
