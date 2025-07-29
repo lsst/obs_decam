@@ -11,7 +11,6 @@ setupRequired(astro_metadata_translator)
 setupRequired(obs_decam_data)
 setupRequired(geom)
 setupRequired(daf_butler)
-setupRequired(ctrl_mpexec)
 
 setupOptional(testdata_decam)
 
