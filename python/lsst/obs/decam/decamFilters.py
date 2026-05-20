@@ -68,4 +68,3 @@ DECAM_FILTER_DEFINITIONS = FilterDefinitionCollection(
                      band="M490"),
     FilterDefinition(physical_filter="M517 DECam c0021 5170.0 260.0",
                      band="M517"))
-)
