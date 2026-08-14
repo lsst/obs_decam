@@ -1,12 +1,17 @@
-# Mapping of camera filter name: reference catalog filter name; each reference
-# filter must exist in the refcat.
-# Note that this does not perform any bandpass corrections: it is just a
-# lookup. Note u-band photometry may not be useful without a color term.
-config.filterMap = {
-    "u": "g",
-    "Y": "y",
-    "N419": "g",
-    "N540": "g",
-    "N708": "i",
-    "N964": "z",
-}
+# Mapping of camera filter name: reference catalog filter name
+# This file is appropriate for the_monster.
+# It is adapted from obs_lsst/config/lsstCam/filterMap.py for DECam.
+
+for source, target in [
+    ("u", "monster_SDSS_u"),
+    ("g", "monster_DES_g"),
+    ("r", "monster_DES_r"),
+    ("i", "monster_DES_i"),
+    ("z", "monster_DES_z"),
+    ("Y", "monster_DES_y"),
+    ("N419", "monster_DES_g"),
+    ("N540", "monster_DES_g"),
+    ("N708", "monster_DES_i"),
+    ("N964", "monster_DES_z"),
+]:
+    config.filterMap[source] = target
