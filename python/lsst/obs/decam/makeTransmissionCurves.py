@@ -19,17 +19,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import astropy.io.fits
 import numpy as np
 
 from lsst.afw.image import TransmissionCurve
-from lsst.utils import getPackageDir
+from lsst.resources import ResourcePath
 from .decamFilters import DECAM_FILTER_DEFINITIONS
 
 __all__ = ("getDESSystemTransmission", "getDESAtmosphereTransmission")
 
-DATA_DIR = os.path.join(getPackageDir("obs_decam_data"), "decam", "transmission_curves")
+DATA_DIR = ResourcePath("eups://obs_decam_data/decam/transmission_curves/", forceDirectory=True)
 
 DECAM_BEGIN = "2012-09-12"  # Initial date for DECam first light.
 
@@ -42,7 +41,9 @@ def getDESAtmosphereTransmission():
     the validity period for the curve stored as the associated dictionary
     value.  The curve is guaranteed not to be spatially-varying.
     """
-    table = astropy.io.fits.getdata(os.path.join(DATA_DIR, "des", "des_atm_std.fits"))
+    uri = DATA_DIR.join("des", forceDirectory=True).join("des_atm_std.fits")
+    with uri.as_local() as local:
+        table = astropy.io.fits.getdata(local.ospath)
 
     atm = TransmissionCurve.makeSpatiallyConstant(
         throughput=table["throughput_atm"].astype(np.float64),
@@ -74,9 +75,11 @@ def getDESSystemTransmission():
                 physical_filter = filter_def.physical_filter
                 break
 
-        table = astropy.io.fits.getdata(
-            os.path.join(DATA_DIR, "des", f"{band}_band_per_detector_throughput.fits"),
+        uri = DATA_DIR.join("des", forceDirectory=True).join(
+            f"{band}_band_per_detector_throughput.fits"
         )
+        with uri.as_local() as local:
+            table = astropy.io.fits.getdata(local.ospath)
 
         detector_dict = {}
         for index in range(table['throughput_ccd'].shape[1]):
