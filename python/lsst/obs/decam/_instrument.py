@@ -32,8 +32,8 @@ from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument, VisitSystem
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
-from lsst.utils.introspection import get_full_type_name
 from lsst.utils import getPackageDir
+from lsst.utils.introspection import get_full_type_name
 
 
 class DarkEnergyCamera(Instrument):
@@ -44,8 +44,7 @@ class DarkEnergyCamera(Instrument):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        packageDir = getPackageDir("obs_decam")
-        self.configPaths = [os.path.join(packageDir, "config")]
+        self.configPaths = ["eups://obs_decam/config"]
 
     @classmethod
     def getName(cls):
