@@ -44,7 +44,7 @@ class DarkEnergyCamera(Instrument):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.configPaths = ["eups://obs_decam/config"]
+        self.configPaths = ["resource://lsst.obs.decam/resources/config"]
 
     @classmethod
     def getName(cls):
