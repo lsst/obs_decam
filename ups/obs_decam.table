@@ -11,6 +11,7 @@ setupRequired(astro_metadata_translator)
 setupRequired(obs_decam_data)
 setupRequired(geom)
 setupRequired(daf_butler)
+setupRequired(resources)
 
 setupOptional(testdata_decam)
 
