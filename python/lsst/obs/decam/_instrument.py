@@ -24,6 +24,7 @@
 
 __all__ = ("DarkEnergyCamera",)
 
+import importlib.resources
 import os
 from functools import lru_cache
 
@@ -32,7 +33,6 @@ from lsst.afw.cameraGeom import makeCameraFromPath, CameraConfig
 from lsst.obs.base import Instrument, VisitSystem
 from lsst.obs.decam.decamFilters import DECAM_FILTER_DEFINITIONS
 
-from lsst.utils import getPackageDir
 from lsst.utils.introspection import get_full_type_name
 
 
@@ -51,8 +51,16 @@ class DarkEnergyCamera(Instrument):
         return "DECam"
 
     def getCamera(self):
-        path = os.path.join(getPackageDir("obs_decam"), self.policyName, "camGeom")
-        return self._getCameraFromPath(path)
+        # The camera geometry is a directory of files (camera.py plus per-amp
+        # FITS) consumed by makeCameraFromPath, so it must be presented as a
+        # local directory. importlib.resources.as_file yields that path
+        # without requiring an EUPS environment (unlike getPackageDir).
+        with importlib.resources.as_file(
+            importlib.resources.files("lsst.obs.decam").joinpath(
+                f"resources/{self.policyName}/camGeom"
+            )
+        ) as path:
+            return self._getCameraFromPath(str(path))
 
     @staticmethod
     @lru_cache()
