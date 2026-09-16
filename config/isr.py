@@ -1,3 +1,5 @@
+from lsst.ip.isr.masking import DECamEdgeBleedMaskTask
+
 config.datasetType = "raw"
 config.fallbackFilterName = None
 config.expectWcs = True
@@ -82,7 +84,9 @@ config.doNanInterpAfterFlat = False
 
 config.doMeasureBackground = True
 
-config.doCameraSpecificMasking = False
+# Mask depressed rows next to the read register below saturated stars.
+config.doCameraSpecificMasking = True
+config.masking.retarget(DECamEdgeBleedMaskTask)
 
 config.doVignette = False
 config.doAttachTransmissionCurve = False
