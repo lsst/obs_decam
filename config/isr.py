@@ -50,6 +50,7 @@ config.crosstalk.minPixelToMask = 45000.0
 config.crosstalk.crosstalkMaskPlane = "CROSSTALK"
 
 config.doWidenSaturationTrails = True
+config.doDECamEdgeBleedMask = True
 
 config.doBrighterFatter = False
 
