@@ -24,10 +24,10 @@ HDU a given detector is in in a multi-extension FITS file.
 """
 
 import contextlib
-import astro_metadata_translator
 import unittest
 import os
 
+from astro_metadata_translator import ObservationInfo, FITS_FLAT_DICT_PREFIX, FITS_FLAT_DICT_SEP, fix_header
 import lsst.afw.geom
 import lsst.utils.tests
 import lsst.obs.decam
@@ -84,6 +84,12 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
             self.fileDescriptor, ref=make_dataset_ref(detector)
         )
         metadata = formatter.read(component="metadata")
+        # The formatter read should have an OBS_INFO record that needs
+        # stripping since the "expected" value is read directly from the
+        # FITS file.
+        self.assertEqual(metadata["OBS_INFO INSTRUMENT"], "DECam")
+        ObservationInfo.strip_from_flat_dict(metadata, prefix=FITS_FLAT_DICT_PREFIX, sep=FITS_FLAT_DICT_SEP)
+        self.assertNotIn("OBS_INFO INSTRUMENT", metadata)
 
         # Remove provenance
         _clean_metadata_provenance(metadata)
@@ -99,7 +105,7 @@ class DarkEnergyCameraRawFormatterTestCase(lsst.utils.tests.TestCase):
 
         # detector 1 is in HDU 2
         expected = lsst.afw.fits.readMetadata(self.filename, 2)
-        astro_metadata_translator.fix_header(expected)
+        fix_header(expected)
         self.assertEqual(expected['CCDNUM'], 1)  # sanity check
         self.check_readMetadata(1, expected)
 
@@ -179,6 +185,13 @@ class DarkEnergyCameraCPCalibFormatterTestCase(lsst.utils.tests.TestCase):
         )
         metadata = formatter.read(component="metadata")
         self.assertEqual(metadata['CCDNUM'], detector, f"detector={detector}")
+
+        # The formatter read should have an OBS_INFO record that needs
+        # stripping since the "expected" value is read directly from the
+        # FITS file.
+        self.assertEqual(metadata["OBS_INFO INSTRUMENT"], "DECam")
+        ObservationInfo.strip_from_flat_dict(metadata, prefix=FITS_FLAT_DICT_PREFIX, sep=FITS_FLAT_DICT_SEP)
+        self.assertNotIn("OBS_INFO INSTRUMENT", metadata)
 
         # Remove provenance
         _clean_metadata_provenance(metadata)
