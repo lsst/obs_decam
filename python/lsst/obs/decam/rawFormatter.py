@@ -133,7 +133,7 @@ class DarkEnergyCameraRawFormatter(FitsRawFormatterBase):
 
     def readMetadata(self):
         index, metadata = self._determineHDU(self.data_id['detector'])
-        astro_metadata_translator.fix_header(metadata)
+        astro_metadata_translator.fix_header(metadata, translator_class=self.translatorClass)
         return metadata
 
     def readImage(self):
