@@ -11,3 +11,6 @@ config.psf_source_measurement.plugins["base_Jacobian"].pixelScale = 0.263
 config.psf_source_measurement.undeblended["base_Jacobian"].pixelScale = 0.263
 config.star_measurement.plugins["base_Jacobian"].pixelScale = 0.263
 config.star_measurement.undeblended["base_Jacobian"].pixelScale = 0.263
+
+config.psf_repair.cosmicray.cond3_fac2 = 0.5
+config.psf_repair.cosmicray.background.binSize = 128
