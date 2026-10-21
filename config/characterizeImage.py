@@ -44,3 +44,6 @@ config.measureApCorr.sourceSelector["science"].signalToNoise.maximum = None
 config.measureApCorr.sourceSelector["science"].signalToNoise.fluxField = "base_PsfFlux_instFlux"
 config.measureApCorr.sourceSelector["science"].signalToNoise.errField = "base_PsfFlux_instFluxErr"
 config.measureApCorr.sourceSelector.name = "science"
+
+config.repair.cosmicray.cond3_fac2 = 0.5
+config.repair.cosmicray.background.binSize = 128
